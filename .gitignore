@@ -2,6 +2,7 @@ archives/*.jar
 archives/*.tar.*
 archives/*.whl
 archives/*.zip
+blobs/
 geopyspark-*/
 netcdf-backend/project/
 scratch/dot-local/

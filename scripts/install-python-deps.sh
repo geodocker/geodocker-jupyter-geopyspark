@@ -30,5 +30,8 @@ CFLAGS='-DPI=M_PI -DHALFPI=M_PI_2 -DFORTPI=M_PI_4 -DTWOPI=(2*M_PI) -I$HOME/local
 pip3 install pandas==0.19.2
 pip3 install lxml==3.7.3
 
+# mark
+touch $HOME/.local/lib/python3.4/site-packages/.xxx
+
 # release
 chown -R $USER:$GROUP $HOME/.cache/pip $HOME/.local

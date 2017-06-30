@@ -1,0 +1,5 @@
+archives/
+scratch/
+netcdf-backend/
+geopyspark-*/
+thredds-feature-s3-hdfs/
