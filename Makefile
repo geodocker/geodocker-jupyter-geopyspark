@@ -47,7 +47,7 @@ archives/geonotebook-$(GEONOTEBOOK-SHA).zip:
 	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK-SHA).zip" -o archives/geonotebook-$(GEONOTEBOOK-SHA).zip
 
 archives/s3+hdfs.zip:
-	(cd archives ; curl -L -O "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip")
+	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
 
 archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
 	docker run -it --rm \
@@ -93,8 +93,19 @@ archives/$(PYTHON-BLOB): scripts/build-python-blob.sh scratch/dot-local/lib/pyth
           -v $(shell pwd)/scripts:/scripts:ro \
           $(STAGE0) /scripts/build-python-blob.sh $(shell id -u) $(shell id -g) $(GEOPYSPARK-SHA) $(GEONOTEBOOK-SHA)
 
+%: archives/%.zip
+	rm -rf $@
+	unzip $<
 
-stage1: Dockerfile.stage1 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
+archives/$(GEOPYSPARK-WHEEL): geopyspark-$(GEOPYSPARK-SHA)
+	make -C $(<) dist/$(GEOPYSPARK-WHEEL)
+	cp -f $(<)/dist/$(GEOPYSPARK-WHEEL) $@
+
+archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
+	make -C $< build
+	cp -f $(<)/geopyspark/jars/$(GEOPYSPARK-JAR) $@
+
+stage1: Dockerfile.stage1 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
 	docker build -t $(STAGE1) -f Dockerfile.stage1 .
 
 # run:

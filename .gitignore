@@ -1,8 +1,11 @@
-target/
-netcdf-backend/project/
+archives/*.jar
 archives/*.tar.*
+archives/*.whl
 archives/*.zip
+geopyspark-*/
+netcdf-backend/project/
+scratch/dot-local/
 scratch/local/gdal/
 scratch/local/src/
-scratch/dot-local/
 scratch/pip-cache/
+target/
