@@ -1,47 +1,50 @@
 .PHONY: stage0 stage1 all
 
-SRC := archives/gdal-2.1.3.tar.gz archives/geos-3.6.1.tar.bz2 archives/lcms2-2.8.tar.gz archives/libpng-1.6.28.tar.gz archives/proj-4.9.3.tar.gz archives/openjpeg-v2.1.2.tar.gz archives/zlib-1.2.11.tar.gz
-GEOPYSPARK-WHEEL := geopyspark-0.1.0-py3-none-any.whl
-GEOPYSPARK-JAR := geotrellis-backend-assembly-0.1.0.jar
-CDM-JAR := netcdfAll-5.0.0-SNAPSHOT.jar
-NETCDF-JAR := gddp-assembly-0.1.0.jar
-GDAL-BLOB := archives/gdal-and-friends.tar.gz
-PYTHON-BLOB := archives/geopyspark-and-friends.tar.gz
-GEONOTEBOOK := eeb1ee9e2dfb9df84eec24306c4b05b7008865ec
+N ?= 33
 VERSION := 10
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := quay.io/geodocker/jupyter-geopyspark:$(VERSION)
+GEOPYSPARK-SHA ?= 3ff76fd9d332732c718fd884451a4768995dc308
+GEONOTEBOOK-SHA ?= 5ea686af9d38a87dbf7a46c2575b71889856e2b2
+GEOPYSPARK-VERSION ?= 0.1.0
+GEOPYSPARK-WHEEL := geopyspark-$(GEOPYSPARK-VERSION)-py3-none-any.whl
+GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK-VERSION).jar
+PYTHON-BLOB := geopyspark-and-friends.tar.gz
+SRC := archives/gdal-2.1.3.tar.gz archives/geos-3.6.1.tar.bz2 archives/lcms2-2.8.tar.gz archives/libpng-1.6.28.tar.gz archives/proj-4.9.3.tar.gz archives/openjpeg-v2.1.2.tar.gz archives/zlib-1.2.11.tar.gz
+GDAL-BLOB := gdal-and-friends.tar.gz
+CDM-JAR := netcdfAll-5.0.0-SNAPSHOT.jar
+NETCDF-JAR := gddp-assembly-$(GEOPYSPARK-VERSION).jar
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 
 all: stage0 stage1
 
 archives/zlib-1.2.11.tar.gz:
-	(cd archives; curl -L "https://downloads.sourceforge.net/project/libpng/zlib/1.2.11/zlib-1.2.11.tar.gz?r=http%3A%2F%2Fwww.zlib.net%2F&ts=1490316463&use_mirror=pilotfiber" -o zlib-1.2.11.tar.gz)
+	curl -L "https://downloads.sourceforge.net/project/libpng/zlib/1.2.11/zlib-1.2.11.tar.gz?r=http%3A%2F%2Fwww.zlib.net%2F&ts=1490316463&use_mirror=pilotfiber" -o archives/zlib-1.2.11.tar.gz
 
 archives/libpng-1.6.28.tar.gz:
-	(cd archives; curl -L "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.gz?r=http%3A%2F%2Fwww.libpng.org%2Fpub%2Fpng%2Flibpng.html&ts=1490316660&use_mirror=superb-sea2" -o libpng-1.6.28.tar.gz)
+	curl -L "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.gz?r=http%3A%2F%2Fwww.libpng.org%2Fpub%2Fpng%2Flibpng.html&ts=1490316660&use_mirror=superb-sea2" -o archives/libpng-1.6.28.tar.gz
 
 archives/geos-3.6.1.tar.bz2:
-	(cd archives; curl -L "http://download.osgeo.org/geos/geos-3.6.1.tar.bz2" -o geos-3.6.1.tar.bz2)
+	curl -L "http://download.osgeo.org/geos/geos-3.6.1.tar.bz2" -o archives/geos-3.6.1.tar.bz2
 
 archives/proj-4.9.3.tar.gz:
-	(cd archives; curl -L "http://download.osgeo.org/proj/proj-4.9.3.tar.gz" -o proj-4.9.3.tar.gz)
+	curl -L "http://download.osgeo.org/proj/proj-4.9.3.tar.gz" -o archives/proj-4.9.3.tar.gz
 
 archives/lcms2-2.8.tar.gz:
-	(cd archives; curl -L "https://downloads.sourceforge.net/project/lcms/lcms/2.8/lcms2-2.8.tar.gz?r=&ts=1490316968&use_mirror=pilotfiber" -o lcms2-2.8.tar.gz)
+	curl -L "https://downloads.sourceforge.net/project/lcms/lcms/2.8/lcms2-2.8.tar.gz?r=&ts=1490316968&use_mirror=pilotfiber" -o archives/lcms2-2.8.tar.gz
 
 archives/openjpeg-v2.1.2.tar.gz:
-	(cd archives; curl -L "https://github.com/uclouvain/openjpeg/archive/v2.1.2.tar.gz" -o openjpeg-v2.1.2.tar.gz)
+	curl -L "https://github.com/uclouvain/openjpeg/archive/v2.1.2.tar.gz" -o archives/openjpeg-v2.1.2.tar.gz
 
 archives/gdal-2.1.3.tar.gz:
-	(cd archives; curl -L "http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz" -o gdal-2.1.3.tar.gz)
+	curl -L "http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz" -o archives/gdal-2.1.3.tar.gz
 
-archives/$(GEONOTEBOOK).zip:
-	(cd archives; curl -L -O "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK).zip")
+archives/$(GEOPYSPARK-SHA).zip:
+	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK-SHA).zip" -o archives/geopyspark-$(GEOPYSPARK-SHA).zip
 
-archives/geonotebook.tar: archives/$(GEONOTEBOOK).zip
-	(cd archives; unzip $(GEONOTEBOOK).zip; mv geonotebook-$(GEONOTEBOOK) geonotebook ; tar cvf geonotebook.tar geonotebook/ ; rm -rf geonotebook/)
+archives/geonotebook-$(GEONOTEBOOK-SHA).zip:
+	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK-SHA).zip" -o archives/geonotebook-$(GEONOTEBOOK-SHA).zip
 
 archives/s3+hdfs.zip:
 	(cd archives ; curl -L -O "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip")
@@ -67,66 +70,73 @@ blobs/%: archives/%
 stage0: Dockerfile.stage0
 	(docker images | grep 'jamesmcclain/jupyter-geopyspark \+stage0') || (docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
 
-$(GDAL-BLOB): $(SRC) scripts/build-blobs.sh archives/gdal-2.1.3.tar.gz archives/geos-3.6.1.tar.bz2 archives/lcms2-2.8.tar.gz archives/libpng-1.6.28.tar.gz archives/proj-4.9.3.tar.gz archives/openjpeg-v2.1.2.tar.gz archives/zlib-1.2.11.tar.gz
-	docker run -it --rm \
-           -v $(shell pwd)/archives:/archives:rw \
-           -v $(shell pwd)/scripts:/scripts:ro \
-           $(STAGE0) /scripts/build-blobs.sh $(shell id -u) $(shell id -g)
-
-$(PYTHON-BLOB): archives/$(GEOPYSPARK-WHEEL) scripts/gather-libs.sh archives/gdal-and-friends.tar.gz
+archives/$(GDAL-BLOB): $(SRC) scripts/build-native-blob.sh
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/archives/pip-cache:/root/.cache/pip:rw \
+          -v $(shell pwd)/scratch/local:/root/local:rw \
+          -v $(shell pwd)/scratch/pip-cache:/root/.cache/pip:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          $(STAGE0) /scripts/build-native-blobs.sh $(shell id -u) $(shell id -g) $(N)
+
+archives/$(PYTHON-BLOB): archives/$(GEOPYSPARK-WHEEL) scripts/gather-libs.sh archives/$(GDAL-BLOB)
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scratch/local:/root/local:rw \
+          -v $(shell pwd)/scratch/pip-cache:/root/.cache/pip:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(STAGE0) /scripts/gather-libs.sh $(shell id -u) $(shell id -g)
 
-stage1: Dockerfile.stage1 blobs/$(GEOPYSPARK-JAR) blobs/$(NETCDF-JAR) blobs/geonotebook.tar blobs/geotrellis-backend-assembly-0.1.0.jar blobs/gdal-and-friends.tar.gz blobs/geopyspark-and-friends.tar.gz
+stage1: Dockerfile.stage1 blobs/$(GEOPYSPARK-JAR) blobs/$(NETCDF-JAR) blobs/geonotebook.tar blobs/geotrellis-backend-assembly-0.1.0.jar blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
 	docker build -t $(STAGE1) -f Dockerfile.stage1 .
 
-run:
-	docker run -it \
-	  --rm \
-	  --name geopyspark \
-	  -p 8000:8000 \
-	  -p 8888:8888 \
-	  -p 8033:8033 \
-          -p 4040:4040 \
-          -p 4041:4041 \
-          -p 4042:4042 \
-          -p 4043:4043 \
-          -p 4044:4044 \
-	  -v /tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff:/tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff \
-	  -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
-	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
-	  $(STAGE1)
+# run:
+# 	docker run -it \
+# 	  --rm \
+# 	  --name geopyspark \
+# 	  -p 8000:8000 \
+# 	  -p 8888:8888 \
+# 	  -p 8033:8033 \
+#           -p 4040:4040 \
+#           -p 4041:4041 \
+#           -p 4042:4042 \
+#           -p 4043:4043 \
+#           -p 4044:4044 \
+# 	  -v /tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff:/tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff \
+# 	  -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
+# 	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+# 	  $(STAGE1)
 
-run-editable:
-	docker run -it \
-	  --rm \
-	  --name geopyspark \
-	  -p 8000:8000 \
-	  -p 8888:8888 \
-	  -p 8033:8033 \
-          -p 4040:4040 \
-          -p 4041:4041 \
-          -p 4042:4042 \
-          -p 4043:4043 \
-          -p 4044:4044 \
-      -v $(realpath ../geopyspark):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark \
-	  -v /tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff:/tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff \
-	  -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
-	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
-	  $(STAGE1)
+# run-editable:
+# 	docker run -it \
+# 	  --rm \
+# 	  --name geopyspark \
+# 	  -p 8000:8000 \
+# 	  -p 8888:8888 \
+# 	  -p 8033:8033 \
+#           -p 4040:4040 \
+#           -p 4041:4041 \
+#           -p 4042:4042 \
+#           -p 4043:4043 \
+#           -p 4044:4044 \
+#       -v $(realpath ../geopyspark):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark \
+# 	  -v /tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff:/tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff \
+# 	  -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
+# 	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+# 	  $(STAGE1)
 
 shell:
 	docker exec -it geopyspark bash
 
 clean:
-	rm -f archives/$(GEOPYSPARK-WHEEL) archives/$(GEOPYSPARK-JAR)
+	rm -f archives/$(GDAL-BLOB)
+	rm -f archives/$(GEOPYSPARK-WHEEL)
+	rm -f archives/$(GEOPYSPARK-JAR)
 	(cd netcdf-backend ; ./sbt "project gddp" clean ; cd ..)
 
 cleaner: clean
-	rm -f $(GDAL-BLOB) $(PYTHON-BLOB) blobs/*
+	rm -rf scratch/local/gdal
+	rm -f blobs/*
 	rm -f archives/$(NETCDF-JAR) archives/$(CDM-JAR)
 
 cleanest: cleaner
+	rm -rf scratch/local/src

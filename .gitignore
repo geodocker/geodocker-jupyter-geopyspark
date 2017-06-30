@@ -1,3 +1,5 @@
 target/
 netcdf-backend/project/
-
+archives/*.tar.*
+scratch/local/gdal/
+scratch/local/src/
