@@ -40,7 +40,7 @@ archives/openjpeg-v2.1.2.tar.gz:
 archives/gdal-2.1.3.tar.gz:
 	curl -L "http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz" -o archives/gdal-2.1.3.tar.gz
 
-archives/$(GEOPYSPARK-SHA).zip:
+archives/geopyspark-$(GEOPYSPARK-SHA).zip:
 	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK-SHA).zip" -o archives/geopyspark-$(GEOPYSPARK-SHA).zip
 
 archives/geonotebook-$(GEONOTEBOOK-SHA).zip:
@@ -74,19 +74,27 @@ archives/$(GDAL-BLOB): $(SRC) scripts/build-native-blob.sh
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/local:/root/local:rw \
-          -v $(shell pwd)/scratch/pip-cache:/root/.cache/pip:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(STAGE0) /scripts/build-native-blobs.sh $(shell id -u) $(shell id -g) $(N)
 
-archives/$(PYTHON-BLOB): archives/$(GEOPYSPARK-WHEEL) scripts/gather-libs.sh archives/$(GDAL-BLOB)
+scratch/dot-local/lib/python3.4/site-packages: scripts/install-python-deps.sh archives/$(GDAL-BLOB)
 	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scratch/local:/root/local:rw \
+          -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
+          -v $(shell pwd)/scratch/local:/root/local:ro \
           -v $(shell pwd)/scratch/pip-cache:/root/.cache/pip:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(STAGE0) /scripts/gather-libs.sh $(shell id -u) $(shell id -g)
+          $(STAGE0) /scripts/install-python-deps.sh $(shell id -u) $(shell id -g)
 
-stage1: Dockerfile.stage1 blobs/$(GEOPYSPARK-JAR) blobs/$(NETCDF-JAR) blobs/geonotebook.tar blobs/geotrellis-backend-assembly-0.1.0.jar blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
+archives/$(PYTHON-BLOB): scripts/build-python-blob.sh scratch/dot-local/lib/python3.4/site-packages
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
+          -v $(shell pwd)/scratch/local:/root/local:ro \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          $(STAGE0) /scripts/build-python-blob.sh $(shell id -u) $(shell id -g) $(GEOPYSPARK-SHA) $(GEONOTEBOOK-SHA)
+
+
+stage1: Dockerfile.stage1 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
 	docker build -t $(STAGE1) -f Dockerfile.stage1 .
 
 # run:

@@ -1,5 +1,8 @@
 target/
 netcdf-backend/project/
 archives/*.tar.*
+archives/*.zip
 scratch/local/gdal/
 scratch/local/src/
+scratch/dot-local/
+scratch/pip-cache/
