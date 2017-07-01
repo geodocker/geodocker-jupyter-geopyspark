@@ -20,9 +20,12 @@ addons:
    apt:
       packages:
          - make
+         - python3
+         - python3-pip
 
 cache:
    directories:
+      - "$HOME/.cache/pip"
       - "$HOME/.gradle"
       - "$HOME/.ivy2"
       - "$HOME/.m2"
@@ -31,9 +34,12 @@ cache:
       - ./scratch/
 
 before_install:
-   - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle
+   - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle $HOME/.cache/pip
    - docker pull jamesmcclain/jupyter-geopyspark:stage0
+   - docker pull openjdk:8-jdk
+
+install:
+   - pip3 install wheel
 
 script:
    - N=2 make
-   - docker images
