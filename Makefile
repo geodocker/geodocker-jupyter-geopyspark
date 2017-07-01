@@ -145,8 +145,8 @@ stage1: Dockerfile.stage1 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPY
 # 	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
 # 	  $(STAGE1)
 
-shell:
-	docker exec -it geopyspark bash
+# shell:
+# 	docker exec -it geopyspark bash
 
 clean:
 	(cd netcdf-backend ; ./sbt "project gddp" clean ; cd ..)

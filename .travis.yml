@@ -1,0 +1,39 @@
+sudo: required
+
+language:
+   - scala
+
+scala:
+   - "2.11.11"
+
+jdk:
+   - openjdk8
+
+services:
+   - docker
+
+branches:
+   only:
+      - master
+
+addons:
+   apt:
+      packages:
+         - make
+
+cache:
+   directories:
+      - "$HOME/.gradle"
+      - "$HOME/.ivy2"
+      - "$HOME/.m2"
+      - "$HOME/.sbt"
+      - ./archives
+      - ./scratch/
+
+before_install:
+   - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle
+   - docker pull jamesmcclain/jupyter-geopyspark:stage0
+
+script:
+   - N=2 make
+   - docker images
