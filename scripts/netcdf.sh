@@ -4,9 +4,12 @@ USERID=$1
 GROUPID=$2
 JAR=$3
 
-unzip /archives/s3+hdfs.zip
+set -x
+unzip -q /archives/s3+hdfs.zip
 cd thredds-feature-s3-hdfs
-./gradlew assemble
+./gradlew assemble > /dev/null 2>&1
+set +x
+
 cp build/libs/$JAR /archives
 
 chown -R $USERID:$GROUPID /archives ~/.m2 ~/.gradle
