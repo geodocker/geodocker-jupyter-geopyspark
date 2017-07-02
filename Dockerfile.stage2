@@ -11,6 +11,7 @@ COPY blobs/geopyspark-and-friends.tar.gz /blobs/
 COPY blobs/geotrellis-backend-assembly-$VERSION.jar /blobs/
 COPY blobs/gddp-assembly-$VERSION.jar /blobs/
 COPY blobs/geonotebook-$SHA.zip /tmp
+COPY scripts/extract-blob.sh /scripts/
 
 # Install GDAL, GeoPySpark, &c.
 COPY scripts/install-blobs.sh /scripts/
