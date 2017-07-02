@@ -3,7 +3,6 @@
 USER=$1
 GROUP=$2
 GEOPYSPARK=$3
-GEONOTEBOOK=$4
 
 export CPPFLAGS="-I$HOME/local/gdal/include"
 export CFLAGS="-I$HOME/local/gdal/include"

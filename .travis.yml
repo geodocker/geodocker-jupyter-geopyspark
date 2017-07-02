@@ -42,4 +42,7 @@ install:
    - pip3 install wheel
 
 script:
-   - N=2 make
+   - TRAVIS=1 make archives/netcdfAll-5.0.0-SNAPSHOT.jar
+   - TRAVIS=1 make archives/gdal-and-friends.tar.gz
+   - TRAVIS=1 make archives/geopyspark-and-friends.tar.gz
+   - TRAVIS=1 make stage2
