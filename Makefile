@@ -78,10 +78,9 @@ archives/$(GDAL-BLOB) scratch/local/gdal:
           -v $(shell pwd)/archives:/archives:rw \
           $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) $(GDAL-BLOB)
 	mkdir -p scratch/local/gdal
-	(cd scratch/local/gdal ; tar axvf ../../../archives/$(GDAL-BLOB))
+	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
 else
 archives/$(GDAL-BLOB) scratch/local/gdal: $(SRC) scripts/build-native-blob.sh
-	rm -rf scratch/local/gdal
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/local:/root/local:rw \
@@ -107,7 +106,7 @@ archives/$(PYTHON-BLOB): scripts/build-python-blob.sh scratch/dot-local/lib/pyth
 
 %: archives/%.zip
 	rm -rf $@
-	unzip $<
+	unzip -q $<
 
 archives/$(GEOPYSPARK-WHEEL): geopyspark-$(GEOPYSPARK-SHA)
 	make -C $(<) dist/$(GEOPYSPARK-WHEEL)
@@ -166,12 +165,13 @@ clean:
 	rm -f archives/$(GDAL-BLOB)
 	rm -f archives/$(GEOPYSPARK-JAR)
 	rm -f archives/$(GEOPYSPARK-WHEEL)
-	rm -rf scratch/local/gdal
+	rm -rf scratch/local/gdal/
 
 cleaner: clean
 	rm -f archives/$(NETCDF-JAR)
 	rm -f blobs/*
 	rm -rf geopyspark-*/
+	rm -rf scratch/dot-local/*
 
 cleanest: cleaner
 	rm -rf archives/$(CDM-JAR)
