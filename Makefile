@@ -160,8 +160,7 @@ publish: build
 
 #################################
 
-GEOPYSPARK-DIR ?= $(realpath ../../geopyspark/geopyspark)
-GEONOTEBOOK-DIR ?= $(realpath ../../geonotebook/geonotebook)
+GEOPYSPARK-DIR ?= $(realpath ../geopyspark/geopyspark)
 
 
 run:
@@ -179,7 +178,6 @@ run-editable:
           -p 8000:8000 \
           $(EXTRA-FLAGS) \
           -v $(GEOPYSPARK-DIR):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark:rw \
-          -v $(GEONOTEBOOK-DIR):/home/hadoop/.local/lib/python3.4/site-packages/geonotebook:rw \
           -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
           -v $(HOME)/.aws:/home/hadoop/.aws:ro \
           $(STAGE2)
