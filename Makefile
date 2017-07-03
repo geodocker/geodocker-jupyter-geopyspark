@@ -1,10 +1,11 @@
-.PHONY: stage0 stage2 all
+.PHONY: stage0 stage2 all clean cleaner cleanest mrproper build
 
 N ?= 33
-VERSION := 13
+TAG ?= 13
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := jamesmcclain/jupyter-geopyspark:13
-STAGE2 := quay.io/geodocker/jupyter-geopyspark:$(VERSION)
+IMG := quay.io/geodocker/jupyter-geopyspark
+STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK-SHA ?= 3ff76fd9d332732c718fd884451a4768995dc308
 GEONOTEBOOK-SHA ?= 5ea686af9d38a87dbf7a46c2575b71889856e2b2
 GEOPYSPARK-VERSION ?= 0.1.0
@@ -57,6 +58,9 @@ archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
            -v $(HOME)/.m2:/root/.m2:rw \
            -v $(HOME)/.gradle:/root/.gradle:rw \
            openjdk:8-jdk /scripts/netcdf.sh $(shell id -u) $(shell id -g) $(CDM-JAR)
+ifeq ($(TRAVIS),1)
+	docker rmi "openjdk:8-jdk"
+endif
 
 archives/$(NETCDF-JAR): archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) $(call rwildcard, netcdf-backend/, *.scala)
 	cp -f archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) /tmp
@@ -68,7 +72,7 @@ blobs/%: archives/%
 	cp -f $< $@
 
 stage0: Dockerfile.stage0
-	(docker images | grep 'jamesmcclain/jupyter-geopyspark \+stage0') || (docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
+	(docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
 
 ifeq ($(TRAVIS),1)
 archives/$(GDAL-BLOB) scratch/local/gdal:
@@ -77,11 +81,11 @@ archives/$(GDAL-BLOB) scratch/local/gdal:
 	docker run -it --rm -u root \
           -v $(shell pwd)/archives:/archives:rw \
           $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) $(GDAL-BLOB)
+	docker rmi $(STAGE1)
 	mkdir -p scratch/local/gdal
-	(cd scratch/local/gdal ; tar axvf ../../../archives/$(GDAL-BLOB))
+	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
 else
 archives/$(GDAL-BLOB) scratch/local/gdal: $(SRC) scripts/build-native-blob.sh
-	rm -rf scratch/local/gdal
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/local:/root/local:rw \
@@ -107,7 +111,7 @@ archives/$(PYTHON-BLOB): scripts/build-python-blob.sh scratch/dot-local/lib/pyth
 
 %: archives/%.zip
 	rm -rf $@
-	unzip $<
+	unzip -q $<
 
 archives/$(GEOPYSPARK-WHEEL): geopyspark-$(GEOPYSPARK-SHA)
 	make -C $(<) dist/$(GEOPYSPARK-WHEEL)
@@ -118,60 +122,27 @@ archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 	cp -f $(<)/geopyspark/jars/$(GEOPYSPARK-JAR) $@
 
 stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
+ifeq ($(TRAVIS),1)
+	docker rmi $(STAGE0)
+	rm -rf archives/ geopyspark-*/ netcdf-backend/ scratch/local/
+endif
 	docker build \
           --build-arg VERSION=$(GEOPYSPARK-VERSION) \
           --build-arg SHA=$(GEONOTEBOOK-SHA) \
           -t $(STAGE2) -f Dockerfile.stage2 .
-
-# run:
-# 	docker run -it \
-# 	  --rm \
-# 	  --name geopyspark \
-# 	  -p 8000:8000 \
-# 	  -p 8888:8888 \
-# 	  -p 8033:8033 \
-#           -p 4040:4040 \
-#           -p 4041:4041 \
-#           -p 4042:4042 \
-#           -p 4043:4043 \
-#           -p 4044:4044 \
-# 	  -v /tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff:/tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff \
-# 	  -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
-# 	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
-# 	  $(STAGE2)
-
-# run-editable:
-# 	docker run -it \
-# 	  --rm \
-# 	  --name geopyspark \
-# 	  -p 8000:8000 \
-# 	  -p 8888:8888 \
-# 	  -p 8033:8033 \
-#           -p 4040:4040 \
-#           -p 4041:4041 \
-#           -p 4042:4042 \
-#           -p 4043:4043 \
-#           -p 4044:4044 \
-#       -v $(realpath ../geopyspark):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark \
-# 	  -v /tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff:/tmp/L57.Globe.month09.2010.hh09vv04.h6v1.doy247to273.NBAR.v3.0.tiff \
-# 	  -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
-# 	  -v $(HOME)/.aws:/home/hadoop/.aws:ro \
-# 	  $(STAGE2)
-
-# shell:
-# 	docker exec -it geopyspark bash
 
 clean:
 	(cd netcdf-backend ; ./sbt "project gddp" clean ; cd ..)
 	rm -f archives/$(GDAL-BLOB)
 	rm -f archives/$(GEOPYSPARK-JAR)
 	rm -f archives/$(GEOPYSPARK-WHEEL)
-	rm -rf scratch/local/gdal
+	rm -rf scratch/local/gdal/
 
 cleaner: clean
 	rm -f archives/$(NETCDF-JAR)
 	rm -f blobs/*
 	rm -rf geopyspark-*/
+	rm -rf scratch/dot-local/*
 
 cleanest: cleaner
 	rm -rf archives/$(CDM-JAR)
@@ -181,3 +152,37 @@ mrproper: cleanest
 	rm -rf archives/*
 	rm -rf scratch/dot-local/*
 	rm -rf scratch/pip-cache/*
+
+publish: build
+	docker tag $(STAGE2) $(IMG):latest
+	docker push $(STAGE2)
+	docker push $(IMG):latest
+
+#################################
+
+GEOPYSPARK-DIR ?= $(realpath ../../geopyspark/geopyspark)
+GEONOTEBOOK-DIR ?= $(realpath ../../geonotebook/geonotebook)
+
+
+run:
+	mkdir -p $(HOME)/.aws
+	docker run -it --rm --name geopyspark \
+          -p 8000:8000 \
+          $(EXTRA-FLAGS) \
+          -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
+          -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+          $(STAGE2)
+
+run-editable:
+	mkdir -p $(HOME)/.aws
+	docker run -it --rm --name geopyspark \
+          -p 8000:8000 \
+          $(EXTRA-FLAGS) \
+          -v $(GEOPYSPARK-DIR):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark:rw \
+          -v $(GEONOTEBOOK-DIR):/home/hadoop/.local/lib/python3.4/site-packages/geonotebook:rw \
+          -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
+          -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+          $(STAGE2)
+
+shell:
+	docker exec -it geopyspark bash

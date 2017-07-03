@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
+set -x
+
 # untar gdal and friends
 mkdir -p $HOME/local/gdal
 cd $HOME/local/gdal
-tar axvf /blobs/gdal-and-friends.tar.gz
+tar axf /blobs/gdal-and-friends.tar.gz
 
 # untar geopyspark and friends
 mkdir -p $HOME/.local/lib/python3.4/site-packages
 cd $HOME/.local/lib/python3.4/site-packages
-tar axvf /blobs/geopyspark-and-friends.tar.gz
+tar axf /blobs/geopyspark-and-friends.tar.gz
 mkdir -p /home/hadoop/.local/lib/python3.4/site-packages/geopyspark/netcdf
 
 # patch in NetCDF support
@@ -94,3 +96,5 @@ class Gddp(object):
         rdd = jvm.geopyspark.netcdf.datasets.Gddp.samples(uri, float_point, int_days, sc._jsc.sc())
         return rdd
 EOF
+
+set +x
