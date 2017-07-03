@@ -12,6 +12,10 @@ jdk:
 services:
    - docker
 
+env:
+   global:
+      - TAG=${TRAVIS_TAG:-${TRAVIS_COMMIT:0:7}}
+
 branches:
    only:
       - master
@@ -30,8 +34,9 @@ cache:
       - "$HOME/.ivy2"
       - "$HOME/.m2"
       - "$HOME/.sbt"
-      - ./archives
-      - ./scratch/
+      - ./blobs
+      - ./sratch/dot-local
+      - ./scratch/pip-cache
 
 before_install:
    - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle $HOME/.cache/pip
@@ -42,7 +47,4 @@ install:
    - pip3 install wheel
 
 script:
-   - TRAVIS=1 make archives/netcdfAll-5.0.0-SNAPSHOT.jar
-   - TRAVIS=1 make archives/gdal-and-friends.tar.gz
-   - TRAVIS=1 make archives/geopyspark-and-friends.tar.gz
-   - TRAVIS=1 make stage2
+   - TRAVIS=1 TAG=$TAG make stage2

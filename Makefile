@@ -1,10 +1,11 @@
-.PHONY: stage0 stage2 all
+.PHONY: stage0 stage2 all clean cleaner cleanest mrproper build
 
 N ?= 33
-VERSION := 13
+TAG ?= 13
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := jamesmcclain/jupyter-geopyspark:13
-STAGE2 := quay.io/geodocker/jupyter-geopyspark:$(VERSION)
+IMG := quay.io/geodocker/jupyter-geopyspark
+STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK-SHA ?= 3ff76fd9d332732c718fd884451a4768995dc308
 GEONOTEBOOK-SHA ?= 5ea686af9d38a87dbf7a46c2575b71889856e2b2
 GEOPYSPARK-VERSION ?= 0.1.0
@@ -57,6 +58,9 @@ archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
            -v $(HOME)/.m2:/root/.m2:rw \
            -v $(HOME)/.gradle:/root/.gradle:rw \
            openjdk:8-jdk /scripts/netcdf.sh $(shell id -u) $(shell id -g) $(CDM-JAR)
+ifeq ($(TRAVIS),1)
+	docker rmi "openjdk:8-jdk"
+endif
 
 archives/$(NETCDF-JAR): archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) $(call rwildcard, netcdf-backend/, *.scala)
 	cp -f archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) /tmp
@@ -68,7 +72,7 @@ blobs/%: archives/%
 	cp -f $< $@
 
 stage0: Dockerfile.stage0
-	(docker images | grep 'jamesmcclain/jupyter-geopyspark \+stage0') || (docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
+	(docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
 
 ifeq ($(TRAVIS),1)
 archives/$(GDAL-BLOB) scratch/local/gdal:
@@ -77,6 +81,7 @@ archives/$(GDAL-BLOB) scratch/local/gdal:
 	docker run -it --rm -u root \
           -v $(shell pwd)/archives:/archives:rw \
           $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) $(GDAL-BLOB)
+	docker rmi $(STAGE1)
 	mkdir -p scratch/local/gdal
 	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
 else
@@ -117,6 +122,10 @@ archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 	cp -f $(<)/geopyspark/jars/$(GEOPYSPARK-JAR) $@
 
 stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
+ifeq ($(TRAVIS),1)
+	docker rmi $(STAGE0)
+	rm -rf archives/ geopyspark-*/ netcdf-backend/ scratch/local/
+endif
 	docker build \
           --build-arg VERSION=$(GEOPYSPARK-VERSION) \
           --build-arg SHA=$(GEONOTEBOOK-SHA) \
@@ -144,6 +153,10 @@ mrproper: cleanest
 	rm -rf scratch/dot-local/*
 	rm -rf scratch/pip-cache/*
 
+publish: build
+	docker tag $(STAGE2) $(IMG):latest
+	docker push $(STAGE2)
+	docker push $(IMG):latest
 
 #################################
 
