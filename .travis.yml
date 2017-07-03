@@ -34,6 +34,7 @@ cache:
       - "$HOME/.ivy2"
       - "$HOME/.m2"
       - "$HOME/.sbt"
+      - ./archives
       - ./blobs
       - ./sratch/dot-local
       - ./scratch/pip-cache
