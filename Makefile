@@ -75,13 +75,15 @@ stage0: Dockerfile.stage0
 	(docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
 
 ifeq ($(TRAVIS),1)
-archives/$(GDAL-BLOB) scratch/local/gdal:
-	rm -rf scratch/local/gdal
+archives/$(GDAL-BLOB):
 	docker pull $(STAGE1)
 	docker run -it --rm -u root \
           -v $(shell pwd)/archives:/archives:rw \
           $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) $(GDAL-BLOB)
 	docker rmi $(STAGE1)
+
+scratch/local/gdal: archives/$(GDAL-BLOB)
+	rm -rf scratch/local/gdal
 	mkdir -p scratch/local/gdal
 	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
 else
@@ -124,7 +126,7 @@ archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB)
 ifeq ($(TRAVIS),1)
 	docker rmi $(STAGE0)
-	rm -rf $(shell ls archives/* | grep -v '\(gdal-and-friends\|netcdf\)')
+	rm -rf $(shell ls archives/* | grep -iv '\(s3+hdfs\|gdal-and-friends\|netcdf\)')
 	rm -rf geopyspark-*/ netcdf-backend/ scratch/local/
 endif
 	docker build \
