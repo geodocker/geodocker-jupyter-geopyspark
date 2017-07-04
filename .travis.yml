@@ -35,17 +35,18 @@ cache:
       - "$HOME/.m2"
       - "$HOME/.sbt"
       - ./archives
-      - ./blobs
       - ./sratch/dot-local
       - ./scratch/pip-cache
 
 before_install:
    - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle $HOME/.cache/pip
-   - docker pull jamesmcclain/jupyter-geopyspark:stage0
-   - docker pull openjdk:8-jdk
 
 install:
    - pip3 install wheel
+   - docker pull jamesmcclain/jupyter-geopyspark:stage0
 
 script:
+   - .travis/touch-blobs.sh
+   - TRAVIS=1 TAG=$TAG make -d archives/netcdfAll-5.0.0-SNAPSHOT.jar
+   - TRAVIS=1 TAG=$TAG make -d archives/gdal-and-friends.tar.gz
    - TRAVIS=1 TAG=$TAG make stage2

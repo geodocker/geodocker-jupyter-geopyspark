@@ -42,6 +42,7 @@ bleach==1.5.0
 click==6.7
 click-plugins==1.0.3
 cligj==0.4.0
+colortools==0.1.2
 cycler==0.10.0
 decorator==4.0.10
 entrypoints==0.2.2
