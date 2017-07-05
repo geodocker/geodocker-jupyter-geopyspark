@@ -2,6 +2,7 @@
 
 USER=$1
 GROUP=$2
+BLOB=$3
 
 export CPPFLAGS="-I$HOME/local/gdal/include"
 export CFLAGS="-I$HOME/local/gdal/include"
@@ -90,8 +91,10 @@ pip3 install --user -r /tmp/geonotebook_deps.txt &> /dev/null
 
 set +x
 
-# mark
-touch $HOME/.local/lib/python3.4/site-packages/.xxx
+# archive libraries
+cd $HOME/.local/lib/python3.4/site-packages
+touch .xxx
+tar acf /archives/$BLOB $(find | grep -v geopyspark)
 
 # release
 chown -R $USER:$GROUP $HOME/.cache/pip $HOME/.local

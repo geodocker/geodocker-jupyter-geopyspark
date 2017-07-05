@@ -2,7 +2,8 @@
 
 USER=$1
 GROUP=$2
-GEOPYSPARK=$3
+BLOB=$3
+GEOPYSPARK=$4
 
 export CPPFLAGS="-I$HOME/local/gdal/include"
 export CFLAGS="-I$HOME/local/gdal/include"
@@ -19,11 +20,11 @@ unzip -q /archives/geopyspark-${GEOPYSPARK}.zip
 cd geopyspark-${GEOPYSPARK}
 pip3 install --user .
 
+set +x
+
 # archive libraries
 cd $HOME/.local/lib/python3.4/site-packages
-tar acf /archives/geopyspark-and-friends.tar.gz .
-
-set +x
+tar acf /archives/$BLOB $(find | grep geopyspark)
 
 # release
 chown -R $USER:$GROUP /archives $HOME/.local
