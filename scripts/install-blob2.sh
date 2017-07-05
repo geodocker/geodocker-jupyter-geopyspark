@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 
+PYTHONBLOB=$1
+
 set -x
 
-# untar gdal and friends
-mkdir -p $HOME/local/gdal
-cd $HOME/local/gdal
-tar axf /blobs/gdal-and-friends.tar.gz
-
-# untar geopyspark and friends
+# Untar GeoPySpark
 mkdir -p $HOME/.local/lib/python3.4/site-packages
 cd $HOME/.local/lib/python3.4/site-packages
-tar axf /blobs/geopyspark-and-friends.tar.gz
-mkdir -p /home/hadoop/.local/lib/python3.4/site-packages/geopyspark/netcdf
+tar axf /blobs/$PYTHONBLOB
 
-# patch in NetCDF support
+# Patch in NetCDF support
+mkdir -p /home/hadoop/.local/lib/python3.4/site-packages/geopyspark/netcdf
 touch /home/hadoop/.local/lib/python3.4/site-packages/geopyspark/netcdf/__init__.py
 cat <<EOF > /home/hadoop/.local/lib/python3.4/site-packages/geopyspark/netcdf/datasets.py
 import numpy as np
