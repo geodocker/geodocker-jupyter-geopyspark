@@ -133,7 +133,7 @@ ifeq ($(TRAVIS),1)
 endif
 	docker build \
           --build-arg VERSION=$(GEOPYSPARK-VERSION) \
-          --build-arg SHA=$(GEONOTEBOOK-SHA) \
+          --build-arg GEONOTEBOOKSHA=$(GEONOTEBOOK-SHA) \
           --build-arg GDALBLOB=$(GDAL-BLOB) \
           --build-arg PYTHONBLOB1=$(PYTHON-BLOB1) \
           --build-arg PYTHONBLOB2=$(PYTHON-BLOB2) \
