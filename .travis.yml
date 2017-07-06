@@ -50,3 +50,9 @@ script:
    - TRAVIS=1 TAG=$TAG make archives/netcdfAll-5.0.0-SNAPSHOT.jar
    - TRAVIS=1 TAG=$TAG make archives/gdal-and-friends.tar.gz
    - TRAVIS=1 TAG=$TAG make stage2
+
+after_success:
+   - if [ "$QUAY_USERNAME" != "" -a "$QUAY_PASSWORD" != "" ]; then
+     docker login -u="$QUAY_USERNAME" -p="$QUAY_PASSWORD" quay.io;
+     TRAVIS=1 TAG=$TAG make publish;
+     fi
