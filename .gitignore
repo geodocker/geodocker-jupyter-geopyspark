@@ -5,6 +5,7 @@ archives/*.zip
 blobs/
 geopyspark-*/
 netcdf-backend/project/
+notebooks/.ipynb_checkpoints/
 scratch/dot-local/
 scratch/local/gdal/
 scratch/local/src/
