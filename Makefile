@@ -2,9 +2,9 @@
 
 N ?= 33
 TAG ?= 13
-STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
-STAGE1 := jamesmcclain/jupyter-geopyspark:13
 IMG := quay.io/geodocker/jupyter-geopyspark
+STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
+STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK-SHA ?= 3ff76fd9d332732c718fd884451a4768995dc308
 GEONOTEBOOK-SHA ?= 5ea686af9d38a87dbf7a46c2575b71889856e2b2
@@ -63,7 +63,7 @@ ifeq ($(TRAVIS),1)
 	docker rmi "openjdk:8-jdk"
 endif
 
-archives/$(NETCDF-JAR): archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) $(call rwildcard, netcdf-backend/, *.scala)
+archives/$(NETCDF-JAR): $(shell .travis/not.sh archives/$(CDM-JAR)) archives/$(GEOPYSPARK-JAR) $(call rwildcard, netcdf-backend/, *.scala)
 	cp -f archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) /tmp
 	(cd netcdf-backend; ./sbt "project gddp" assembly; cd ..)
 	cp -f netcdf-backend/gddp/target/scala-2.11/$(NETCDF-JAR) $@
@@ -83,7 +83,7 @@ archives/$(GDAL-BLOB):
           $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) $(GDAL-BLOB)
 	docker rmi $(STAGE1)
 
-scratch/local/gdal: archives/$(GDAL-BLOB)
+scratch/local/gdal: $(shell .travis/not.sh archives/$(GDAL-BLOB))
 	rm -rf scratch/local/gdal
 	mkdir -p scratch/local/gdal
 	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
@@ -118,17 +118,17 @@ archives/$(PYTHON-BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/py
 	unzip -q $<
 
 archives/$(GEOPYSPARK-WHEEL): geopyspark-$(GEOPYSPARK-SHA)
-	make -C $(<) dist/$(GEOPYSPARK-WHEEL)
-	cp -f $(<)/dist/$(GEOPYSPARK-WHEEL) $@
+	make -C $< dist/$(GEOPYSPARK-WHEEL)
+	cp -f $</dist/$(GEOPYSPARK-WHEEL) $@
 
 archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 	make -C $< build
-	cp -f $(<)/geopyspark/jars/$(GEOPYSPARK-JAR) $@
+	cp -f $</geopyspark/jars/$(GEOPYSPARK-JAR) $@
 
 stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB1) blobs/$(PYTHON-BLOB2)
 ifeq ($(TRAVIS),1)
 	docker rmi $(STAGE0)
-	rm -rf $(shell ls archives/* | grep -iv '\(s3+hdfs\|gdal-and-friends\|netcdf\)')
+	rm -rf $(shell ls archives/* | grep -iv '\(gdal-and-friends\|netcdf\)')
 	rm -rf geopyspark-*/ netcdf-backend/ scratch/local/
 endif
 	docker build \
@@ -162,9 +162,9 @@ mrproper: cleanest
 	rm -rf scratch/pip-cache/*
 
 publish: build
-	docker tag $(STAGE2) $(IMG):latest
+	docker tag $(STAGE2) "$(IMG):latest"
 	docker push $(STAGE2)
-	docker push $(IMG):latest
+	docker push "$(IMG):latest"
 
 #################################
 
