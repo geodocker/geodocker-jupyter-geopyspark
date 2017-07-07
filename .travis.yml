@@ -46,9 +46,8 @@ install:
    - docker pull jamesmcclain/jupyter-geopyspark:stage0
 
 script:
-   - .travis/touch-blobs.sh
-   - TRAVIS=1 TAG=$TAG make archives/netcdfAll-5.0.0-SNAPSHOT.jar
-   - TRAVIS=1 TAG=$TAG make archives/gdal-and-friends.tar.gz
+   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.1.0.jar
+   - TRAVIS=1 TAG=$TAG make scratch/local/gdal
    - TRAVIS=1 TAG=$TAG make stage2
 
 after_success:
