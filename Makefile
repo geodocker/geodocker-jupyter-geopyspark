@@ -6,8 +6,8 @@ IMG := quay.io/geodocker/jupyter-geopyspark
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
-GEOPYSPARK-SHA ?= 3ff76fd9d332732c718fd884451a4768995dc308
-GEONOTEBOOK-SHA ?= 5ea686af9d38a87dbf7a46c2575b71889856e2b2
+GEOPYSPARK-SHA ?= 7215036eb3ca3183b368a515c1289aa5e6226c3a
+GEONOTEBOOK-SHA ?= 3819405a82d1b84164a04dd5742e0e848baaa04b
 GEOPYSPARK-VERSION ?= 0.1.0
 GEOPYSPARK-WHEEL := geopyspark-$(GEOPYSPARK-VERSION)-py3-none-any.whl
 GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK-VERSION).jar
@@ -106,6 +106,7 @@ archives/$(PYTHON-BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scr
           $(STAGE0) /scripts/build-python-blob1.sh $(shell id -u) $(shell id -g) $(PYTHON-BLOB1)
 
 archives/$(PYTHON-BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/python3.4/site-packages/.xxx archives/geopyspark-$(GEOPYSPARK-SHA).zip
+	rm -rf scratch/dot-local/lib/python3.4/site-packages/geopyspark
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
