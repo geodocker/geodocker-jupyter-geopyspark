@@ -7,7 +7,7 @@ JAR=$3
 set -x
 unzip -q /archives/s3+hdfs.zip
 cd thredds-feature-s3-hdfs
-./gradlew assemble > /dev/null 2>&1
+./gradlew assemble
 set +x
 
 cp build/libs/$JAR /archives

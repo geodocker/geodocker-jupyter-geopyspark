@@ -55,6 +55,15 @@ archives/geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA).zip:
 archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
 
+ifeq ($(TRAVIS),1)
+thredds-feature-s3-hdfs: archives/s3+hdfs.zip
+	unzip -qu $<
+
+archives/$(CDM-JAR): thredds-feature-s3-hdfs
+	(cd $< ; ./gradlew assemble > /dev/null 2>&1)
+	cp -f $</build/libs/$(CDM-JAR) $@
+
+else
 archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
 	docker run -it --rm \
            -v $(shell pwd)/archives:/archives:rw \
@@ -62,15 +71,7 @@ archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
            -v $(HOME)/.m2:/root/.m2:rw \
            -v $(HOME)/.gradle:/root/.gradle:rw \
            openjdk:8-jdk /scripts/netcdf.sh $(shell id -u) $(shell id -g) $(CDM-JAR)
-ifeq ($(TRAVIS),1)
-	docker rmi "openjdk:8-jdk"
 endif
-
-archives/$(NETCDF-JAR): $(shell .travis/not.sh archives/$(CDM-JAR)) archives/$(GEOPYSPARK-JAR) archives/geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA).zip $(call rwildcard, netcdf-backend/, *.scala)
-	cp -f archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) /tmp
-	(cd netcdf-backend; ./sbt "project gddp" assembly; cd ..)
-	cp -f netcdf-backend/gddp/target/scala-2.11/$(NETCDF-JAR) $@
-	rm -f /tmp/$(CDM-JAR) /tmp/$(GEOPYSPARK-JAR)
 
 blobs/%: archives/%
 	cp -f $< $@
@@ -90,6 +91,7 @@ scratch/local/gdal: $(shell .travis/not.sh archives/$(GDAL-BLOB))
 	rm -rf scratch/local/gdal
 	mkdir -p scratch/local/gdal
 	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
+
 else
 archives/$(GDAL-BLOB) scratch/local/gdal: $(SRC) scripts/build-native-blob.sh
 	docker run -it --rm \
@@ -119,11 +121,19 @@ archives/$(PYTHON-BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/py
 
 %: archives/%.zip
 	rm -rf $@
-	unzip -q $<
+	unzip -qu $<
 
 archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 	make -C $< build
 	cp -f $</geopyspark/jars/$(GEOPYSPARK-JAR) $@
+
+ifeq ($(TRAVIS),1)
+archives/$(NETCDF-JAR): geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA) $(shell .travis/not.sh archives/$(CDM-JAR)) archives/$(GEOPYSPARK-JAR)
+else
+archives/$(NETCDF-JAR): geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA) archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR)
+endif
+	CDM_JAR_DIR=$(shell pwd)/archives GEOPYSPARK_JAR_DIR=$(shell pwd)/archives make -C $< backend/gddp/target/scala-2.11/$(NETCDF-JAR)
+	cp -f $</backend/gddp/target/scala-2.11/$(NETCDF-JAR) $@
 
 stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB1) blobs/$(PYTHON-BLOB2)
 ifeq ($(TRAVIS),1)
