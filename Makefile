@@ -9,7 +9,6 @@ STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK-SHA ?= 7215036eb3ca3183b368a515c1289aa5e6226c3a
 GEONOTEBOOK-SHA ?= 3819405a82d1b84164a04dd5742e0e848baaa04b
 GEOPYSPARK-VERSION ?= 0.1.0
-GEOPYSPARK-WHEEL := geopyspark-$(GEOPYSPARK-VERSION)-py3-none-any.whl
 GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK-VERSION).jar
 PYTHON-BLOB1 := friends-of-geopyspark.tar.gz
 PYTHON-BLOB2 := just-geopyspark.tar.gz
@@ -118,10 +117,6 @@ archives/$(PYTHON-BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/py
 	rm -rf $@
 	unzip -q $<
 
-archives/$(GEOPYSPARK-WHEEL): geopyspark-$(GEOPYSPARK-SHA)
-	make -C $< dist/$(GEOPYSPARK-WHEEL)
-	cp -f $</dist/$(GEOPYSPARK-WHEEL) $@
-
 archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 	make -C $< build
 	cp -f $</geopyspark/jars/$(GEOPYSPARK-JAR) $@
@@ -144,7 +139,6 @@ clean:
 	(cd netcdf-backend ; ./sbt "project gddp" clean ; cd ..)
 	rm -f archives/$(GDAL-BLOB)
 	rm -f archives/$(GEOPYSPARK-JAR)
-	rm -f archives/$(GEOPYSPARK-WHEEL)
 	rm -rf scratch/local/gdal/
 
 cleaner: clean
