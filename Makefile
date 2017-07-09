@@ -7,12 +7,12 @@ STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK-SHA ?= 7215036eb3ca3183b368a515c1289aa5e6226c3a
-GEOPYSPARK-NETCDF-SHA ?= 3d5c830fb3f753dc72e8db076c48fd6bbbb59f0f
+GEOPYSPARK-NETCDF-SHA ?= 0a39d9d0eed5e16380fa3c3700807b89925f47da
 GEONOTEBOOK-SHA ?= 3819405a82d1b84164a04dd5742e0e848baaa04b
 GEOPYSPARK-VERSION ?= 0.1.0
 GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK-VERSION).jar
 PYTHON-BLOB1 := friends-of-geopyspark.tar.gz
-PYTHON-BLOB2 := just-geopyspark.tar.gz
+PYTHON-BLOB2 := geopyspark-sans-friends.tar.gz
 SRC := archives/gdal-2.1.3.tar.gz archives/geos-3.6.1.tar.bz2 archives/lcms2-2.8.tar.gz archives/libpng-1.6.28.tar.gz archives/proj-4.9.3.tar.gz archives/openjpeg-v2.1.2.tar.gz archives/zlib-1.2.11.tar.gz
 GDAL-BLOB := gdal-and-friends.tar.gz
 CDM-JAR := netcdfAll-5.0.0-SNAPSHOT.jar
@@ -50,7 +50,7 @@ archives/geonotebook-$(GEONOTEBOOK-SHA).zip:
 	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK-SHA).zip" -o $@
 
 archives/geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA).zip:
-	curl -L "https://github.com/jamesmcclain/geopyspark-netcdf/archive/$(GEOPYSPARK-NETCDF-SHA).zip" -o $@
+	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(GEOPYSPARK-NETCDF-SHA).zip" -o $@
 
 archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
