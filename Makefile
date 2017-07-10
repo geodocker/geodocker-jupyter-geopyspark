@@ -7,12 +7,12 @@ STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK-SHA ?= 7215036eb3ca3183b368a515c1289aa5e6226c3a
+GEOPYSPARK-NETCDF-SHA ?= 0a39d9d0eed5e16380fa3c3700807b89925f47da
 GEONOTEBOOK-SHA ?= 3819405a82d1b84164a04dd5742e0e848baaa04b
 GEOPYSPARK-VERSION ?= 0.1.0
-GEOPYSPARK-WHEEL := geopyspark-$(GEOPYSPARK-VERSION)-py3-none-any.whl
 GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK-VERSION).jar
 PYTHON-BLOB1 := friends-of-geopyspark.tar.gz
-PYTHON-BLOB2 := just-geopyspark.tar.gz
+PYTHON-BLOB2 := geopyspark-sans-friends.tar.gz
 SRC := archives/gdal-2.1.3.tar.gz archives/geos-3.6.1.tar.bz2 archives/lcms2-2.8.tar.gz archives/libpng-1.6.28.tar.gz archives/proj-4.9.3.tar.gz archives/openjpeg-v2.1.2.tar.gz archives/zlib-1.2.11.tar.gz
 GDAL-BLOB := gdal-and-friends.tar.gz
 CDM-JAR := netcdfAll-5.0.0-SNAPSHOT.jar
@@ -49,9 +49,21 @@ archives/geopyspark-$(GEOPYSPARK-SHA).zip:
 archives/geonotebook-$(GEONOTEBOOK-SHA).zip:
 	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK-SHA).zip" -o $@
 
+archives/geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA).zip:
+	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(GEOPYSPARK-NETCDF-SHA).zip" -o $@
+
 archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
 
+ifeq ($(TRAVIS),1)
+thredds-feature-s3-hdfs: archives/s3+hdfs.zip
+	unzip -qu $<
+
+archives/$(CDM-JAR): thredds-feature-s3-hdfs
+	(cd $< ; ./gradlew assemble > /dev/null 2>&1)
+	cp -f $</build/libs/$(CDM-JAR) $@
+
+else
 archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
 	docker run -it --rm \
            -v $(shell pwd)/archives:/archives:rw \
@@ -59,15 +71,7 @@ archives/$(CDM-JAR): scripts/netcdf.sh archives/s3+hdfs.zip
            -v $(HOME)/.m2:/root/.m2:rw \
            -v $(HOME)/.gradle:/root/.gradle:rw \
            openjdk:8-jdk /scripts/netcdf.sh $(shell id -u) $(shell id -g) $(CDM-JAR)
-ifeq ($(TRAVIS),1)
-	docker rmi "openjdk:8-jdk"
 endif
-
-archives/$(NETCDF-JAR): $(shell .travis/not.sh archives/$(CDM-JAR)) archives/$(GEOPYSPARK-JAR) $(call rwildcard, netcdf-backend/, *.scala)
-	cp -f archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR) /tmp
-	(cd netcdf-backend; ./sbt "project gddp" assembly; cd ..)
-	cp -f netcdf-backend/gddp/target/scala-2.11/$(NETCDF-JAR) $@
-	rm -f /tmp/$(CDM-JAR) /tmp/$(GEOPYSPARK-JAR)
 
 blobs/%: archives/%
 	cp -f $< $@
@@ -87,6 +91,7 @@ scratch/local/gdal: $(shell .travis/not.sh archives/$(GDAL-BLOB))
 	rm -rf scratch/local/gdal
 	mkdir -p scratch/local/gdal
 	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL-BLOB))
+
 else
 archives/$(GDAL-BLOB) scratch/local/gdal: $(SRC) scripts/build-native-blob.sh
 	docker run -it --rm \
@@ -105,26 +110,30 @@ archives/$(PYTHON-BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scr
           -v $(shell pwd)/scripts:/scripts:ro \
           $(STAGE0) /scripts/build-python-blob1.sh $(shell id -u) $(shell id -g) $(PYTHON-BLOB1)
 
-archives/$(PYTHON-BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/python3.4/site-packages/.xxx archives/geopyspark-$(GEOPYSPARK-SHA).zip
-	rm -rf scratch/dot-local/lib/python3.4/site-packages/geopyspark
+archives/$(PYTHON-BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/python3.4/site-packages/.xxx archives/geopyspark-$(GEOPYSPARK-SHA).zip archives/geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA).zip
+	rm -rf scratch/dot-local/lib/python3.4/site-packages/geopyspark*
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
           -v $(shell pwd)/scratch/local:/root/local:ro \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(STAGE0) /scripts/build-python-blob2.sh $(shell id -u) $(shell id -g) $(PYTHON-BLOB2) $(GEOPYSPARK-SHA)
+          $(STAGE0) /scripts/build-python-blob2.sh $(shell id -u) $(shell id -g) $(PYTHON-BLOB2) $(GEOPYSPARK-SHA) $(GEOPYSPARK-NETCDF-SHA)
 
 %: archives/%.zip
 	rm -rf $@
-	unzip -q $<
-
-archives/$(GEOPYSPARK-WHEEL): geopyspark-$(GEOPYSPARK-SHA)
-	make -C $< dist/$(GEOPYSPARK-WHEEL)
-	cp -f $</dist/$(GEOPYSPARK-WHEEL) $@
+	unzip -qu $<
 
 archives/$(GEOPYSPARK-JAR): geopyspark-$(GEOPYSPARK-SHA)
 	make -C $< build
 	cp -f $</geopyspark/jars/$(GEOPYSPARK-JAR) $@
+
+ifeq ($(TRAVIS),1)
+archives/$(NETCDF-JAR): geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA) $(shell .travis/not.sh archives/$(CDM-JAR)) archives/$(GEOPYSPARK-JAR)
+else
+archives/$(NETCDF-JAR): geopyspark-netcdf-$(GEOPYSPARK-NETCDF-SHA) archives/$(CDM-JAR) archives/$(GEOPYSPARK-JAR)
+endif
+	CDM_JAR_DIR=$(shell pwd)/archives GEOPYSPARK_JAR_DIR=$(shell pwd)/archives make -C $< backend/gddp/target/scala-2.11/$(NETCDF-JAR)
+	cp -f $</backend/gddp/target/scala-2.11/$(NETCDF-JAR) $@
 
 stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK-SHA).zip blobs/$(GEOPYSPARK-JAR) blobs/$(GEOPYSPARK-WHEEL) blobs/$(NETCDF-JAR) blobs/$(GDAL-BLOB) blobs/$(PYTHON-BLOB1) blobs/$(PYTHON-BLOB2)
 ifeq ($(TRAVIS),1)
@@ -144,7 +153,6 @@ clean:
 	(cd netcdf-backend ; ./sbt "project gddp" clean ; cd ..)
 	rm -f archives/$(GDAL-BLOB)
 	rm -f archives/$(GEOPYSPARK-JAR)
-	rm -f archives/$(GEOPYSPARK-WHEEL)
 	rm -rf scratch/local/gdal/
 
 cleaner: clean

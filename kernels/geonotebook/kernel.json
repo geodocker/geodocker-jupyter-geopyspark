@@ -15,6 +15,6 @@
         "PYTHONPATH": "/usr/local/spark-2.1.0-bin-hadoop2.7/python/lib/pyspark.zip:/usr/local/spark-2.1.0-bin-hadoop2.7/python/lib/py4j-0.10.4-src.zip",
         "GEOPYSPARK_JARS_PATH": "/opt/jars",
         "YARN_CONF_DIR": "/yarn",
-        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/just-geopyspark.tar.gz --conf spark.yarn.appMasterEnv.LD_LIBRARY_PATH=/home/hadoop/local/gdal/lib --conf spark.executorEnv.LD_LIBRARY_PATH=gdal-and-friends.tar.gz/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:just-geopyspark.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
+        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.yarn.appMasterEnv.LD_LIBRARY_PATH=/home/hadoop/local/gdal/lib --conf spark.executorEnv.LD_LIBRARY_PATH=gdal-and-friends.tar.gz/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
     }
 }

@@ -4,6 +4,7 @@ USER=$1
 GROUP=$2
 BLOB=$3
 GEOPYSPARK=$4
+GEOPYSPARK_NETCDF=$5
 
 export CPPFLAGS="-I$HOME/local/gdal/include"
 export CFLAGS="-I$HOME/local/gdal/include"
@@ -17,7 +18,10 @@ set -x
 # install geopsypark
 cd $HOME
 unzip -q /archives/geopyspark-${GEOPYSPARK}.zip
-cd geopyspark-${GEOPYSPARK}
+unzip -q /archives/geopyspark-netcdf-${GEOPYSPARK_NETCDF}.zip
+cd geopyspark-${GEOPYSPARK}/
+pip3 install --user .
+cd ../geopyspark-netcdf-${GEOPYSPARK_NETCDF}/
 pip3 install --user .
 
 set +x
