@@ -17,7 +17,6 @@ SRC := archives/gdal-2.1.3.tar.gz archives/geos-3.6.1.tar.bz2 archives/lcms2-2.8
 GDAL_BLOB := gdal-and-friends.tar.gz
 CDM_JAR := netcdfAll-5.0.0-SNAPSHOT.jar
 NETCDF_JAR := gddp-assembly-$(GEOPYSPARK_VERSION).jar
-rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 
 all: stage0 stage2
