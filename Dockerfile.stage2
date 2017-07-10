@@ -7,6 +7,8 @@ ARG PYTHONBLOB1
 ARG PYTHONBLOB2
 
 ENV LD_LIBRARY_PATH /home/hadoop/local/gdal/lib
+ENV PYSPARK_PYTHON=python3.4
+ENV PYSPARK_DRIVER_PYTHON=python3.4
 
 # Install extraction script
 COPY scripts/extract-blob.sh /scripts/
