@@ -27,7 +27,7 @@ create-cluster:
 --configurations "file://$(CURDIR)/configurations.json" \
 --ec2-attributes KeyName=${EC2_KEY},SubnetId=${SUBNET_ID} \
 --applications Name=Ganglia Name=Hadoop Name=Spark Name=Zeppelin \
---bootstrap-actions Name=BootstrapGeoPySpark,Path=${S3_URI}/bootstrap-geopyspark-docker.sh
+--bootstrap-actions Name=BootstrapGeoPySpark,Path=${S3_URI}/bootstrap-geopyspark-docker.sh \
 --instance-groups \
 Name=Master,${MASTER_BID_PRICE}InstanceCount=1,InstanceGroupType=MASTER,InstanceType=${MASTER_INSTANCE} \
 Name=Workers,${WORKER_BID_PRICE}InstanceCount=${WORKER_COUNT},InstanceGroupType=CORE,InstanceType=${WORKER_INSTANCE} \
