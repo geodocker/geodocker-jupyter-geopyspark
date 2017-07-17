@@ -13,24 +13,22 @@ ifndef CLUSTER_ID
 CLUSTER_ID=$(shell if [ -e "cluster-id.txt" ]; then cat cluster-id.txt; fi)
 endif
 
-rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 upload-code:
 	@aws s3 cp bootstrap-geopyspark-docker.sh ${S3_URI}/bootstrap-geopyspark-docker.sh
 
 create-cluster:
 	aws emr create-cluster --name "${NAME}" \
---release-label emr-5.4.0 \
+--release-label emr-5.7.0 \
 --output text \
 --use-default-roles \
 --log-uri ${S3_URI}/logs \
---configurations "file://$(CURDIR)/configurations.json" \
 --ec2-attributes KeyName=${EC2_KEY},SubnetId=${SUBNET_ID} \
---applications Name=Ganglia Name=Hadoop Name=Spark Name=Zeppelin \
---bootstrap-actions Name=BootstrapGeoPySpark,Path=${S3_URI}/bootstrap-geopyspark-docker.sh \
+--applications Name=Hadoop Name=Spark Name=Zeppelin \
 --instance-groups \
 Name=Master,${MASTER_BID_PRICE}InstanceCount=1,InstanceGroupType=MASTER,InstanceType=${MASTER_INSTANCE} \
 Name=Workers,${WORKER_BID_PRICE}InstanceCount=${WORKER_COUNT},InstanceGroupType=CORE,InstanceType=${WORKER_INSTANCE} \
+--bootstrap-actions Name=GeoPySpark,Path=${S3_URI}/bootstrap-geopyspark-docker.sh \
 | tee cluster-id.txt
 
 wait: INTERVAL:=60

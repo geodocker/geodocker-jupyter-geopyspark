@@ -11,13 +11,39 @@ is_master() {
   fi
 }
 
+for i in "$@"
+do
+    case $i in
+        --continue)
+            CONTINUE=true
+            shift
+            ;;
+        -i=*|--image=*)
+            IMAGE="${i#*=}"
+            shift
+            ;;
+        -e=*|--env=*)
+            ENV_VARS+=("-e ${i#*=}")
+            shift
+            ;;
+        *)
+            ;;
+    esac
+done
+
 ### MAIN ####
 
-THIS_SCRIPT="$(realpath "${BASH_SOURCE[0]}")"
+# EMR bootstrap runs before HDFS or YARN are initilized
+if [ ! $CONTINUE ]; then
+    sudo yum -y install docker
+    sudo usermod -aG docker hadoop
+    sudo service docker start
 
-sudo yum -y install docker
-sudo usermod -aG docker hadoop
-sudo service docker start
+    THIS_SCRIPT="$(realpath "${BASH_SOURCE[0]}")"
+    TIMEOUT= is_master && TIMEOUT=3 || TIMEOUT=4
+    echo "bash -x $THIS_SCRIPT --continue $ARGS > /tmp/bootstrap-geopyspark-docker.log" | at now + $TIMEOUT min
+    exit 0 # Bail and let EMR finish initializing
+fi
 
 YARN_RM=$(xmllint --xpath "//property[name='yarn.resourcemanager.hostname']/value/text()"  /etc/hadoop/conf/yarn-site.xml)
 
