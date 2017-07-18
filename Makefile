@@ -1,7 +1,6 @@
 .PHONY: stage0 stage2 all clean cleaner cleanest mrproper build
 
-N ?= 33
-TAG ?= 14
+TAG ?= xxx
 IMG := quay.io/geodocker/jupyter-geopyspark
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
@@ -97,7 +96,7 @@ archives/$(GDAL_BLOB) scratch/local/gdal: $(SRC) scripts/build-native-blob.sh
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/local:/root/local:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(STAGE0) /scripts/build-native-blob.sh $(shell id -u) $(shell id -g) $(N)
+          $(STAGE0) /scripts/build-native-blob.sh $(shell id -u) $(shell id -g)
 endif
 
 archives/$(PYTHON_BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scripts/build-python-blob1.sh scratch/local/gdal
