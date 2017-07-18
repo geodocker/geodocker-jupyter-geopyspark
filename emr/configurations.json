@@ -1,0 +1,78 @@
+[
+  {
+    "Classification": "spark",
+    "Properties": {
+      "maximizeResourceAllocation": "false",
+      "spark.dynamicAllocation.enabled": "true"
+    }
+  },
+  {
+    "Classification": "spark-log4j",
+    "Properties": {
+      "log4j.logger.geotrellis.spark.tiling": "DEBUG"
+    }
+  },
+
+  {
+    "Classification": "hdfs-site",
+    "Properties": {
+      "dfs.replication": "1",
+      "dfs.permissions": "false",
+      "dfs.datanode.max.xcievers": "16384",
+      "dfs.datanode.max.transfer.threads": "16384",
+      "dfs.datanode.balance.max.concurrent.moves": "1000",
+      "dfs.datanode.balance.bandwidthPerSec": "100000000"
+    }
+  },
+  {
+    "Classification": "yarn-site",
+    "Properties": {
+      "yarn.resourcemanager.am.max-attempts": "1"
+    }
+  },
+  {
+    "Classification": "hadoop-env",
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "JAVA_HOME": "/usr/lib/jvm/java-1.8.0",
+          "GDAL_DATA": "/usr/local/share/gdal",
+          "LD_LIBRARY_PATH": "/usr/local/lib",
+          "PYSPARK_PYTHON": "python27",
+          "PYSPARK_DRIVER_PYTHON": "python27"
+        }
+      }
+    ]
+  },
+  {
+    "Classification": "spark-env",
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "JAVA_HOME": "/usr/lib/jvm/java-1.8.0",
+          "GDAL_DATA": "/usr/local/share/gdal",
+          "LD_LIBRARY_PATH": "/usr/local/lib",
+          "PYSPARK_PYTHON": "python27",
+          "PYSPARK_DRIVER_PYTHON": "python27"
+        }
+      }
+    ]
+  },
+  {
+    "Classification": "yarn-env",
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "JAVA_HOME": "/usr/lib/jvm/java-1.8.0",
+          "GDAL_DATA": "/usr/local/share/gdal",
+          "LD_LIBRARY_PATH": "/usr/local/lib",
+          "PYSPARK_PYTHON": "python27",
+          "PYSPARK_DRIVER_PYTHON": "python27"
+        }
+      }
+    ]
+  }
+]
