@@ -1,6 +1,6 @@
 .PHONY: stage0 stage2 all clean cleaner cleanest mrproper build
 
-TAG ?= xxx
+TAG ?= 14
 IMG := quay.io/geodocker/jupyter-geopyspark
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
