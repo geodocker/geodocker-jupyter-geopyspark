@@ -6,7 +6,7 @@ STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK_SHA ?= 73a19f9a9695e947c7639380560936cb0d4379cb
-GEOPYSPARK_NETCDF_SHA ?= 0a39d9d0eed5e16380fa3c3700807b89925f47da
+GEOPYSPARK_NETCDF_SHA ?= a9cc8cb56dbde8672b1b339c01693347842aba62
 GEONOTEBOOK_SHA ?= 033a86d89fed4e0add0fd20a04f23e738e05e304
 GEOPYSPARK_VERSION ?= 0.2.0
 GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
@@ -48,7 +48,7 @@ archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
 	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
 
 archives/geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA).zip:
-	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(GEOPYSPARK_NETCDF_SHA).zip" -o $@
+	curl -L "https://github.com/jamesmcclain/geopyspark-netcdf/archive/$(GEOPYSPARK_NETCDF_SHA).zip" -o $@
 
 archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
