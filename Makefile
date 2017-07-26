@@ -48,7 +48,7 @@ archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
 	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
 
 archives/geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA).zip:
-	curl -L "https://github.com/jamesmcclain/geopyspark-netcdf/archive/$(GEOPYSPARK_NETCDF_SHA).zip" -o $@
+	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(GEOPYSPARK_NETCDF_SHA).zip" -o $@
 
 archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
