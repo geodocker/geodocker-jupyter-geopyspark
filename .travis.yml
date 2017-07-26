@@ -46,7 +46,7 @@ install:
    - docker pull jamesmcclain/jupyter-geopyspark:stage0
 
 script:
-   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.1.0.jar
+   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.0.jar
    - TRAVIS=1 TAG=$TAG make scratch/local/gdal
    - TRAVIS=1 TAG=$TAG make stage2
 
