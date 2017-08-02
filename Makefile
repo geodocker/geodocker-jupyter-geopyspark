@@ -1,12 +1,12 @@
 .PHONY: stage0 stage2 all clean cleaner cleanest mrproper build
 
-TAG ?= 15-rc2
+TAG ?= 16
 IMG := quay.io/geodocker/jupyter-geopyspark
 STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
 STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
-GEOPYSPARK_SHA ?= 73a19f9a9695e947c7639380560936cb0d4379cb
-GEOPYSPARK_NETCDF_SHA ?= a9cc8cb56dbde8672b1b339c01693347842aba62
+GEOPYSPARK_SHA ?= 5f7d15b21dc01204d806f9b74cd7eaa0c5002254
+GEOPYSPARK_NETCDF_SHA ?= 372526101b5efe6d7efc47c9eb16585a38024554
 GEONOTEBOOK_SHA ?= 033a86d89fed4e0add0fd20a04f23e738e05e304
 GEOPYSPARK_VERSION ?= 0.2.0
 GEOPYSPARK-JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
