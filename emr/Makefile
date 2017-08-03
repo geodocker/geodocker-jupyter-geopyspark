@@ -15,10 +15,10 @@ endif
 
 
 upload-code:
-	@aws s3 cp bootstrap-geopyspark-docker.sh ${S3_URI}/bootstrap-geopyspark-docker.sh
+	@aws --profile azavea-datahub s3 cp bootstrap-geopyspark-docker.sh ${S3_URI}/bootstrap-geopyspark-docker.sh
 
 create-cluster:
-	aws emr create-cluster --name "${NAME}" \
+	aws --profile azavea-datahub emr create-cluster --name "${NAME}" \
 --release-label emr-5.7.0 \
 --output text \
 --use-default-roles \
@@ -46,7 +46,7 @@ wait:
 	done
 
 terminate-cluster:
-	aws emr terminate-clusters --cluster-ids ${CLUSTER_ID}
+	aws --profile azavea-datahub emr terminate-clusters --cluster-ids ${CLUSTER_ID}
 	rm -f cluster-id.txt
 	rm -f last-step-id.txt
 
