@@ -40,6 +40,7 @@ affine==2.0.0.post1
 alembic==0.8.9
 backports-abc==0.5
 bleach==1.5.0
+boto3==1.4.5
 click==6.7
 click-plugins==1.0.3
 cligj==0.4.0
