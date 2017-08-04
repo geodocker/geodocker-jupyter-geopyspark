@@ -137,7 +137,7 @@ stage2: Dockerfile.stage2 blobs/geonotebook-$(GEONOTEBOOK_SHA).zip blobs/$(GEOPY
 ifeq ($(TRAVIS),1)
 	docker rmi $(STAGE0)
 	rm -rf $(shell ls archives/* | grep -iv '\(gdal-and-friends\|netcdf\)')
-	rm -rf geopyspark-*/ netcdf-backend/ scratch/local/
+	rm -rf geopyspark-*/ scratch/local/
 endif
 	docker build \
           --build-arg VERSION=$(GEOPYSPARK_VERSION) \
@@ -148,7 +148,7 @@ endif
           -t $(STAGE2) -f Dockerfile.stage2 .
 
 clean:
-	(cd netcdf-backend ; ./sbt "project gddp" clean ; cd ..)
+	(cd geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA) ; ./sbt "project gddp" clean ; cd ..)
 	rm -f archives/$(GDAL_BLOB)
 	rm -f archives/$(GEOPYSPARK-JAR)
 	rm -rf scratch/local/gdal/
