@@ -17,7 +17,6 @@ GDAL_BLOB := gdal-and-friends.tar.gz
 CDM_JAR := netcdfAll-5.0.0-SNAPSHOT.jar
 NETCDF_JAR := gddp-assembly-$(GEOPYSPARK_VERSION).jar
 
-
 all: stage0 stage2
 
 archives/zlib-1.2.11.tar.gz:
@@ -176,14 +175,14 @@ publish: build
 #################################
 
 GEOPYSPARK_DIR ?= $(realpath ../geopyspark/geopyspark)
-
+GEODOCKER_NOTEBOOK_DIR ?= $(shell pwd)/notebooks
 
 run:
 	mkdir -p $(HOME)/.aws
 	docker run -it --rm --name geopyspark \
-          -p 8000:8000 \
+          -p 8800:8000 \
           $(EXTRA_FLAGS) \
-          -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
+          -v $(GEODOCKER_NOTEBOOK_DIR):/home/hadoop/notebooks:rw \
           -v $(HOME)/.aws:/home/hadoop/.aws:ro \
           $(STAGE2)
 
@@ -193,7 +192,7 @@ run-editable:
           -p 8000:8000 \
           $(EXTRA_FLAGS) \
           -v $(GEOPYSPARK_DIR):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark:rw \
-          -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
+          -v $(GEOPYSPARK_NOTEBOOK_DIR):/home/hadoop/notebooks:rw \
           -v $(HOME)/.aws:/home/hadoop/.aws:ro \
           $(STAGE2)
 
