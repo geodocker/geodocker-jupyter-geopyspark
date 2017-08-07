@@ -42,8 +42,14 @@ COPY blobs/$PYTHONBLOB2 /blobs/
 COPY scripts/install-blob2.sh /scripts/
 RUN /scripts/install-blob2.sh $PYTHONBLOB2
 
-# Install Jars
-COPY blobs/geotrellis-backend-assembly-$VERSION.jar /opt/jars/
+USER root
+
+# Install additional python dependencies
+RUN pip install satsearch
+
+USER hadoop
+
+# Install Extra Jars
 COPY blobs/gddp-assembly-$VERSION.jar /opt/jars/
 
 WORKDIR /tmp

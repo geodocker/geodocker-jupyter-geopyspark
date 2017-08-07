@@ -19,16 +19,16 @@ set -x
 cd $HOME
 unzip -q /archives/geopyspark-${GEOPYSPARK}.zip
 unzip -q /archives/geopyspark-netcdf-${GEOPYSPARK_NETCDF}.zip
-cd geopyspark-${GEOPYSPARK}/
-pip3 install --user .
 cd ../geopyspark-netcdf-${GEOPYSPARK_NETCDF}/
 pip3 install --user .
+cd geopyspark-${GEOPYSPARK}/
+make install
 
 set +x
 
 # archive libraries
 cd $HOME/.local/lib/python3.4/site-packages
-tar acf /archives/$BLOB $(find | grep geopyspark)
+tar acf /archives/$BLOB *
 
 # release
 chown -R $USER:$GROUP /archives $HOME/.local

@@ -13,6 +13,7 @@ ifndef CLUSTER_ID
 CLUSTER_ID=$(shell if [ -e "cluster-id.txt" ]; then cat cluster-id.txt; fi)
 endif
 
+GEODOCKER_NOTEBOOK_DIR ?= $(shell pwd)/notebooks
 
 upload-code:
 	@aws s3 cp bootstrap-geopyspark-docker.sh ${S3_URI}/bootstrap-geopyspark-docker.sh
@@ -45,6 +46,9 @@ wait:
 	esac; \
 	done
 
+upload-notebooks:
+	aws emr put --cluster-id ${CLUSTER_ID} --key-pair-file "${HOME}/${EC2_KEY}.pem" \
+		$(GEODOCKER_NOTEBOOK_DIR)/* /home/hadoop/notebooks/
 terminate-cluster:
 	aws emr terminate-clusters --cluster-ids ${CLUSTER_ID}
 	rm -f cluster-id.txt

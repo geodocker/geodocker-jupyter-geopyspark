@@ -95,7 +95,7 @@ set +x
 # archive libraries
 cd $HOME/.local/lib/python3.4/site-packages
 touch .xxx
-tar acf /archives/$BLOB $(find | grep -v geopyspark)
+tar acf /archives/$BLOB *
 
 # release
 chown -R $USER:$GROUP $HOME/.cache/pip $HOME/.local
