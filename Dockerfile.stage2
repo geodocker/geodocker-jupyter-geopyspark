@@ -46,5 +46,9 @@ RUN /scripts/install-blob2.sh $PYTHONBLOB2
 COPY blobs/geotrellis-backend-assembly-$VERSION.jar /opt/jars/
 COPY blobs/gddp-assembly-$VERSION.jar /opt/jars/
 
+# Install AWS Command Line Interface (CLI) and Boto 3
+RUN pip3 install --user awscli
+RUN pip3 install --user boto3
+
 WORKDIR /tmp
 CMD ["jupyterhub", "--no-ssl", "--Spawner.notebook_dir=/home/hadoop/notebooks"]
