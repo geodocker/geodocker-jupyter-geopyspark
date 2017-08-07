@@ -1,9 +1,9 @@
 .PHONY: stage0 stage2 all clean cleaner cleanest mrproper
 
-TAG ?= 16
+TAG ?= 18
 IMG := quay.io/geodocker/jupyter-geopyspark
-STAGE0 := $(IMG):stage0
-STAGE1 := $(IMG):80da618
+STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
+STAGE1 := jamesmcclain/jupyter-geopyspark:33
 STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK_SHA ?= bdc752e589e365f8d81912e08db936ffb5d689a1
 GEOPYSPARK_NETCDF_SHA ?= 3f18ff9c9613932b4dc10e12ea9a1338260a3ff6
@@ -20,7 +20,7 @@ NETCDF_JAR := gddp-assembly-$(GEOPYSPARK_VERSION).jar
 
 all: stage0 stage2
 
-archives/mapnik.tar:
+archives/mapnik.tar: config/mapnik/SPECS/mapnik.spec
 	(cd config ; tar cvf ../$@ mapnik; cd ..)
 
 archives/mapnik-v3.0.15.tar.bz2:
@@ -92,11 +92,14 @@ stage0: Dockerfile.stage0
 ########################################################################
 
 ifeq ($(TRAVIS),1)
-archives/$(GDAL_BLOB):
+archives/mapnik-v3.0.15-13.x86_64.rpm archives/$(GDAL_BLOB):
 	docker pull $(STAGE1)
 	docker run -it --rm -u root \
           -v $(shell pwd)/archives:/archives:rw \
           $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) $(GDAL_BLOB)
+	docker run -it --rm -u root \
+          -v $(shell pwd)/archives:/archives:rw \
+          $(STAGE1) /scripts/extract-blob.sh $(shell id -u) $(shell id -g) mapnik-v3.0.15-13.x86_64.rpm
 	docker rmi $(STAGE1)
 
 scratch/local/gdal: $(shell .travis/not.sh archives/$(GDAL_BLOB))
@@ -105,6 +108,11 @@ scratch/local/gdal: $(shell .travis/not.sh archives/$(GDAL_BLOB))
 	(cd scratch/local/gdal ; tar axf ../../../archives/$(GDAL_BLOB))
 
 else
+archives/mapnik-v3.0.15-13.x86_64.rpm: archives/mapnik-v3.0.15.tar.bz2
+	docker run -it --rm -u root \
+          -v $(shell pwd)/archives:/archives:rw \
+          $(STAGE1) /scripts/build-rpm.sh $(shell id -u) $(shell id -g)
+
 archives/$(GDAL_BLOB) scratch/local/gdal: $(SRC) scripts/build-native-blob.sh
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
@@ -160,6 +168,7 @@ endif
 ########################################################################
 
 stage2: Dockerfile.stage2 \
+   blobs/mapnik-v3.0.15-13.x86_64.rpm \
    blobs/geonotebook-$(GEONOTEBOOK_SHA).zip \
    blobs/$(GEOPYSPARK_JAR) \
    blobs/$(GEOPYSPARK-WHEEL) \
@@ -169,7 +178,7 @@ stage2: Dockerfile.stage2 \
    blobs/$(PYTHON_BLOB2)
 ifeq ($(TRAVIS),1)
 	docker rmi $(STAGE0)
-	rm -rf $(shell ls archives/* | grep -iv '\(gdal-and-friends\|netcdf\)')
+	rm -rf $(shell ls archives/* | grep -iv '\(rpm\|gdal-and-friends\|netcdf\)')
 	rm -rf geopyspark-*/ scratch/local/
 endif
 	docker build \
