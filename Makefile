@@ -185,6 +185,7 @@ run:
           $(EXTRA_FLAGS) \
           -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
           -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+					-v /tmp:/tmp:rw \
           $(STAGE2)
 
 run-editable:
@@ -195,6 +196,7 @@ run-editable:
           -v $(GEOPYSPARK_DIR):/home/hadoop/.local/lib/python3.4/site-packages/geopyspark:rw \
           -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
           -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+					-v /tmp:/tmp:rw \
           $(STAGE2)
 
 shell:
