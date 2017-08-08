@@ -20,12 +20,6 @@ NETCDF_JAR := gddp-assembly-$(GEOPYSPARK_VERSION).jar
 
 all: stage0 stage2
 
-archives/mapnik.tar: config/mapnik/SPECS/mapnik.spec
-	(cd config ; tar cvf ../$@ mapnik; cd ..)
-
-archives/mapnik-v3.0.15.tar.bz2:
-	curl -L "https://github.com/mapnik/mapnik/releases/download/v3.0.15/mapnik-v3.0.15.tar.bz2" -o $@
-
 archives/zlib-1.2.11.tar.gz:
 	curl -L "https://downloads.sourceforge.net/project/libpng/zlib/1.2.11/zlib-1.2.11.tar.gz?r=http%3A%2F%2Fwww.zlib.net%2F&ts=1490316463&use_mirror=pilotfiber" -o $@
 

@@ -1,7 +1,7 @@
-%define _topdir   /tmp/mapnik
+%define _topdir   /tmp/rpm
 %define name      mapnik
-%define release   13
-%define version   v3.0.15
+%define release   33
+%define version   v3.0.13
 
 BuildRoot: %{buildroot}
 Summary:   Mapnik
@@ -20,16 +20,11 @@ Mapnik 3.0.15
 %setup -q
 
 %build
-python scons/scons.py configure DESTDIR=%{buildroot} PREFIX=/usr
-python scons/scons.py -j 33
+echo
 
 %install
-python scons/scons.py install
+python scons/scons.py PYTHON=/usr/bin/python3.4 DESTDIR=%{buildroot} PREFIX=/usr -j 33 install
 
 %files
 %defattr(-,root,root)
-/usr/bin/mapnik*
-/usr/bin/shapeindex
-/usr/include/mapnik/*
-/usr/lib/libmapnik*
-/usr/lib/mapnik/*
+/usr/*

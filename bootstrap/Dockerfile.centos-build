@@ -1,0 +1,28 @@
+FROM quay.io/geodocker/jupyter:4
+
+USER root
+RUN yum install -y \
+     cairo-devel \
+     freetype-devel \
+     gcc \
+     gdal-devel \
+     gmp-devel \
+     harfbuzz-devel \
+     libicu-devel \
+     libjpeg-turbo-devel \
+     libmpc-devel \
+     libpng-devel \
+     libtiff-devel \
+     libwebp-devel \
+     libxml2-devel \
+     make \
+     mpfr-devel \
+     pkgconfig \
+     proj-devel \
+     python34-devel \
+     rpm-build \
+     which \
+     zlib-devel
+
+WORKDIR /tmp
+CMD ["bash"]
