@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-GDALBLOB=$1
-PYTHONBLOB=$2
+PYTHONBLOB=$1
 
 set -x
 
 # Untar GDAL and friends
 mkdir -p $HOME/local/gdal
 cd $HOME/local/gdal
-tar axf /blobs/$GDALBLOB
+tar axf /blobs/gdal-and-friends.tar.gz
 
 # Untar GeoPySpark dependencies 
 mkdir -p $HOME/.local/lib/python3.4/site-packages

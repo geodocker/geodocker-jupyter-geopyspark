@@ -1,4 +1,4 @@
-%define _topdir   /tmp/rpm
+%define _topdir   /tmp/rpmbuild
 %define name      gcc
 %define release   33
 %define version   7.1.0
@@ -20,9 +20,9 @@ Gnu Compiler Collection
 %setup -q
 
 %build
-tar axvf /tmp/isl-0.16.1.tar.bz2
+tar axvf /archives/isl-0.16.1.tar.bz2
 mv isl-0.16.1/ isl/
-./configure --prefix=/usr/local --disable-nls --disable-multilib --enable-linker-build-id --enable-languages='c,c++'
+./configure --prefix=/usr/local --disable-nls --disable-multilib --disable-bootstrap --enable-linker-build-id --enable-languages='c,c++'
 make -j 33
 
 %install

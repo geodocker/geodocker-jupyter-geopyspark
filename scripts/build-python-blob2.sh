@@ -15,6 +15,12 @@ chown -R root:root $HOME/.local
 
 set -x
 
+# install GDAL and friends
+mkdir -p $HOME/local/gdal
+cd $HOME/local/gdal
+tar axf /blobs/gdal-and-friends.tar.gz
+cd
+
 # install geopsypark
 cd $HOME
 unzip -q /archives/geopyspark-${GEOPYSPARK}.zip

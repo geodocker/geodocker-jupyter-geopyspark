@@ -1,4 +1,4 @@
-%define _topdir   /tmp/rpm
+%define _topdir   /tmp/rpmbuild
 %define name      gcc
 %define release   33
 %define version   5.4.0

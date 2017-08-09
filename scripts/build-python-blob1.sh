@@ -13,6 +13,12 @@ chown -R root:root $HOME/.cache/pip $HOME/.local
 
 set -x
 
+# install GDAL and friends
+mkdir -p $HOME/local/gdal
+cd $HOME/local/gdal
+tar axf /blobs/gdal-and-friends.tar.gz
+cd
+
 # install geopsypark's friends
 cat <<EOF > /tmp/geopyspark_deps.txt
 appdirs==1.4.3

@@ -1,4 +1,4 @@
-%define _topdir   /tmp/rpm
+%define _topdir   /tmp/rpmbuild
 %define name      python-mapnik
 %define release   33
 %define version   v3.0.13
@@ -9,22 +9,22 @@ License:   LGPL
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Source:    %{name}-%{version}.tar.bz2
-Prefix:    /usr
+Source:    %{version}.tar.gz
+Prefix:    /usr/lib/python3.4/site-package
 Group:     Geography
 
 %description
-Mapnik 3.0.15
+Python Mapnik 3.0.13
 
 %prep
-%setup -q
+%setup -q -n python-mapnik-3.0.13
 
 %build
 echo
 
 %install
-python scons/scons.py PYTHON=/usr/bin/python3.4 DESTDIR=%{buildroot} PREFIX=/usr -j 33 install
+pip3 install --target %{buildroot}/usr/lib/python3.4/site-packages .
 
 %files
 %defattr(-,root,root)
-/usr/*
+/usr/lib/python3.4/site-packages/*

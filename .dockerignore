@@ -1,5 +1,9 @@
 archives/
-scratch/
-netcdf-backend/
+bootstrap/
+emr/
 geopyspark-*/
+netcdf-backend/
+notebooks/
+scratch/
 thredds-feature-s3-hdfs/
+.travis/

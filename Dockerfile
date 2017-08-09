@@ -1,16 +1,9 @@
-FROM quay.io/geodocker/jupyter:99fceaa
+FROM jamesmcclain/jupyter-geopyspark:base
 
 ARG VERSION
 ARG GEONOTEBOOKSHA
-ARG GDALBLOB
 ARG PYTHONBLOB1
 ARG PYTHONBLOB2
-
-# Install Mapnik
-COPY blobs/mapnik-v3.0.15-13.x86_64.rpm /blobs/
-USER root
-RUN yum localinstall -y /blobs/mapnik-v3.0.15-13.x86_64.rpm
-USER hadoop
 
 ENV LD_LIBRARY_PATH /home/hadoop/local/gdal/lib
 ENV PYSPARK_PYTHON=python3.4
@@ -18,14 +11,11 @@ ENV PYSPARK_DRIVER_PYTHON=python3.4
 
 # Install stage1 scripts
 COPY scripts/extract-blob.sh /scripts/
-COPY scripts/build-rpm.sh /scripts/
 
 # Install Python dependencies
-COPY blobs/$GDALBLOB /blobs/
 COPY blobs/$PYTHONBLOB1 /blobs/
 COPY scripts/install-blob1.sh /scripts/
-RUN pip3 install --user pytest && \
-    /scripts/install-blob1.sh $GDALBLOB $PYTHONBLOB1
+RUN pip3 install --user pytest && /scripts/install-blob1.sh $PYTHONBLOB1
 
 # Install remaining GeoNotebook dependencies
 COPY config/requirements.txt /tmp/requirements.txt
@@ -53,11 +43,6 @@ RUN /scripts/install-blob2.sh $PYTHONBLOB2
 # Install Jars
 COPY blobs/geotrellis-backend-assembly-$VERSION.jar /opt/jars/
 COPY blobs/gddp-assembly-$VERSION.jar /opt/jars/
-
-# Clean (saves no space, but looks nicer)
-USER root
-RUN rm -rf /tmp/*
-USER hadoop
 
 WORKDIR /tmp
 CMD ["jupyterhub", "--no-ssl", "--Spawner.notebook_dir=/home/hadoop/notebooks"]

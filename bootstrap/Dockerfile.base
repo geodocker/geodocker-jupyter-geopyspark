@@ -1,0 +1,15 @@
+FROM quay.io/geodocker/jupyter:4
+
+COPY blobs/boost-1_59_0-33.x86_64.rpm /blobs/
+COPY blobs/gcc-lib-7.1.0-33.x86_64.rpm /blobs/
+COPY blobs/gdal-and-friends.tar.gz /blobs/
+COPY blobs/mapnik-v3.0.13-33.x86_64.rpm /blobs/
+COPY blobs/python-mapnik-v3.0.13-33.x86_64.rpm /blobs/
+
+# Install Mapnik
+USER root
+RUN yum localinstall -y /blobs/gcc-lib-7.1.0-33.x86_64.rpm /blobs/boost-1_59_0-33.x86_64.rpm /blobs/mapnik-v3.0.13-33.x86_64.rpm /blobs/python-mapnik-v3.0.13-33.x86_64.rpm && \
+    yum autoremove -y && yum clean all && \
+    echo /usr/local/lib >> /etc/ld.so.conf.d/local.conf && echo /usr/local/lib64 >> /etc/ld.so.conf.d/local.conf && \
+    ldconfig
+USER hadoop

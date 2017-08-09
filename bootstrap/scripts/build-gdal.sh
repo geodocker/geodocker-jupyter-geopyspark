@@ -11,9 +11,6 @@ export LDFLAGS="-I$HOME/local/gdal/lib"
 mkdir -p $HOME/local/src
 cd $HOME/local/src
 
-# aquire
-chown -R root:root $HOME/local
-
 # untar source
 for archive in zlib-1.2.11.tar.gz libpng-1.6.28.tar.gz geos-3.6.1.tar.bz2 proj-4.9.3.tar.gz lcms2-2.8.tar.gz openjpeg-v2.1.2.tar.gz gdal-2.1.3.tar.gz
 do
@@ -56,5 +53,5 @@ cd $HOME/local/src/gdal-2.1.3
 cd $HOME/local/gdal
 tar acvf /archives/gdal-and-friends.tar.gz .
 
-# release
-chown -R $USERID:$GROUPID /archives ~/local
+# permissions
+chown -R $USERID:$GROUPID /archives

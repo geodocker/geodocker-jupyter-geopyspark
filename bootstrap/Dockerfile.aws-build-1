@@ -1,0 +1,3 @@
+FROM jamesmcclain/jupyter-geopyspark:aws-build-0
+
+COPY blobs/gdal-and-friends.tar.gz /blobs/

@@ -23,9 +23,8 @@ RUN yum install -y \
      python34-devel \
      rpm-build \
      which \
-     zlib-devel
-
-RUN ln -s /usr/include/python3.4m /usr/include/python3.4
+     zlib-devel && \
+   ln -s /usr/include/python3.4m /usr/include/python3.4
 
 WORKDIR /tmp
 CMD ["bash"]

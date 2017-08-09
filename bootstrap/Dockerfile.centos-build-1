@@ -1,0 +1,7 @@
+FROM jamesmcclain/jupyter-geopyspark:centos-build-0
+
+COPY blobs/gcc-7.1.0-33.x86_64.rpm /blobs/gcc-7.1.0-33.x86_64.rpm
+
+RUN yum remove -y gcc-c++ && \
+    yum localinstall -y /blobs/gcc-7.1.0-33.x86_64.rpm && \
+    ln -s /usr/local/bin/gcc /usr/local/bin/cc

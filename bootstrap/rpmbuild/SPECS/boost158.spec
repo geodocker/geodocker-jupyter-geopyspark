@@ -1,4 +1,4 @@
-%define _topdir   /tmp/rpm
+%define _topdir   /tmp/rpmbuild
 %define name      boost
 %define release   33
 %define version   1_58_0
