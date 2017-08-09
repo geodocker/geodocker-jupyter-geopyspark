@@ -2,9 +2,10 @@ FROM quay.io/geodocker/jupyter:4
 
 USER root
 RUN yum install -y \
+     bzip2-devel \
      cairo-devel \
      freetype-devel \
-     gcc \
+     gcc gcc-c++ \
      gdal-devel \
      gmp-devel \
      harfbuzz-devel \
@@ -23,6 +24,8 @@ RUN yum install -y \
      rpm-build \
      which \
      zlib-devel
+
+RUN ln -s /usr/include/python3.4m /usr/include/python3.4
 
 WORKDIR /tmp
 CMD ["bash"]
