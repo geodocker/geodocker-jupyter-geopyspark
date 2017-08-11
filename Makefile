@@ -181,6 +181,7 @@ GEOPYSPARK_DIR ?= $(realpath ../geopyspark/geopyspark)
 run:
 	mkdir -p $(HOME)/.aws
 	docker run -it --rm --name geopyspark \
+					-p 4040:4040 \
           -p 8000:8000 \
           $(EXTRA_FLAGS) \
           -v $(shell pwd)/notebooks:/home/hadoop/notebooks:rw \
