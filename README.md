@@ -8,9 +8,54 @@ and instructions for [building the image](#building-the-image) and [modifying it
 
 # Using The Image #
 
+One can use the image with or without making a clone of this repository.
+
 ## Without A Clone ##
 
+To use the image without (or from outside of) a fork of this repository, first make sure that you are in possession of the image.
+The command
+```
+docker pull quay.io/geodocker/jupyter-geopyspark
+```
+will pull the latest version of the image.
+
+The container can then be started by typing
+```
+docker run -it --rm --name geopyspark \
+   -p 8000:8000 \
+   quay.io/geodocker/jupyter-geopyspark
+```
+or perhaps
+```
+docker run -it --rm --name geopyspark \
+   -p 8000:8000 \
+   -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+   quay.io/geodocker/jupyter-geopyspark
+```
+if you wish to have your AWS credentials available in the container (e.g. for pulling data from S3).
+
 ## From A Clone ##
+
+To use the image from within a clone of this repository, there are [two useful targets in the Makefile: `run` and `run-editable`](Makefile#L181-L198).
+To use the `run` target, type something like
+```
+TARGET=latest make run
+```
+or to use the `run` target with some image other than the latest one, something like
+```
+TARGET=a1b78b9 make run
+```
+will launch a container using the image `quay.io/geodocker/jupyter-geopyspark:a1b78b9`.
+
+The `run-editable` target also exists, which attempts to map one's local clone of the GeoPySpark into the container so that that code can be edited and iterated on in a fairly convenient fashion.
+By default, it is assumed that the GeoPySpark code is present in `../geopyspark/geopyspark`, but than can be changed by passing in an alternate location through the `GEOPYSPARK_DIR` environment variable.
+Here
+```
+TARGET=latest GEOPYSPARK_DIR=/tmp/geopyspark/geopyspark run-editable
+```
+is an example of that.
+
+Both of those targets also pay attention to the `EXTRA_FLAGS` environment variable which can be used to pass additional flags to docker.
 
 # Building The Image #
 
