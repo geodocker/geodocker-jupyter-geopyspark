@@ -75,7 +75,7 @@ blobs/%: archives/%
 	cp -f $< $@
 
 stage0: Dockerfile.stage0
-	(docker pull $(STAGE0)) || (build -t $(STAGE0) -f Dockerfile.stage0 .)
+	(docker pull $(STAGE0)) || (docker build -t $(STAGE0) -f Dockerfile.stage0 .)
 
 ifeq ($(TRAVIS),1)
 archives/$(GDAL_BLOB):
