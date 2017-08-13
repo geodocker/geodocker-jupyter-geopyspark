@@ -4,7 +4,6 @@ USER root
 RUN yum install -y \
      bzip2-devel \
      cairo-devel \
-     freetype-devel \
      gcc gcc-c++ \
      gdal-devel \
      gmp-devel \

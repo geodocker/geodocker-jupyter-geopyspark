@@ -1,8 +1,8 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= 18
+TAG ?= mapnik
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-AWSBUILD := jamesmcclain/jupyter-geopyspark:aws-build-1
+AWSBUILD := jamesmcclain/jupyter-geopyspark:aws-build-gdal
 BASE := jamesmcclain/jupyter-geopyspark:base
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= bdc752e589e365f8d81912e08db936ffb5d689a1

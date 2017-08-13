@@ -20,7 +20,7 @@ Boost 1.64
 %setup -q -n boost_1_64_0
 
 %build
-./bootstrap.sh ./bootstrap.sh --with-python=python3.4 --with-python-version=3.4
+./bootstrap.sh --with-python=python3.4 --with-python-version=3.4
 ./b2 --prefix=%{buildroot}/usr/local -j 33
 
 %install
