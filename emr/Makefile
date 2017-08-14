@@ -50,11 +50,6 @@ terminate-cluster:
 	rm -f cluster-id.txt
 	rm -f last-step-id.txt
 
-clean:
-	./sbt clean -no-colors
-	rm -rf viewer/site.tgz
-	rm -rf viewer/dist/*
-
 proxy:
 	aws emr socks --cluster-id ${CLUSTER_ID} --key-pair-file "${HOME}/${EC2_KEY}.pem"
 
