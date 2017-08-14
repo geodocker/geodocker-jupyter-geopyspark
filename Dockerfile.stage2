@@ -17,7 +17,8 @@ COPY scripts/extract-blob.sh /scripts/
 COPY blobs/$GDALBLOB /blobs/
 COPY blobs/$PYTHONBLOB1 /blobs/
 COPY scripts/install-blob1.sh /scripts/
-RUN pip3 install --user pytest && /scripts/install-blob1.sh $GDALBLOB $PYTHONBLOB1
+RUN pip3 install --user pytest && \
+    /scripts/install-blob1.sh $GDALBLOB $PYTHONBLOB1
 
 # Install remaining GeoNotebook dependencies
 COPY config/requirements.txt /tmp/requirements.txt
