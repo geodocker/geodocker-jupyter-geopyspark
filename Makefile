@@ -2,7 +2,7 @@
 
 TAG ?= 16
 IMG := quay.io/geodocker/jupyter-geopyspark
-STAGE0 := jamesmcclain/jupyter-geopyspark:stage0
+STAGE0 := $(IMG):stage0
 STAGE1 := $(IMG):80da618
 STAGE2 := $(IMG):$(TAG)
 GEOPYSPARK_SHA ?= bdc752e589e365f8d81912e08db936ffb5d689a1
