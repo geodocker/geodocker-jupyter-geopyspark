@@ -1,7 +1,4 @@
-archives/*.jar
-archives/*.tar.*
-archives/*.whl
-archives/*.zip
+archives/*
 blobs/
 geopyspark-*/
 netcdf-backend/project/
@@ -11,3 +8,5 @@ scratch/local/gdal/
 scratch/local/src/
 scratch/pip-cache/
 target/
+
+emr/config-aws.mk
