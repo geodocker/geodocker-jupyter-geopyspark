@@ -6,7 +6,6 @@ RUN yum clean all -y && yum update -y && \
       bzip2-devel \
       cairo-devel \
       gcc gcc-c++ \
-      gdal-devel \
       gmp-devel \
       harfbuzz-devel \
       libicu-devel \
@@ -19,7 +18,6 @@ RUN yum clean all -y && yum update -y && \
       make \
       mpfr-devel \
       pkgconfig \
-      proj-devel \
       python34-devel \
       rpm-build \
       which \

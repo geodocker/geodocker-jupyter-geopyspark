@@ -3,9 +3,10 @@
 USERID=$1
 GROUPID=$2
 
-export LD_LIBRARY_PATH=/usr/local/lib
-yum remove -y freetype-devel
-yum localinstall -y /archives/boost-1_62_0-33.x86_64.rpm /archives/freetype-2.8-33.x86_64.rpm
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+yum remove -y freetype freetype-devel proj proj-devel gdal-libs gdal-devel
+yum install -y harfbuzz-devel
+yum localinstall -y /archives/freetype-2.8-33.x86_64.rpm /archives/proj-4.9.3-33.x86_64.rpm /archives/gdal-2.1.3-33.x86_64.rpm /archives/boost-1_62_0-33.x86_64.rpm 
 
 cd /tmp
 tar axvf /archives/mapbox-geometry-v0.9.2.tar.gz

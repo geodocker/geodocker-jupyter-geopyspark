@@ -3,9 +3,11 @@ FROM quay.io/geodocker/jupyter:99fceaa
 COPY blobs/boost-lib-1_62_0-33.x86_64.rpm /blobs/
 COPY blobs/freetype-lib-2.8-33.x86_64.rpm /blobs/
 COPY blobs/gcc-lib-6.4.0-33.x86_64.rpm /blobs/
+COPY blobs/gdal-2.1.3-33.x86_64.rpm /blobs/
 COPY blobs/gdal-and-friends.tar.gz /blobs/
 COPY blobs/mapnik-093fcee-33.x86_64.rpm /blobs/
 COPY blobs/mapnik-python-e5f107d-33.x86_64.rpm /blobs/
+COPY blobs/proj-4.9.3-33.x86_64.rpm /blobs/
 
 USER root
 
@@ -13,6 +15,8 @@ USER root
 RUN yum clean all -y && yum update -y && \
     yum localinstall -y /blobs/gcc-lib-6.4.0-33.x86_64.rpm \
        /blobs/freetype-lib-2.8-33.x86_64.rpm \
+       /blobs/proj-4.9.3-33.x86_64.rpm \
+       /blobs/gdal-2.1.3-33.x86_64.rpm \
        /blobs/boost-lib-1_62_0-33.x86_64.rpm \
        /blobs/mapnik-093fcee-33.x86_64.rpm \
        /blobs/mapnik-python-e5f107d-33.x86_64.rpm && \

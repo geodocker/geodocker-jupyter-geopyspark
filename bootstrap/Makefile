@@ -16,6 +16,8 @@ aws-build-gdal: blobs/gdal-and-friends.tar.gz
 
 base: blobs/gdal-and-friends.tar.gz \
    blobs/gcc-lib-6.4.0-33.x86_64.rpm \
+   blobs/proj-4.9.3-33.x86_64.rpm \
+   blobs/gdal-2.1.3-33.x86_64.rpm \
    blobs/freetype-lib-2.8-33.x86_64.rpm \
    blobs/boost-lib-1_62_0-33.x86_64.rpm \
    blobs/mapnik-093fcee-33.x86_64.rpm \
@@ -27,8 +29,8 @@ base: blobs/gdal-and-friends.tar.gz \
 archives/zlib-1.2.11.tar.gz:
 	curl -L "https://downloads.sourceforge.net/project/libpng/zlib/1.2.11/zlib-1.2.11.tar.gz?r=http%3A%2F%2Fwww.zlib.net%2F&ts=1490316463&use_mirror=pilotfiber" -o $@
 
-archives/libpng-1.6.28.tar.gz:
-	curl -L "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.gz?r=http%3A%2F%2Fwww.libpng.org%2Fpub%2Fpng%2Flibpng.html&ts=1490316660&use_mirror=superb-sea2" -o $@
+archives/libpng-1.6.30.tar.xz:
+	curl -L "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.30/libpng-1.6.30.tar.xz?r=http%3A%2F%2Fwww.libpng.org%2Fpub%2Fpng%2Flibpng.html&ts=1502829944&use_mirror=iweb" -o $@
 
 archives/geos-3.6.1.tar.bz2:
 	curl -L "http://download.osgeo.org/geos/geos-3.6.1.tar.bz2" -o $@
@@ -88,19 +90,31 @@ archives/freetype-2.8-33.x86_64.rpm archives/freetype-lib-2.8-33.x86_64.rpm: $(s
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/freetype.sh $(shell id -u) $(shell id -g)
 
+archives/proj-4.9.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3.tar.gz
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/proj.sh $(shell id -u) $(shell id -g)
+
+archives/gdal-2.1.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3.tar.gz
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/gdal.sh $(shell id -u) $(shell id -g)
+
 archives/boost-1_62_0-33.x86_64.rpm archives/boost-lib-1_62_0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/boost162.sh $(shell id -u) $(shell id -g)
 
-archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost-1_62_0-33.x86_64.rpm archives/freetype-2.8-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
+archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8-33.x86_64.rpm archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3-33.x86_64.rpm archives/boost-1_62_0-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/mapnik-python-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
+archives/mapnik-python-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8-33.x86_64.rpm archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3-33.x86_64.rpm archives/boost-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
@@ -112,7 +126,7 @@ archives/gdal-and-friends.tar.gz: scripts/build-gdal.sh \
    archives/gdal-2.1.3.tar.gz \
    archives/geos-3.6.1.tar.bz2 \
    archives/lcms2-2.8.tar.gz \
-   archives/libpng-1.6.28.tar.gz \
+   archives/libpng-1.6.30.tar.xz \
    archives/proj-4.9.3.tar.gz \
    archives/openjpeg-v2.1.2.tar.gz \
    archives/zlib-1.2.11.tar.gz
