@@ -1,4 +1,4 @@
-FROM quay.io/geodocker/jupyter:4
+FROM quay.io/geodocker/jupyter:99fceaa
 
 COPY blobs/boost-lib-1_62_0-33.x86_64.rpm /blobs/
 COPY blobs/freetype-lib-2.8-33.x86_64.rpm /blobs/
@@ -10,12 +10,13 @@ COPY blobs/mapnik-python-e5f107d-33.x86_64.rpm /blobs/
 USER root
 
 # Install Mapnik
-RUN yum localinstall -y /blobs/gcc-lib-6.4.0-33.x86_64.rpm \
+RUN yum clean all -y && yum update -y && \
+    yum localinstall -y /blobs/gcc-lib-6.4.0-33.x86_64.rpm \
        /blobs/freetype-lib-2.8-33.x86_64.rpm \
        /blobs/boost-lib-1_62_0-33.x86_64.rpm \
        /blobs/mapnik-093fcee-33.x86_64.rpm \
        /blobs/mapnik-python-e5f107d-33.x86_64.rpm && \
-    yum autoremove -y && yum clean all && \
+    yum autoremove -y && yum clean all -y && \
     echo /usr/local/lib >> /etc/ld.so.conf.d/local.conf && echo /usr/local/lib64 >> /etc/ld.so.conf.d/local.conf && \
     ldconfig
 

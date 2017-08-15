@@ -129,8 +129,8 @@ cleaner: clean
 	rm -f archives/rpmbuild.tar
 
 cleanest: cleaner
-	rm -f archives/*.tar.gz archives/*.tar.bz2
+	rm -f archives/*.tar.gz archives/*.tar.bz2 archives/*.tar.xz archives/*.zip
 
 mrproper: cleanest
-	rm -f archies/*.rpm
+	rm -f archives/*.rpm
 

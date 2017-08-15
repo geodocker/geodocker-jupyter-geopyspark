@@ -1,29 +1,31 @@
-FROM quay.io/geodocker/jupyter:4
+FROM quay.io/geodocker/jupyter:99fceaa
 
 USER root
-RUN yum install -y \
-     bzip2-devel \
-     cairo-devel \
-     gcc gcc-c++ \
-     gdal-devel \
-     gmp-devel \
-     harfbuzz-devel \
-     libicu-devel \
-     libjpeg-turbo-devel \
-     libmpc-devel \
-     libpng-devel \
-     libtiff-devel \
-     libwebp-devel \
-     libxml2-devel \
-     make \
-     mpfr-devel \
-     pkgconfig \
-     proj-devel \
-     python34-devel \
-     rpm-build \
-     which \
-     zlib-devel && \
-   ln -s /usr/include/python3.4m /usr/include/python3.4
+RUN yum clean all -y && yum update -y && \
+    yum install -y \
+      bzip2-devel \
+      cairo-devel \
+      gcc gcc-c++ \
+      gdal-devel \
+      gmp-devel \
+      harfbuzz-devel \
+      libicu-devel \
+      libjpeg-turbo-devel \
+      libmpc-devel \
+      libpng-devel \
+      libtiff-devel \
+      libwebp-devel \
+      libxml2-devel \
+      make \
+      mpfr-devel \
+      pkgconfig \
+      proj-devel \
+      python34-devel \
+      rpm-build \
+      which \
+      zlib-devel && \
+    ln -s /usr/include/python3.4m /usr/include/python3.4 && \
+    yum autoremove -y && yum clean all -y
 
 WORKDIR /tmp
 CMD ["bash"]
