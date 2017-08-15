@@ -47,15 +47,6 @@ archives/gdal-2.1.3.tar.gz:
 
 ########################################################################
 
-archives/v3.0.13.tar.gz:
-	curl -L "https://github.com/mapnik/python-mapnik/archive/v3.0.13.tar.gz" -o $@
-
-archives/mapnik-v3.0.13.tar.bz2:
-	curl -L "https://github.com/mapnik/mapnik/releases/download/v3.0.13/mapnik-v3.0.13.tar.bz2" -o $@
-
-archives/mapnik-a682cea51e7dd85815f20f5a107c4e6272dc01a9.zip:
-	curl -L "https://github.com/mapnik/mapnik/archive/a682cea51e7dd85815f20f5a107c4e6272dc01a9.zip" -o $@
-
 archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip:
 	curl -L "https://github.com/mapnik/mapnik/archive/093fcee6d1ba1fd360718ceade83894aeffc2548.zip" -o $@
 
@@ -71,26 +62,11 @@ archives/mapbox-geometry-v0.9.2.tar.gz:
 archives/freetype-2.8.tar.gz:
 	curl -L "https://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz" -o $@
 
-archives/boost_1_64_0.tar.bz2:
-	curl -L "https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.bz2" -o $@
-
 archives/boost_1_62_0.tar.bz2:
 	curl -L "https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2" -o $@
 
-archives/boost_1_58_0.tar.bz2:
-	curl -L "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2" -o $@
-
-archives/boost_1_59_0.tar.bz2:
-	curl -L "http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.bz2" -o $@
-
-archives/gcc-7.1.0.tar.bz2:
-	curl -L "http://mirrors.concertpass.com/gcc/releases/gcc-7.1.0/gcc-7.1.0.tar.bz2" -o $@
-
 archives/gcc-6.4.0.tar.xz:
 	curl -L "http://mirrors.concertpass.com/gcc/releases/gcc-6.4.0/gcc-6.4.0.tar.xz" -o $@
-
-archives/gcc-5.4.0.tar.bz2:
-	curl -L "http://www.netgull.com/gcc/releases/gcc-5.4.0/gcc-5.4.0.tar.bz2" -o $@
 
 archives/isl-0.16.1.tar.bz2:
 	curl -L "ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2" -o $@
@@ -99,12 +75,6 @@ archives/isl-0.16.1.tar.bz2:
 
 archives/rpmbuild.tar: rpmbuild/
 	tar cvf $@ $<
-
-archives/gcc-7.1.0-33.x86_64.rpm archives/gcc-lib-7.1.0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/gcc-7.1.0.tar.bz2 archives/isl-0.16.1.tar.bz2
-	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scripts:/scripts:ro \
-          jamesmcclain/jupyter-geopyspark:centos-build-base /scripts/gcc7.sh $(shell id -u) $(shell id -g)
 
 archives/gcc-6.4.0-33.x86_64.rpm archives/gcc-lib-6.4.0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/gcc-6.4.0.tar.xz archives/isl-0.16.1.tar.bz2
 	docker run -it --rm \
