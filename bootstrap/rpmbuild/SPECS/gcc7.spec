@@ -11,7 +11,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    %{name}-%{version}.tar.bz2
 Prefix:    /usr/local
-Group:     Development/Tools
+Group:     Development/Tools 7.1.0
 
 %description
 Gnu Compiler Collection

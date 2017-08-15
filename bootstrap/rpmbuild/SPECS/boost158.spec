@@ -11,7 +11,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    %{name}_%{version}.tar.bz2
 Prefix:    /usr/local
-Group:     Development/Tools
+Group:     Development/Libraries
 
 %description
 Boost 1.58
@@ -26,8 +26,17 @@ Boost 1.58
 %install
 ./b2 --prefix=%{buildroot}/usr/local -j 33 install
 
+%package lib
+Group: Development/Libraries
+Summary: Boost libraries
+%description lib
+The libraries
 
 %files
 %defattr(-,root,root)
 /usr/local/lib/*
 /usr/local/include/*
+
+%files lib
+%defattr(-,root,root)
+/usr/local/lib/*

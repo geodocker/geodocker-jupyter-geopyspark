@@ -14,7 +14,7 @@ Prefix:    /usr/local
 Group:     Development/Tools
 
 %description
-Gnu Compiler Collection
+Gnu Compiler Collection 5.4.0
 
 %prep
 %setup -q

@@ -1,7 +1,7 @@
 %define _topdir   /tmp/rpmbuild
 %define name      boost
 %define release   33
-%define version   1_64_0
+%define version   1_62_0
 
 BuildRoot: %{buildroot}
 Summary:   Boost
@@ -14,10 +14,10 @@ Prefix:    /usr/local
 Group:     Development/Libraries
 
 %description
-Boost 1.64
+Boost 1.62
 
 %prep
-%setup -q -n boost_1_64_0
+%setup -q -n boost_1_62_0
 
 %build
 ./bootstrap.sh --with-python=python3.4 --with-python-version=3.4

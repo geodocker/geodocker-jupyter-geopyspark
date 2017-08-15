@@ -1,23 +1,23 @@
 %define _topdir   /tmp/rpmbuild
-%define name      python-mapnik
+%define name      mapnik-python
 %define release   33
-%define version   v3.0.13
+%define version   e5f107d
 
 BuildRoot: %{buildroot}
-Summary:   Python Mapnik
+Summary:   Python bindings for Mapnik
 License:   LGPL
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Source:    %{version}.tar.gz
+Source:    mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 Prefix:    /usr/lib/python3.4/site-package
 Group:     Geography
 
 %description
-Python Mapnik 3.0.13
+Mapnik Python e5f107d
 
 %prep
-%setup -q -n python-mapnik-3.0.13
+%setup -q -n python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c
 
 %build
 echo
