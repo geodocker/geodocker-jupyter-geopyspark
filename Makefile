@@ -1,13 +1,13 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= terraform
+TAG ?= 19
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 AWSBUILD := $(FAMILY):aws-build-gdal-0
 IMAGE := $(FAMILY):$(TAG)
-GEOPYSPARK_SHA ?= 2eff2eccc79d5b40e3d54376835829ff13fe0352
-GEOPYSPARK_NETCDF_SHA ?= 3f18ff9c9613932b4dc10e12ea9a1338260a3ff6
-GEONOTEBOOK_SHA ?= e5b4f3383cc38d3b546dac174ee54aa2d8fb2a84
-GEOPYSPARK_VERSION ?= 0.2.0
+GEOPYSPARK_SHA ?= 686ad28724d7648bec5e7e1a39cd48d5d80fca79
+GEOPYSPARK_NETCDF_SHA ?= 8e059120f4f7b49c38a326633e31d8120906ef4a
+GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
+GEOPYSPARK_VERSION ?= 0.2.2
 GEOPYSPARK_JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
 PYTHON_BLOB1 := friends-of-geopyspark.tar.gz
 PYTHON_BLOB2 := geopyspark-sans-friends.tar.gz
@@ -118,6 +118,8 @@ endif
           -t $(IMAGE) -f Dockerfile .
 
 ########################################################################
+env:
+	env
 
 clean:
 	rm -f archives/$(GEOPYSPARK_JAR)

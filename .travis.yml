@@ -14,7 +14,8 @@ services:
 
 env:
    global:
-      - TAG=${TRAVIS_TAG:-${TRAVIS_COMMIT:0:7}}
+      - CLEAN_TRAVIS_TAG=${TRAVIS_TAG/[[:space:]]/}
+      - TAG=${CLEAN_TRAVIS_TAG:-${TRAVIS_COMMIT:0:7}}
 
 branches:
    only:
@@ -42,12 +43,13 @@ before_install:
    - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle $HOME/.cache/pip
 
 install:
-   - pip3 install wheel
+   - pip3 install --user wheel
    - docker pull quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-0
 
 script:
-   - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.0.jar
-   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.0.jar
+   - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.2.jar
+   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.2.jar
+   - TRAVIS=1 TAG=$TAG make env
    - TRAVIS=1 TAG=$TAG make image
 
 after_success:
