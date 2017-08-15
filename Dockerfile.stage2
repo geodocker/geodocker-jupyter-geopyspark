@@ -1,4 +1,4 @@
-FROM quay.io/geodocker/jupyter:4
+FROM quay.io/geodocker/jupyter:99fceaa
 
 ARG VERSION
 ARG GEONOTEBOOKSHA
