@@ -1,5 +1,5 @@
 %define _topdir   /tmp/rpmbuild
-%define name      mapnik-python
+%define name      python-mapnik
 %define release   33
 %define version   e5f107d
 
@@ -9,7 +9,7 @@ License:   LGPL
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Source:    mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
+Source:    python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 Prefix:    /usr/lib/python3.4/site-package
 Group:     Geography
 

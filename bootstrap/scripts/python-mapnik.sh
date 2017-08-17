@@ -15,7 +15,7 @@ cp -r geometry.hpp-0.9.2/include/mapbox /usr/local/include
 cp -r variant-1.1.3/include/mapbox /usr/local/include
 tar axvf /archives/rpmbuild.tar
 cd rpmbuild
-cp /archives/mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip SOURCES/
-rpmbuild -v -bb --clean SPECS/mapnik-python.spec
+cp /archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip SOURCES/
+rpmbuild -v -bb --clean SPECS/python-mapnik.spec
 cp -f RPMS/x86_64/*.rpm /archives/
 chown -R $USERID:$GROUPID /archives/*

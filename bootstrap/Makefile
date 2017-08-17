@@ -21,7 +21,7 @@ base: blobs/gdal-and-friends.tar.gz \
    blobs/freetype-lib-2.8-33.x86_64.rpm \
    blobs/boost-lib-1_62_0-33.x86_64.rpm \
    blobs/mapnik-093fcee-33.x86_64.rpm \
-   blobs/mapnik-python-e5f107d-33.x86_64.rpm
+   blobs/python-mapnik-e5f107d-33.x86_64.rpm
 	docker build -t jamesmcclain/jupyter-geopyspark:base -f Dockerfile.base .
 
 ########################################################################
@@ -52,7 +52,7 @@ archives/gdal-2.1.3.tar.gz:
 archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip:
 	curl -L "https://github.com/mapnik/mapnik/archive/093fcee6d1ba1fd360718ceade83894aeffc2548.zip" -o $@
 
-archives/mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip:
+archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip:
 	curl -L "https://github.com/mapnik/python-mapnik/archive/e5f107d8d459590829d50c976c7a4222d8f4737c.zip" -o $@
 
 archives/mapbox-variant-v1.1.3.tar.gz:
@@ -114,11 +114,11 @@ archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/mapnik-python-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8-33.x86_64.rpm archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3-33.x86_64.rpm archives/boost-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-python-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
+archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8-33.x86_64.rpm archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3-33.x86_64.rpm archives/boost-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/mapnik-python.sh $(shell id -u) $(shell id -g)
+          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/python-mapnik.sh $(shell id -u) $(shell id -g)
 
 ########################################################################
 
