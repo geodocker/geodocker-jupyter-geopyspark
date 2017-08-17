@@ -20,7 +20,7 @@ RUN pip3 install --user pytest && /scripts/install-blob1.sh $PYTHONBLOB1
 # Install remaining GeoNotebook dependencies
 COPY config/requirements.txt /tmp/requirements.txt
 RUN pip3 install --user -r /tmp/requirements.txt && \
-    pip3 install --user "https://github.com/OpenGeoscience/ktile/archive/6f134e86f90242c8393fe1912435a5fb99c6256d.zip"
+    pip3 install --user "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip"
 
 # Install GeoNotebook
 COPY blobs/geonotebook-$GEONOTEBOOKSHA.zip /tmp
