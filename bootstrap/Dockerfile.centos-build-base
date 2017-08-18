@@ -5,6 +5,7 @@ RUN yum clean all -y && yum update -y && \
     yum install -y \
       bzip2-devel \
       cairo-devel \
+      freetype-devel \
       gcc gcc-c++ \
       gmp-devel \
       harfbuzz-devel \
@@ -23,7 +24,9 @@ RUN yum clean all -y && yum update -y && \
       which \
       zlib-devel && \
     ln -s /usr/include/python3.4m /usr/include/python3.4 && \
-    yum autoremove -y && yum clean all -y
+    yum autoremove -y
+
+RUN yum install -y gdal-devel proj-devel && yum autoremove -y
 
 WORKDIR /tmp
 CMD ["bash"]

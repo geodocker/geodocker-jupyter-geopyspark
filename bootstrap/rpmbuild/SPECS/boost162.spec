@@ -1,5 +1,5 @@
 %define _topdir   /tmp/rpmbuild
-%define name      boost
+%define name      boost162
 %define release   33
 %define version   1_62_0
 
@@ -9,7 +9,7 @@ License:   Boost License
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Source:    %{name}_%{version}.tar.bz2
+Source:    boost_%{version}.tar.bz2
 Prefix:    /usr/local
 Group:     Development/Libraries
 

@@ -1,7 +1,6 @@
 FROM jamesmcclain/jupyter-geopyspark:centos-build-base
 
-COPY blobs/gcc-6.4.0-33.x86_64.rpm /blobs/gcc-6.4.0-33.x86_64.rpm
+COPY blobs/gcc6-6.4.0-33.x86_64.rpm /blobs/
 
-RUN yum remove -y gcc-c++ && \
-    yum localinstall -y /blobs/gcc-6.4.0-33.x86_64.rpm && \
+RUN yum localinstall -y /blobs/gcc6-6.4.0-33.x86_64.rpm && \
     ln -s /usr/local/bin/gcc /usr/local/bin/cc

@@ -1,5 +1,5 @@
 %define _topdir   /tmp/rpmbuild
-%define name      freetype
+%define name      freetype2
 %define release   33
 %define version   2.8
 
@@ -9,7 +9,7 @@ License:   GPL
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Source:    %{name}-%{version}.tar.gz
+Source:    freetype-%{version}.tar.gz
 Prefix:    /usr/local
 Group:     Typography
 
@@ -17,7 +17,7 @@ Group:     Typography
 FreeType 2.8
 
 %prep
-%setup -q
+%setup -q -n freetype-2.8
 
 %build
 ./configure --prefix=/usr/local --with-harfbuzz=no

@@ -8,18 +8,16 @@ blobs/%: archives/%
 centos-build-base aws-build-base:
 	docker build -t jamesmcclain/jupyter-geopyspark:$@ -f Dockerfile.$@ .
 
-centos-build-gcc6: blobs/gcc-6.4.0-33.x86_64.rpm
+centos-build-gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
 	docker build -t jamesmcclain/jupyter-geopyspark:$@ -f Dockerfile.$@ .
 
 aws-build-gdal: blobs/gdal-and-friends.tar.gz
 	docker build -t jamesmcclain/jupyter-geopyspark:$@ -f Dockerfile.$@ .
 
 base: blobs/gdal-and-friends.tar.gz \
-   blobs/gcc-lib-6.4.0-33.x86_64.rpm \
-   blobs/proj-4.9.3-33.x86_64.rpm \
-   blobs/gdal-2.1.3-33.x86_64.rpm \
-   blobs/freetype-lib-2.8-33.x86_64.rpm \
-   blobs/boost-lib-1_62_0-33.x86_64.rpm \
+   blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
+   blobs/freetype2-lib-2.8-33.x86_64.rpm \
+   blobs/boost162-lib-1_62_0-33.x86_64.rpm \
    blobs/mapnik-093fcee-33.x86_64.rpm \
    blobs/python-mapnik-e5f107d-33.x86_64.rpm
 	docker build -t jamesmcclain/jupyter-geopyspark:base -f Dockerfile.base .
@@ -49,11 +47,17 @@ archives/gdal-2.1.3.tar.gz:
 
 ########################################################################
 
-archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip:
-	curl -L "https://github.com/mapnik/mapnik/archive/093fcee6d1ba1fd360718ceade83894aeffc2548.zip" -o $@
+archives/isl-0.16.1.tar.bz2:
+	curl -L "ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2" -o $@
 
-archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip:
-	curl -L "https://github.com/mapnik/python-mapnik/archive/e5f107d8d459590829d50c976c7a4222d8f4737c.zip" -o $@
+archives/gcc-6.4.0.tar.xz:
+	curl -L "http://mirrors.concertpass.com/gcc/releases/gcc-6.4.0/gcc-6.4.0.tar.xz" -o $@
+
+archives/boost_1_62_0.tar.bz2:
+	curl -L "https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2" -o $@
+
+archives/freetype-2.8.tar.gz:
+	curl -L "https://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz" -o $@
 
 archives/mapbox-variant-v1.1.3.tar.gz:
 	curl -L "https://github.com/mapbox/variant/archive/v1.1.3.tar.gz" -o $@
@@ -61,60 +65,42 @@ archives/mapbox-variant-v1.1.3.tar.gz:
 archives/mapbox-geometry-v0.9.2.tar.gz:
 	curl -L "https://github.com/mapbox/geometry.hpp/archive/v0.9.2.tar.gz" -o $@
 
-archives/freetype-2.8.tar.gz:
-	curl -L "https://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz" -o $@
+archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip:
+	curl -L "https://github.com/mapnik/mapnik/archive/093fcee6d1ba1fd360718ceade83894aeffc2548.zip" -o $@
 
-archives/boost_1_62_0.tar.bz2:
-	curl -L "https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2" -o $@
-
-archives/gcc-6.4.0.tar.xz:
-	curl -L "http://mirrors.concertpass.com/gcc/releases/gcc-6.4.0/gcc-6.4.0.tar.xz" -o $@
-
-archives/isl-0.16.1.tar.bz2:
-	curl -L "ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2" -o $@
+archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip:
+	curl -L "https://github.com/mapnik/python-mapnik/archive/e5f107d8d459590829d50c976c7a4222d8f4737c.zip" -o $@
 
 ########################################################################
 
 archives/rpmbuild.tar: rpmbuild/
 	tar cvf $@ $<
 
-archives/gcc-6.4.0-33.x86_64.rpm archives/gcc-lib-6.4.0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/gcc-6.4.0.tar.xz archives/isl-0.16.1.tar.bz2
+archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) $(shell scripts/not.sh archives/gcc-6.4.0.tar.xz) $(shell scripts/not.sh archives/isl-0.16.1.tar.bz2)
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-base /scripts/gcc6.sh $(shell id -u) $(shell id -g)
 
-archives/freetype-2.8-33.x86_64.rpm archives/freetype-lib-2.8-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8.tar.gz
-	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scripts:/scripts:ro \
-          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/freetype.sh $(shell id -u) $(shell id -g)
-
-archives/proj-4.9.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3.tar.gz
-	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scripts:/scripts:ro \
-          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/proj.sh $(shell id -u) $(shell id -g)
-
-archives/gdal-2.1.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3.tar.gz
-	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scripts:/scripts:ro \
-          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/gdal.sh $(shell id -u) $(shell id -g)
-
-archives/boost-1_62_0-33.x86_64.rpm archives/boost-lib-1_62_0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
+archives/boost162-1_62_0-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/boost162.sh $(shell id -u) $(shell id -g)
 
-archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8-33.x86_64.rpm archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3-33.x86_64.rpm archives/boost-1_62_0-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
+archives/freetype2-2.8-33.x86_64.rpm archives/freetype2-lib-2.8-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8.tar.gz
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/freetype.sh $(shell id -u) $(shell id -g)
+
+archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-1_62_0-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8-33.x86_64.rpm archives/proj-4.9.3-33.x86_64.rpm archives/gdal-2.1.3-33.x86_64.rpm archives/boost-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
+archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
@@ -122,7 +108,7 @@ archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rp
 
 ########################################################################
 
-archives/gdal-and-friends.tar.gz: scripts/build-gdal.sh \
+archives/gdal-and-friends.tar.gz: $(shell scripts/not.sh scripts/build-gdal.sh) \
    archives/gdal-2.1.3.tar.gz \
    archives/geos-3.6.1.tar.bz2 \
    archives/lcms2-2.8.tar.gz \
@@ -138,13 +124,13 @@ archives/gdal-and-friends.tar.gz: scripts/build-gdal.sh \
 ########################################################################
 
 clean:
+	rm -f archives/*debug*.rpm
 
 cleaner: clean
 	rm -f archives/rpmbuild.tar
 
 cleanest: cleaner
-	rm -f archives/*.tar.gz archives/*.tar.bz2 archives/*.tar.xz archives/*.zip
+	rm -f archives/[^g]*.rpm
 
 mrproper: cleanest
-	rm -f archives/*.rpm
-
+	rm -f archives/*.tar.gz archives/*.tar.bz2 archives/*.tar.xz archives/*.zip

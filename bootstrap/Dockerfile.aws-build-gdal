@@ -1,3 +1,6 @@
 FROM jamesmcclain/jupyter-geopyspark:aws-build-base
 
 COPY blobs/gdal-and-friends.tar.gz /blobs/
+
+RUN cd /usr/local && tar axvf /blobs/gdal-and-friends.tar.gz && \
+    echo /usr/local/lib >> /etc/ld.so.conf.d/local.conf && ldconfig

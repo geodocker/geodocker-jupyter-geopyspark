@@ -1,5 +1,5 @@
 %define _topdir   /tmp/rpmbuild
-%define name      gcc
+%define name      gcc6
 %define release   33
 %define version   6.4.0
 
@@ -9,7 +9,7 @@ License:   GPL
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Source:    %{name}-%{version}.tar.xz
+Source:    gcc-%{version}.tar.xz
 Prefix:    /usr/local
 Group:     Development/Tools
 
@@ -17,7 +17,7 @@ Group:     Development/Tools
 Gnu Compiler Collection 6.4.0
 
 %prep
-%setup -q
+%setup -q -n gcc-6.4.0
 
 %build
 tar axvf /archives/isl-0.16.1.tar.bz2
