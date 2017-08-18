@@ -61,6 +61,8 @@ blobs/%: archives/%
 ########################################################################
 
 archives/$(PYTHON_BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scripts/build-python-blob1.sh
+	rm -rf scratch/dot-local/lib/python3.4/site-packages/*
+	rm -rf scratch/pip-cache/wheels/*
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
