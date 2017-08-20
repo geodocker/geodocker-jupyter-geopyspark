@@ -176,3 +176,46 @@ The changes to the kernel described in the last bullet-point would probably look
 The process for adding new distributed python dependencies is analogous to the one above,
 except that changes to `LD_LIBRARY_PATH` (both in the dockerfile and in the kernel) might not be required,
 and additions would need to be made to the `--conf spark.executorEnv.PYTHONPATH` configuration passed in via `PYSPARK_SUBMIT_ARGS` in the kernel.
+
+# OAuth #
+
+In to use OAuth for login, two things are necessary:
+It is necessary to [set three environment](https://github.com/jupyterhub/oauthenticator/blame/f5e39b1ece62b8d075832054ed3213cc04f85030/README.md#L74-L78) variables inside of the container before the JupyterHub process is launched, and
+it is necessary to use a `jupyterhub_config.py` file that enables the desired OAuth setup.
+
+## Environment Variables ##
+
+The three environment variables that must be set are `OAUTH_CALLBACK_URL`, `OAUTH_CLIENT_ID`, and `OAUTH_CLIENT_SECRET`.
+The first of those three variables should be set to `http://localhost:8000/hub/oauth_callback` for local testing and something like `http://$(hostname -f):8000/hub/oauth_callback` for deployment.
+The second and third are dependent on the OAuth provider.
+
+## `jupyterhub_config.py` ##
+
+There [three such files](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/tree/99fceaa141d477d2eea8e2603916133aed0e0692/config) already included in the image:
+One for [Google](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/blob/99fceaa141d477d2eea8e2603916133aed0e0692/config/jupyterhub_config_google.py) and related services,
+one for [GitHub](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/blob/99fceaa141d477d2eea8e2603916133aed0e0692/config/jupyterhub_config_github.py),
+and a [generic](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/blob/99fceaa141d477d2eea8e2603916133aed0e0692/config/jupyterhub_config_generic.py) one.
+There is some variability in precise details of how OAuth providers work (e.g. some require variables to be passed in the URL of a POST request, whereas others require variables to passed in the body of a POST request).
+For that reason, the generic configuration should be considered a starting point rather than something that is likely to work in its unmodified state.
+
+There are only two user accounts in the image: `root` and `hadoop`.
+All three of the configurations discussed above map all valid OAuth users to the `hadoop` account.
+That is done because -- without additional configuration -- Spark jobs on EMR must come from a user named "`hadoop`".
+(The users inside of the container are separate and distinct from those on the host instance,
+but the username is evidently part of a Spark job submission, so it must match that of the user that EMR is expecting submissions from.)
+
+## Using ##
+
+To use OAuth, launch a container with the three variables supplied and with the appropriate `jupyterhub_config.py` used.
+
+```bash
+docker run -it --rm --name geopyspark \
+   -p 8000:8000 \
+   -e OAUTH_CALLBACK_URL=http://localhost:8000/hub/oauth_callback \
+   -e OAUTH_CLIENT_ID=xyz \
+   -e OAUTH_CLIENT_SECRET=abc \
+   quay.io/geodocker/jupyter-geopyspark:latest \
+      jupyterhub \
+      -f /etc/jupterhub/jupyterhub_config_github.py \
+      --no-ssl --Spawner.notebook_dir=/home/hadoop/notebooks
+```
