@@ -5,6 +5,7 @@ COPY blobs/gdal-and-friends.tar.gz /blobs/
 COPY blobs/gcc6-lib-6.4.0-33.x86_64.rpm /blobs/
 COPY blobs/boost162-lib-1_62_0-33.x86_64.rpm /blobs/
 COPY blobs/freetype2-lib-2.8-33.x86_64.rpm /blobs/
+COPY blobs/gdal213-lib-2.1.3-33.x86_64.rpm /blobs/
 COPY blobs/mapnik-093fcee-33.x86_64.rpm /blobs/
 COPY blobs/python-mapnik-e5f107d-33.x86_64.rpm /blobs/
 
@@ -16,9 +17,10 @@ RUN yum clean all -y && yum update -y && \
        /blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
        /blobs/boost162-lib-1_62_0-33.x86_64.rpm \
        /blobs/freetype2-lib-2.8-33.x86_64.rpm \
+       /blobs/gdal213-lib-2.1.3-33.x86_64.rpm \
        /blobs/mapnik-093fcee-33.x86_64.rpm \
        /blobs/python-mapnik-e5f107d-33.x86_64.rpm && \
-    yum autoremove -y && \
+    yum autoremove -y && yum clean all -y && \
     cd /usr/local && tar axvf /blobs/gdal-and-friends.tar.gz && \
     echo /usr/local/lib >> /etc/ld.so.conf.d/local.conf && echo /usr/local/lib64 >> /etc/ld.so.conf.d/local.conf && \
     ldconfig

@@ -18,6 +18,7 @@ base: blobs/gdal-and-friends.tar.gz \
    blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
    blobs/freetype2-lib-2.8-33.x86_64.rpm \
    blobs/boost162-lib-1_62_0-33.x86_64.rpm \
+   blobs/gdal213-lib-2.1.3-33.x86_64.rpm \
    blobs/mapnik-093fcee-33.x86_64.rpm \
    blobs/python-mapnik-e5f107d-33.x86_64.rpm
 	docker build -t jamesmcclain/jupyter-geopyspark:base -f Dockerfile.base .
@@ -94,13 +95,19 @@ archives/freetype2-2.8-33.x86_64.rpm archives/freetype2-lib-2.8-33.x86_64.rpm: $
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/freetype.sh $(shell id -u) $(shell id -g)
 
-archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-1_62_0-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
+archives/gdal213-2.1.3-33.x86_64.rpm archives/gdal213-lib-2.1.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/gdal-2.1.3.tar.gz
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/gdal.sh $(shell id -u) $(shell id -g)
+
+archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           jamesmcclain/jupyter-geopyspark:centos-build-gcc6 /scripts/mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
+archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
