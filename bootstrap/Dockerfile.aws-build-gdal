@@ -1,4 +1,4 @@
-FROM jamesmcclain/jupyter-geopyspark:aws-build-base
+FROM quay.io/geodocker/jupyter-geopyspark:aws-build-base
 
 COPY blobs/gdal-and-friends.tar.gz /blobs/
 

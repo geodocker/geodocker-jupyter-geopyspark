@@ -2,8 +2,7 @@
 
 TAG ?= mapnik
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-AWSBUILD := jamesmcclain/jupyter-geopyspark:aws-build-gdal
-BASE := jamesmcclain/jupyter-geopyspark:base
+AWSBUILD := $(FAMILY):aws-build-gdal-0
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= bdc752e589e365f8d81912e08db936ffb5d689a1
 GEOPYSPARK_NETCDF_SHA ?= 3f18ff9c9613932b4dc10e12ea9a1338260a3ff6
