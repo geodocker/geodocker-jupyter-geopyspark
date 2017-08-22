@@ -41,11 +41,11 @@ To use the image from within a clone of this repository,
 there are [two useful targets in the Makefile: `run` and `run-editable`](Makefile#L181-L198).
 To use the `run` target, type something like
 ```
-TARGET=latest make run
+TAG=latest make run
 ```
 or to use the `run` target with some image other than the latest one, something like
 ```
-TARGET=a1b78b9 make run
+TAG=a1b78b9 make run
 ```
 will launch a container using the image `quay.io/geodocker/jupyter-geopyspark:a1b78b9`.
 
@@ -53,7 +53,7 @@ The `run-editable` target also exists, which attempts to map one's local clone o
 By default, it is assumed that the GeoPySpark code is present in `../geopyspark/geopyspark`, but than can be changed by passing in an alternate location through the `GEOPYSPARK_DIR` environment variable.
 Here
 ```
-TARGET=latest GEOPYSPARK_DIR=/tmp/geopyspark/geopyspark run-editable
+TAG=latest GEOPYSPARK_DIR=/tmp/geopyspark/geopyspark run-editable
 ```
 is an example of that.
 
