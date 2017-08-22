@@ -1,29 +1,25 @@
-FROM quay.io/geodocker/jupyter:99fceaa
+FROM quay.io/geodocker/jupyter-geopyspark:base-0
 
 ARG VERSION
 ARG GEONOTEBOOKSHA
-ARG GDALBLOB
 ARG PYTHONBLOB1
 ARG PYTHONBLOB2
 
-ENV LD_LIBRARY_PATH /home/hadoop/local/gdal/lib
 ENV PYSPARK_PYTHON=python3.4
 ENV PYSPARK_DRIVER_PYTHON=python3.4
 
-# Install extraction script
+# Install stage1 scripts
 COPY scripts/extract-blob.sh /scripts/
 
 # Install Python dependencies
-COPY blobs/$GDALBLOB /blobs/
 COPY blobs/$PYTHONBLOB1 /blobs/
 COPY scripts/install-blob1.sh /scripts/
-RUN pip3 install --user pytest && \
-    /scripts/install-blob1.sh $GDALBLOB $PYTHONBLOB1
+RUN pip3 install --user pytest && /scripts/install-blob1.sh $PYTHONBLOB1
 
 # Install remaining GeoNotebook dependencies
 COPY config/requirements.txt /tmp/requirements.txt
 RUN pip3 install --user -r /tmp/requirements.txt && \
-    pip3 install --user "https://github.com/OpenGeoscience/ktile/archive/6f134e86f90242c8393fe1912435a5fb99c6256d.zip"
+    pip3 install --user "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip"
 
 # Install GeoNotebook
 COPY blobs/geonotebook-$GEONOTEBOOKSHA.zip /tmp

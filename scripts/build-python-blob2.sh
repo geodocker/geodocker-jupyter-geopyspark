@@ -6,10 +6,6 @@ BLOB=$3
 GEOPYSPARK=$4
 GEOPYSPARK_NETCDF=$5
 
-export CPPFLAGS="-I$HOME/local/gdal/include"
-export CFLAGS="-I$HOME/local/gdal/include"
-export LDFLAGS="-I$HOME/local/gdal/lib"
-
 # aquire
 chown -R root:root $HOME/.local
 

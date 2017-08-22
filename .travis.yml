@@ -43,12 +43,12 @@ before_install:
 
 install:
    - pip3 install wheel
-   - docker pull jamesmcclain/jupyter-geopyspark:stage0
+   - docker pull jamesmcclain/jupyter-geopyspark:aws-build-gdal
 
 script:
+   - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.0.jar
    - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.0.jar
-   - TRAVIS=1 TAG=$TAG make scratch/local/gdal
-   - TRAVIS=1 TAG=$TAG make stage2
+   - TRAVIS=1 TAG=$TAG make image
 
 after_success:
    - if [ "$QUAY_USERNAME" != "" -a "$QUAY_PASSWORD" != "" ]; then
