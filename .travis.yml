@@ -43,7 +43,7 @@ before_install:
 
 install:
    - pip3 install wheel
-   - docker pull jamesmcclain/jupyter-geopyspark:aws-build-gdal
+   - docker pull quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-0
 
 script:
    - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.0.jar
