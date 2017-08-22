@@ -8,9 +8,6 @@ ARG PYTHONBLOB2
 ENV PYSPARK_PYTHON=python3.4
 ENV PYSPARK_DRIVER_PYTHON=python3.4
 
-# Install stage1 scripts
-COPY scripts/extract-blob.sh /scripts/
-
 # Install Python dependencies
 COPY blobs/$PYTHONBLOB1 /blobs/
 COPY scripts/install-blob1.sh /scripts/
