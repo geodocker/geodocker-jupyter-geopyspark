@@ -12,7 +12,7 @@ One can use the image with or without making a clone of this repository.
 
 ## Without A Clone ##
 
-To use the image without (or from outside of) a fork of this repository,
+To use the image without (or from outside of) a clone of this repository,
 first make sure that you are in possession of the image.
 The command
 ```
@@ -63,6 +63,13 @@ Both of those targets also pay attention to the `EXTRA_FLAGS` environment variab
 
 To build the image, type `make all`, `make image`, or simply `make`.
 
+Type
+```
+make run
+```
+to run the newly-built image.
+The `TAG` environment variable is not set, so by default the `run` target will use the tag of the new image.
+
 # Modifying The Image; or, Image Architecture #
 
 In this section we describe the structure of the repository
@@ -70,16 +77,17 @@ and document how the various pieces interact as part of the build process.
 
 ## Repository Structure ##
 
-   - [`archives`](archives) is an initially-empty directory that is populated with source code archives and built artifacts as part of the build process.
-   - [`blobs`](blobs) is an initially-empty directory that is populated with built artifacts from the `archives`.
-     This directory exists because `archives` is in the [`.dockerignore`](.dockerignore) (which was done to reduce the size of the [build context](https://docs.docker.com/engine/reference/commandline/build/) of the final image).
+   - [`archives`](archives) is an initially-empty directory that is populated with source code and built artifacts as part of the build process.
+   - [`blobs`](blobs) is an initially-empty directory that is populated with built artifacts from the `archives` directory.
+     This directory exists because `archives` is listed in the [`.dockerignore`](.dockerignore) file
+     (which was done to reduce the size of the [build context](https://docs.docker.com/engine/reference/commandline/build/) of the final image).
    - [`bootstrap`](bootstrap) contains the files necessary to build the bootstrap images that are used to produce the final image.
-     Please see the [`README.md`](bootstrap/README.md) file in that directory for more information.
+     Please see the [README](bootstrap/README.md) in that directory for more information.
    - [`config`](config) contains the [GeoNotebook configuration file](config/geonotebook.ini)
      and a [list of python dependencies](config/requirements.txt) that GeoNotebook requires.
    - [`emr`](emr) contains files useful for running the image on Amazon EMR (please see the [README](emr/README.md) in that directory for more information).
    - [`kernels`](kernels) contains Jupyter kernel configuration files.
-     The one most likely to be of interest is [the one](geonotebook/kernel.json) that enables GeoNotebook and GeoPySpark, the other two included kernels there are mostly vestigial/ceremonial.
+     The one most likely to be of interest is [the one](geonotebook/kernel.json) that enables GeoNotebook and GeoPySpark, the other two kernels are mostly vestigial/ceremonial.
    - [`notebooks`](notebook) contains various sample notebooks.
    - [`scratch`](scratch) is a scratch directory used during the build process.
      The files that are added under this directory during the build can be harmlessly deleted after the build is complete,
@@ -90,9 +98,9 @@ and document how the various pieces interact as part of the build process.
         its purpose is to acquire most of the python dependencies needed by GeoPySpark and GeoNotebook and package them together into a tarball for later installation.
       - [`build-pytohn-blob2.sh`](build-python-blob2.sh) [runs in the context of the AWS build container](Makefile#L72-L80),
         its purpose is to package GeoPySpark and [`GeoPySpark-NetCDF`](https://github.com/geotrellis/geopyspark-netcdf) into a tarball for later installation.
-      - [`install-blob1.sh`](scripts/install-blob1.sh) runs [in the context of the image build](Dockerfile#L17).
-        Its purpose is to install the artifacts created earlier by `build-native-blob.sh` and `build-python-blob1.sh`.
-      - [`install-blob2.sh`](scripts/install-blob2.sh) runs [in the context of the image build](Dockerfile#L40).
+      - [`install-blob1.sh`](scripts/install-blob1.sh) runs [in the context of the final image build](Dockerfile#L17).
+        Its purpose is to install the artifacts created earlier by `build-python-blob1.sh`.
+      - [`install-blob2.sh`](scripts/install-blob2.sh) runs [in the context of the final image build](Dockerfile#L40).
         Its purpose is to install the artifacts created earlier by `build-python-blob2.sh`.
    - [`Dockerfile`](Dockerfile) specifies the final image, the output of the build process.
    - [`Makefile`](Makefile) coordinates the build process.
@@ -115,14 +123,14 @@ Please see the [`README.md`](bootstrap/README.md) file in the [`boostrap`](boots
 The purpose of this stage is to build python artifacts that need to be linked against those binary dependencies which have been built
 in a context that [resembles EMR](bootstrap/Dockerfile.aws-build-base#L1) (because we want the image to be usable on EMR).
 
-First, a tarball containing python code, linked against the binary dependencies mentioned above, [is created](Makefile#L62-L70).
-Then, another python tarball, containing GeoPySpark, [is created](Makefile#L72-L80).
+First, a tarball containing python code linked against the binary dependencies mentioned above [is created](Makefile#L62-L70).
+Then, another python tarball containing GeoPySpark [is created](Makefile#L72-L80).
 The reason that there are two python tarballs instead of one is simply because contents of the two tarballs change at different rates;
 over repeated builds, the first tarball is built less frequently than the second one.
 
 ### Stage 2: Build Final Image ###
 
-In the third of the three stages, the artifacts which were created in earlier brought together and installed into the final docker image.
+In the third of the three stages, the artifacts which were created earlier are brought together and installed into the final docker image.
 
 ## Adding Binary Dependencies ##
 
@@ -131,22 +139,22 @@ in this section we will describe the process of adding new binary dependencies t
 
 Currently, all binary dependencies are located in the file [`gdal-and-friends.tar.gz`](bootstrap/Makefile#L123-L134) which comes in via the [`quay.io/geodocker/jupyter-geopyspark:base`](bootstrap/Dockerfile.base) image on which the final image is based.
 If we want to add an additional binary dependency inside of that file,
-then it is simply a matter of [downloading or otherwise acquiring the source code](bootstrap/Makefile#L33-L78)
-and updating the [build script](bootstrap/scripts/build-gdal.sh) to build and package the additional code.
+then we only need to [download or otherwise acquire the source code](bootstrap/Makefile#L33-L78)
+and update the [build script](bootstrap/scripts/build-gdal.sh) to build and package the additional code.
 If we wish to add a binary dependency outside of the `gdal-and-friends.tar.gz` file, then the process is slightly more involved,
 but potentially faster because it is not necessary to rebuild bootstrap images.
 
 The strategy for adding new binary dependency, hypothetically `libHelloWorld` packaged in a file called `helloworld-and-friends.tar.gz`,
-will be to mirror the process for `gdal-and-friends.tar.gz` to the extent that we can,
-except this time we will add the binary to the final image rather than to a bootstrap image.
-   - First, Augment to the [`Makefile`](Makefile) to download or otherwise ensure the existence of the `libHelloWorld` source code.
+will be to mirror the process for `gdal-and-friends.tar.gz` to the extent that we can.
+The difference is that this time we will add the binary to the final image rather than to a bootstrap image.
+   - First, augment to the [`Makefile`](Makefile) to download or otherwise ensure the existence of the `libHelloWorld` source code.
    - Next, we want to build and package `libHelloWorld` in the context of the AWS build image, so that it will be usable on EMR.
-     This would probably be done by first creating a script analogous to the one for [GDAL](bootstrap/scripts/build-gdal.sh) that builds, links, and archives the dependency.
+     This would probably be done by first creating a script analogous to [the one for GDAL](bootstrap/scripts/build-gdal.sh) that builds, links, and archives the dependency.
    - That script should run in the context of the AWS build container so that the created binaries are compiled and linked in an environment that resembles EMR.
    - The resulting archived binary blob should then be added to the final image so that it can be distributed to the Spark executors.
      That should probably be done by adding a the `COPY` command to the Dockerfile to copy the new blob to the `/blobs` directory of the image.
    - Finally, the image environment and the kernel should be modified to make use of the new dependency.
-     The former should most-likely include the addition of an `ENV` command to the Dockerfile to augment the `LD_LIBRARY_PATH` environment variable to be able to find any new shared libraries;
+     The former will probably involve the addition of an `ENV` command to the Dockerfile to augment the `LD_LIBRARY_PATH` environment variable to be able to find any new shared libraries;
      The latter is described below.
 
 The changes to the kernel described in the last bullet-point would probably look something like this
@@ -170,7 +178,7 @@ The changes to the kernel described in the last bullet-point would probably look
 
 The process for adding new distributed python dependencies is analogous to the one above,
 except that changes to `LD_LIBRARY_PATH` (both in the Dockerfile and in the kernel) might not be required,
-and additions most-probably would need to be made to the `--conf spark.executorEnv.PYTHONPATH` configuration passed in via `PYSPARK_SUBMIT_ARGS` in the kernel.
+and additions most-probably will need to be made to the `--conf spark.executorEnv.PYTHONPATH` configuration passed in via `PYSPARK_SUBMIT_ARGS` in the kernel.
 
 # OAuth #
 

@@ -15,7 +15,8 @@ The following images can be built from the materials in this directory:
    - [`centos-build-base`](Dockerfile.centos-build-base) is much the same as the [`quay.io/geodocker/jupyter-geopyspark`](https://quay.io/repository/geodocker/jupyter-geopyspark) image,
      except that it contains a number of build tools and GIS-related libraries.
      This image is used to build and package [GCC 6.4.0](https://gcc.gnu.org/gcc-6/) which is needed to build the other binaries that are built here.
-   - [`centos-build-gcc6`](Dockerfile.centos-build-gcc6) is much the same as the above, but it is used to build most of the binaries in the `base` image are built with it.
+   - [`centos-build-gcc6`](Dockerfile.centos-build-gcc6) is much the same as the above, but it has GCC 6.4.0 installed.
+     It is used to build most of the binaries in the `base` image.
    - [`base-0`](Dockerfile.base) is much the same as `quay.io/geodocker/jupyter-geopyspark` but has a number of additional binary dependencies,
      including [Mapnik](https://github.com/mapnik/mapnik), [python-mapnik](https://github.com/mapnik/python-mapnik), and `gdal-and-friends.tar.gz`.
      The final image (produced in the top-level build) is derived from this image.
