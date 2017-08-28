@@ -29,5 +29,5 @@ variable "key_name" {
 variable "s3_uri" {
     type = "string"
     description = "Where to send EMR logs"
-    default = "s3://geotrellis-test/terraform-logs"
+    default = "s3n://geotrellis-test/terraform-logs/"
 }
