@@ -5,10 +5,10 @@ provider "aws" {
   region     = "${var.region}"
 }
 
-# `aws_emr_cluster` is built-in to Terraform. We name ours `emrSparkCluster`.
-resource "aws_emr_cluster" "emrSparkCluster" {
-  name          = "EMR GeoTrellis Zeppelin"
-  release_label = "emr-5.7.0"               # 2017 July
+# `aws_emr_cluster` is built-in to Terraform. We name ours `emr-spark-cluster`.
+resource "aws_emr_cluster" "emr-spark-cluster" {
+  name          = "GeoNotebook + GeoPySpark Cluster"
+  release_label = "emr-5.7.0"
 
   # This it will work if only `Spark` is named here, but booting the cluster seems
   # to be much faster when `Hadoop` is included. Ingests, etc., will succeed
@@ -17,7 +17,7 @@ resource "aws_emr_cluster" "emrSparkCluster" {
 
   ec2_attributes {
     key_name         = "${var.key_name}"
-    instance_profile = "EMR_EC2_DefaultRole" # This seems to be the only necessary field.
+    instance_profile = "EMR_EC2_DefaultRole"
   }
 
   # MASTER group must have an instance_count of 1.
@@ -27,7 +27,7 @@ resource "aws_emr_cluster" "emrSparkCluster" {
     instance_count = 1
     instance_role  = "MASTER"
     instance_type  = "m3.xlarge"
-    name           = "emrGeoTrellisZeppelin-MasterGroup"
+    name           = "geopyspark-master"
   }
 
   instance_group {
@@ -35,7 +35,7 @@ resource "aws_emr_cluster" "emrSparkCluster" {
     instance_count = 2
     instance_role  = "CORE"
     instance_type  = "m3.xlarge"
-    name           = "emrGeoTrellisZeppelin-CoreGroup"
+    name           = "geopyspark-core"
   }
 
   # Location to dump logs
@@ -43,27 +43,18 @@ resource "aws_emr_cluster" "emrSparkCluster" {
 
   # These can be altered freely, they don't affect the config.
   tags {
-    name = "GeoTrellis Zeppelin Demo Spark Cluster"
+    name = "geodocker"
     role = "EMR_DefaultRole"
-    env  = "env"
   }
 
   # This is the effect of `aws emr create-cluster --use-default-roles`.
   service_role = "EMR_DefaultRole"
-
-  # Spark YARN config to S3 for the ECS cluster to grab.
-  provisioner "remote-exec" {
-    # Necessary to massage settings the way AWS wants them.
-    connection {
-      type        = "ssh"
-      user        = "hadoop"
-      host        = "${aws_emr_cluster.emrSparkCluster.master_public_dns}"
-      private_key = "${file("${var.pem_path}")}"
-    }
-  }
 }
 
-# Pipable to other programs.
-output "emrID" {
-  value = "${aws_emr_cluster.emrSparkCluster.id}"
+output "emr-id" {
+  value = "${aws_emr_cluster.emr-spark-cluster.id}"
+}
+
+output "emr-master" {
+  value = "${aws_emr_cluster.emr-spark-cluster.master_public_dns}"
 }
