@@ -1,0 +1,8 @@
+[
+    {
+	"name": "jupyterhub",
+	"image": "quay.io/geodocker/jupyter-geopyspark:latest",
+	"memoryReservation": 2048,
+	"essential": true
+    }
+]

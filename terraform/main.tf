@@ -1,27 +1,32 @@
-# Marks AWS as a resource provider.
 provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
   region     = "${var.region}"
 }
 
-# `aws_emr_cluster` is built-in to Terraform. We name ours `emr-spark-cluster`.
+resource "aws_vpc" "emr-spark-cluster" {
+  cidr_block           = "172.31.0.0/16"
+  enable_dns_hostnames = true
+}
+
+resource "aws_subnet" "emr-spark-cluster" {
+  vpc_id            = "${aws_vpc.emr-spark-cluster.id}"
+  cidr_block        = "172.31.1.0/24"
+}
+
 resource "aws_emr_cluster" "emr-spark-cluster" {
   name          = "GeoNotebook + GeoPySpark Cluster"
+  applications  = ["Hadoop", "Spark", "Ganglia", "Zeppelin"]
+  log_uri       = "${var.s3_uri}"
   release_label = "emr-5.7.0"
-
-  # This it will work if only `Spark` is named here, but booting the cluster seems
-  # to be much faster when `Hadoop` is included. Ingests, etc., will succeed
-  # even if `Hadoop` is missing here.
-  applications = ["Hadoop", "Spark", "Ganglia", "Zeppelin"]
+  service_role  = "EMR_DefaultRole"
 
   ec2_attributes {
-    key_name         = "${var.key_name}"
     instance_profile = "EMR_EC2_DefaultRole"
+    key_name         = "${var.key_name}"
+    subnet_id        = "${aws_subnet.emr-spark-cluster.id}"
   }
 
-  # MASTER group must have an instance_count of 1.
-  # `xlarge` seems to be the smallest type they'll allow (large didn't work).
   instance_group {
     bid_price      = "0.05"
     instance_count = 1
@@ -32,23 +37,11 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
 
   instance_group {
     bid_price      = "0.05"
-    instance_count = 2
+    instance_count = "${var.worker_count}"
     instance_role  = "CORE"
     instance_type  = "m3.xlarge"
     name           = "geopyspark-core"
   }
-
-  # Location to dump logs
-  log_uri = "${var.s3_uri}"
-
-  # These can be altered freely, they don't affect the config.
-  tags {
-    name = "geodocker"
-    role = "EMR_DefaultRole"
-  }
-
-  # This is the effect of `aws emr create-cluster --use-default-roles`.
-  service_role = "EMR_DefaultRole"
 }
 
 output "emr-id" {

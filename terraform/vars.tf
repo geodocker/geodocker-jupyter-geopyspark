@@ -16,11 +16,6 @@ variable "region" {
     default = "us-east-1"
 }
 
-variable "pem_path" {
-    type = "string"
-    description = "Path to EC2 secret key"
-}
-
 variable "key_name" {
     type = "string"
     description = "The name of your EC2 secret key"
@@ -30,4 +25,22 @@ variable "s3_uri" {
     type = "string"
     description = "Where to send EMR logs"
     default = "s3n://geotrellis-test/terraform-logs/"
+}
+
+variable "ecs_ami" {
+    type = "string"
+    description = "AMI to use for ECS Instances"
+    default = "ami-9eb4b1e5"
+}
+
+variable "jupyterhub_port" {
+    type = "string"
+    description = "The port on which to connect to JupyterHub"
+    default = "8080"
+}
+
+variable "worker_count" {
+    type = "string"
+    description = "The number of worker nodes"
+    default = "1"
 }
