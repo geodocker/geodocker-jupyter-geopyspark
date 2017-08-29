@@ -23,6 +23,13 @@ resource "aws_iam_role_policy_attachment" "ecs-service" {
 
 resource "aws_security_group" "jupyterhub" {
   ingress {
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = "${var.jupyterhub_port}"
     to_port     = "${var.jupyterhub_port}"
     protocol    = "tcp"
@@ -46,7 +53,7 @@ resource "aws_launch_configuration" "jupyterhub" {
   image_id                    = "${var.ecs_ami}"
   instance_type               = "m3.xlarge"
   key_name                    = "${var.key_name}"
-  security_groups             = ["${aws_security_group.jupyterhub.id}"]
+  # security_groups             = ["${aws_security_group.jupyterhub.id}"]
   spot_price                  = "0.05"
 
   lifecycle {
@@ -59,14 +66,14 @@ resource "aws_autoscaling_group" "jupyterhub" {
   min_size = 1
   availability_zones = ["us-east-1a"]
   launch_configuration = "${aws_launch_configuration.jupyterhub.id}"
-  health_check_type = "ELB"
+  health_check_type = "EC2"
   desired_capacity = 1
   load_balancers = ["${aws_elb.jupyterhub.id}"]
 }
 
 resource "aws_elb" "jupyterhub" {
   availability_zones = ["us-east-1a"]
-  security_groups    = ["${aws_security_group.jupyterhub.id}"]
+  # security_groups    = ["${aws_security_group.jupyterhub.id}"]
 
   listener {
     lb_port = 8000
