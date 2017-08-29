@@ -18,10 +18,21 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "ecs-service" {
   role       = "${aws_iam_role.ecs-service.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_instance_profile" "ecs-service" {
+  role = "${aws_iam_role.ecs-service.name}"
 }
 
 resource "aws_security_group" "jupyterhub" {
+  ingress {
+    from_port = 0
+    to_port   = 65535
+    protocol  = "tcp"
+    self      = true
+  }
+
   ingress {
     from_port   = "22"
     to_port     = "22"
@@ -50,12 +61,12 @@ resource "aws_security_group" "jupyterhub" {
 
 resource "aws_launch_configuration" "jupyterhub" {
   # associate_public_ip_address = true
-  image_id                    = "${var.ecs_ami}"
-  instance_type               = "m3.xlarge"
-  key_name                    = "${var.key_name}"
-  # security_groups             = ["${aws_security_group.jupyterhub.id}"]
-  spot_price                  = "0.05"
-
+  image_id             = "${var.ecs_ami}"
+  instance_type        = "m3.xlarge"
+  key_name             = "${var.key_name}"
+  security_groups      = ["${aws_security_group.jupyterhub.id}"]
+  spot_price           = "0.05"
+  iam_instance_profile = "${aws_iam_instance_profile.ecs-service.id}"
   lifecycle {
     create_before_destroy = true
   }
@@ -73,7 +84,7 @@ resource "aws_autoscaling_group" "jupyterhub" {
 
 resource "aws_elb" "jupyterhub" {
   availability_zones = ["us-east-1a"]
-  # security_groups    = ["${aws_security_group.jupyterhub.id}"]
+  security_groups    = ["${aws_security_group.jupyterhub.id}"]
 
   listener {
     lb_port = 8000
