@@ -67,6 +67,8 @@ resource "aws_launch_configuration" "jupyterhub" {
   security_groups      = ["${aws_security_group.jupyterhub.id}"]
   spot_price           = "0.05"
   iam_instance_profile = "${aws_iam_instance_profile.ecs-service.id}"
+  user_data = "#!/bin/bash\necho ECS_CLUSTER='JupyterHub' > /etc/ecs/ecs.config"
+
   lifecycle {
     create_before_destroy = true
   }
