@@ -18,7 +18,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "ecs-service" {
   role       = "${aws_iam_role.ecs-service.name}"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess"
 }
 
 resource "aws_iam_instance_profile" "ecs-service" {
@@ -60,14 +60,13 @@ resource "aws_security_group" "jupyterhub" {
 }
 
 resource "aws_launch_configuration" "jupyterhub" {
-  # associate_public_ip_address = true
   image_id             = "${var.ecs_ami}"
-  instance_type        = "m3.xlarge"
+  instance_type        = "m3.xlarge" # XXX
   key_name             = "${var.key_name}"
   security_groups      = ["${aws_security_group.jupyterhub.id}"]
   spot_price           = "0.05"
-  iam_instance_profile = "${aws_iam_instance_profile.ecs-service.id}"
-  user_data = "#!/bin/bash\necho ECS_CLUSTER='JupyterHub' > /etc/ecs/ecs.config"
+  iam_instance_profile = "ecsInstanceRole" # XXX
+  user_data = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.jupyterhub.name} >> /etc/ecs/ecs.config"
 
   lifecycle {
     create_before_destroy = true
@@ -102,7 +101,6 @@ resource "aws_elb" "jupyterhub" {
     target = "TCP:22"
     interval = 5
   }
-
 }
 
 resource "aws_ecs_task_definition" "jupyterhub" {
