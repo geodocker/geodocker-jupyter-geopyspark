@@ -1,3 +1,26 @@
+resource "aws_iam_role" "ecs-service" {
+    assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+                "Service": "ecs.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "ecs-service" {
+  role       = "${aws_iam_role.ecs-service.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess"
+}
+
 resource "aws_security_group" "jupyterhub" {
   ingress {
     from_port   = "${var.jupyterhub_port}"
@@ -13,17 +36,13 @@ resource "aws_security_group" "jupyterhub" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  depends_on = ["aws_subnet.emr-spark-cluster"]
-
   lifecycle {
     create_before_destroy = true
   }
 }
 
-# resource "aws_elb" "jupyterhub" {}
-
 resource "aws_launch_configuration" "jupyterhub" {
-  associate_public_ip_address = true
+  # associate_public_ip_address = true
   image_id                    = "${var.ecs_ami}"
   instance_type               = "m3.xlarge"
   key_name                    = "${var.key_name}"
@@ -36,20 +55,39 @@ resource "aws_launch_configuration" "jupyterhub" {
 }
 
 resource "aws_autoscaling_group" "jupyterhub" {
+  max_size = 1
+  min_size = 1
+  availability_zones = ["us-east-1a"]
   launch_configuration = "${aws_launch_configuration.jupyterhub.id}"
-  max_size             = 1
-  min_size             = 1
-  vpc_zone_identifier  = ["${aws_subnet.emr-spark-cluster.id}"]
+  health_check_type = "ELB"
+  desired_capacity = 1
+  load_balancers = ["${aws_elb.jupyterhub.id}"]
+}
 
-  lifecycle {
-    create_before_destroy = true
+resource "aws_elb" "jupyterhub" {
+  availability_zones = ["us-east-1a"]
+  security_groups    = ["${aws_security_group.jupyterhub.id}"]
+
+  listener {
+    lb_port = 8000
+    lb_protocol = "http"
+    instance_port = 8000
+    instance_protocol = "http"
   }
+
+  health_check {
+    healthy_threshold = 3
+    unhealthy_threshold = 2
+    timeout = 3
+    target = "TCP:22"
+    interval = 5
+  }
+
 }
 
 resource "aws_ecs_task_definition" "jupyterhub" {
   container_definitions = "${file("task-definitions/jupyterhub.json")}"
   family                = "JupyterHub"
-  network_mode          = "host"
 }
 
 resource "aws_ecs_cluster" "jupyterhub" {
@@ -57,18 +95,15 @@ resource "aws_ecs_cluster" "jupyterhub" {
 }
 
 resource "aws_ecs_service" "jupyterhub" {
-  name            = "jupyterhub"
+  name            = "JupyterHub"
   cluster         = "${aws_ecs_cluster.jupyterhub.id}"
-  task_definition = "${aws_ecs_task_definition.jupyterhub.arn}"
   desired_count   = 1
+  iam_role        = "${aws_iam_role.ecs-service.name}"
+  task_definition = "${aws_ecs_task_definition.jupyterhub.arn}"
 
   load_balancer {
-    # elb_name       = "${aws_elb.jupyterhub.name}"
     container_name = "jupyterhub"
     container_port = "${var.jupyterhub_port}"
+    elb_name       = "${aws_elb.jupyterhub.name}"
   }
-}
-
-output "ecs-id" {
-  value = "${aws_ecs_service.jupyterhub.cluster.id}"
 }

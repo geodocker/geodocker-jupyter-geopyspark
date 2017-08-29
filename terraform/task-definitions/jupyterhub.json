@@ -3,6 +3,13 @@
 	"name": "jupyterhub",
 	"image": "quay.io/geodocker/jupyter-geopyspark:latest",
 	"memoryReservation": 2048,
-	"essential": true
+	"essential": true,
+	"portMappings": [
+            {
+                "containerPort": 8000,
+                "hostPort": 8000,
+                "protocol": "tcp"
+            }
+        ]
     }
 ]

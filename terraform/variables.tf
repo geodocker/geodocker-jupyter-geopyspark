@@ -36,7 +36,7 @@ variable "ecs_ami" {
 variable "jupyterhub_port" {
     type = "string"
     description = "The port on which to connect to JupyterHub"
-    default = "8080"
+    default = "8000"
 }
 
 variable "worker_count" {
