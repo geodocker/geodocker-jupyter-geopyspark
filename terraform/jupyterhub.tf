@@ -71,8 +71,24 @@ resource "aws_elb" "jupyterhub" {
   }
 }
 
+data "aws_instance" "emr-master" {
+  filter {
+    name   = "dns-name"
+    values = ["${aws_emr_cluster.emr-spark-cluster.master_public_dns}"]
+  }
+}
+
+data "template_file" "jupyterhub" {
+  template = "${file("task-definitions/jupyterhub.json.template")}"
+
+  vars {
+    addr = "${data.aws_instance.emr-master.private_dns}"
+    port = "${var.jupyterhub_port}"
+  }
+}
+
 resource "aws_ecs_task_definition" "jupyterhub" {
-  container_definitions = "${file("task-definitions/jupyterhub.json")}"
+  container_definitions = "${data.template_file.jupyterhub.rendered}"
   family                = "JupyterHub"
   network_mode          = "host"
 }

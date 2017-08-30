@@ -3,6 +3,7 @@
 OLD_ADDR=ip-172-31-50-173
 
 if [[ ! -z $NEW_ADDR ]]; then
+    NEW_ADDR=$(echo $NEW_ADDR | sed 's,.ec2.internal,,')
     sed "s,$OLD_ADDR,$NEW_ADDR,g" /etc/hadoop/conf/core-site.xml -i
     sed "s,$OLD_ADDR,$NEW_ADDR,g" /etc/hadoop/conf/yarn-site.xml -i
 else

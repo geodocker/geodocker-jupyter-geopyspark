@@ -4,10 +4,14 @@
 	"image": "quay.io/geodocker/jupyter-geopyspark:latest",
 	"memoryReservation": 2048,
 	"essential": true,
+	"environment": [{
+	    "name": "NEW_ADDR",
+	    "value": "${addr}"
+	}],
 	"portMappings": [
             {
-                "containerPort": 8000,
-                "hostPort": 8000,
+                "containerPort": ${port},
+                "hostPort": ${port},
                 "protocol": "tcp"
             }
         ]
