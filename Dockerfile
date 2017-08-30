@@ -40,5 +40,13 @@ RUN /scripts/install-blob2.sh $PYTHONBLOB2
 COPY blobs/geotrellis-backend-assembly-$VERSION.jar /opt/jars/
 COPY blobs/gddp-assembly-$VERSION.jar /opt/jars/
 
+# YARN
+COPY config/core-site.xml /etc/hadoop/conf/
+COPY config/yarn-site.xml /etc/hadoop/conf/
+COPY scripts/jupyterhub.sh /scripts/
+USER root
+RUN chown hadoop:hadoop -R /etc/hadoop/conf
+USER hadoop
+
 WORKDIR /tmp
-CMD ["jupyterhub", "--no-ssl", "--Spawner.notebook_dir=/home/hadoop/notebooks"]
+CMD ["/scripts/jupyterhub.sh"]

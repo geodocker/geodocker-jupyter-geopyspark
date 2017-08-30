@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more       -->
+<!-- contributor license agreements.  See the NOTICE file distributed with    -->
+<!-- this work for additional information regarding copyright ownership.      -->
+<!-- The ASF licenses this file to You under the Apache License, Version 2.0  -->
+<!-- (the "License"); you may not use this file except in compliance with     -->
+<!-- the License.  You may obtain a copy of the License at                    -->
+<!--                                                                          -->
+<!--     http://www.apache.org/licenses/LICENSE-2.0                           -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<configuration>
+
+  <property>
+    <!-- URI of NN. Fully qualified. No IP.-->
+    <name>fs.defaultFS</name>
+    <value>hdfs://ip-172-31-50-173.ec2.internal:8020</value>
+  </property>
+
+
+
+  <property>
+    <name>hadoop.security.authentication</name>
+    <value>simple</value>
+  </property>
+
+
+
+
+
+
+
+  <property>
+    <name>hadoop.proxyuser.hive.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hive.groups</name>
+    <value>*</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.httpfs.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.httpfs.groups</name>
+    <value>hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,hue,users</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.hue.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hue.groups</name>
+    <value>*</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.oozie.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.oozie.groups</name>
+    <value>*</value>
+  </property>
+
+
+
+  <property>
+    <name>io.compression.codecs</name>
+    <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec,com.hadoop.compression.lzo.LzoCodec,com.hadoop.compression.lzo.LzopCodec</value>
+  </property>
+
+  <property>
+    <name>io.compression.codec.lzo.class</name>
+    <value>com.hadoop.compression.lzo.LzoCodec</value>
+  </property>
+
+
+
+
+
+
+  <property>
+    <name>fs.s3.buffer.dir</name>
+    <value>/mnt/s3,/mnt1/s3</value>
+    <final>true</final>
+  </property>
+
+<property>
+  <name>fs.s3.impl</name>
+  <value>com.amazon.ws.emr.hadoop.fs.EmrFileSystem</value>
+</property>
+
+<property>
+  <name>fs.s3n.impl</name>
+  <value>com.amazon.ws.emr.hadoop.fs.EmrFileSystem</value>
+</property>
+
+  <property>
+    <name>ipc.client.connect.max.retries.on.timeouts</name>
+    <value>5</value>
+  </property>
+
+  <property>
+    <name>hadoop.security.key.default.bitlength</name>
+    <value>256</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.hadoop.groups</name>
+    <value>*</value>
+  </property>
+
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/mnt/var/lib/hadoop/tmp</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.hadoop.hosts</name>
+    <value>*</value>
+  </property>
+
+  <property>
+    <name>hadoop.security.key.provider.path</name>
+    <value>kms://http@ip-172-31-50-173.ec2.internal:9700/kms</value>
+  </property>
+
+  <property>
+    <name>io.file.buffer.size</name>
+    <value>65536</value>
+  </property>
+
+  <property>
+    <name>fs.AbstractFileSystem.s3.impl</name>
+    <value>org.apache.hadoop.fs.s3.EMRFSDelegate</value>
+  </property>
+
+  <property>
+    <name>fs.s3bfs.impl</name>
+    <value>org.apache.hadoop.fs.s3.S3FileSystem</value>
+  </property>
+
+
+
+
+
+</configuration>
