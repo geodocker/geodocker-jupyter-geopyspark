@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs-service" {
-    assume_role_policy = <<EOF
+  assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -25,47 +25,14 @@ resource "aws_iam_instance_profile" "ecs-service" {
   role = "${aws_iam_role.ecs-service.name}"
 }
 
-resource "aws_security_group" "jupyterhub" {
-  ingress {
-    from_port = 0
-    to_port   = 65535
-    protocol  = "tcp"
-    self      = true
-  }
-
-  ingress {
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = "${var.jupyterhub_port}"
-    to_port     = "${var.jupyterhub_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_launch_configuration" "jupyterhub" {
-  image_id             = "${var.ecs_ami}"
-  instance_type        = "m3.xlarge" # XXX
-  key_name             = "${var.key_name}"
-  security_groups      = ["${aws_security_group.jupyterhub.id}"]
-  spot_price           = "0.05"
   iam_instance_profile = "ecsInstanceRole" # XXX
+  image_id             = "${var.ecs_ami}"
+  instance_type        = "m3.xlarge"       # XXX
+  key_name             = "${var.key_name}"
+  security_groups      = ["${aws_security_group.security-group.id}"]
+  spot_price           = "0.05"
+
   user_data = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.jupyterhub.name} >> /etc/ecs/ecs.config"
 
   lifecycle {
@@ -74,18 +41,19 @@ resource "aws_launch_configuration" "jupyterhub" {
 }
 
 resource "aws_autoscaling_group" "jupyterhub" {
-  max_size = 1
-  min_size = 1
-  availability_zones = ["us-east-1a"]
+  health_check_type    = "EC2"
   launch_configuration = "${aws_launch_configuration.jupyterhub.id}"
-  health_check_type = "EC2"
+  load_balancers       = ["${aws_elb.jupyterhub.id}"]
+  vpc_zone_identifier  = ["${var.subnet}"]
+
   desired_capacity = 1
-  load_balancers = ["${aws_elb.jupyterhub.id}"]
+  max_size         = 1
+  min_size         = 1
 }
 
 resource "aws_elb" "jupyterhub" {
-  availability_zones = ["us-east-1a"]
-  security_groups    = ["${aws_security_group.jupyterhub.id}"]
+  subnets         = ["${var.subnet}"]
+  security_groups = ["${aws_security_group.security-group.id}"]
 
   listener {
     lb_port = 8000
@@ -106,14 +74,15 @@ resource "aws_elb" "jupyterhub" {
 resource "aws_ecs_task_definition" "jupyterhub" {
   container_definitions = "${file("task-definitions/jupyterhub.json")}"
   family                = "JupyterHub"
+  network_mode          = "host"
 }
 
 resource "aws_ecs_cluster" "jupyterhub" {
-  name = "JupyterHub"
+  name = "JupyterHub_Cluster"
 }
 
 resource "aws_ecs_service" "jupyterhub" {
-  name            = "JupyterHub"
+  name            = "JupyterHub_Service"
   cluster         = "${aws_ecs_cluster.jupyterhub.id}"
   desired_count   = 1
   iam_role        = "${aws_iam_role.ecs-service.name}"
