@@ -3,10 +3,10 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   applications  = ["Hadoop", "Spark", "Ganglia", "Zeppelin"]
   log_uri       = "${var.s3_uri}"
   release_label = "emr-5.7.0"
-  service_role  = "EMR_DefaultRole"
+  service_role  = "${var.emr_service_role}"
 
   ec2_attributes {
-    instance_profile = "EMR_EC2_DefaultRole"
+    instance_profile = "${var.emr_instance_profile}"
     key_name         = "${var.key_name}"
     subnet_id        = "${var.subnet}"
 

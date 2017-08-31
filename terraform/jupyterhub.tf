@@ -26,9 +26,9 @@ resource "aws_iam_instance_profile" "ecs-service" {
 }
 
 resource "aws_launch_configuration" "jupyterhub" {
-  iam_instance_profile = "ecsInstanceRole" # XXX
+  iam_instance_profile = "${var.ecs_instance_profile}"
   image_id             = "${var.ecs_ami}"
-  instance_type        = "m3.xlarge"       # XXX
+  instance_type        = "m3.xlarge"
   key_name             = "${var.key_name}"
   security_groups      = ["${aws_security_group.security-group.id}"]
   spot_price           = "0.05"

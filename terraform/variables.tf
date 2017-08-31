@@ -18,12 +18,12 @@ variable "region" {
 
 variable "key_name" {
     type        = "string"
-    description = "The name of your EC2 secret key"
+    description = "The name of the EC2 secret key (primarily for SSH access)"
 }
 
 variable "s3_uri" {
     type        = "string"
-    description = "Where to send EMR logs"
+    description = "Where EMR logs will be sent"
     default     = "s3n://geotrellis-test/terraform-logs/"
 }
 
@@ -48,4 +48,22 @@ variable "worker_count" {
 variable "subnet" {
   type        = "string"
   description = "The subnet in which to launch the EMR cluster and the JupyterHub container"
+}
+
+variable "emr_service_role" {
+  type        = "string"
+  description = "EMR service role"
+  default     = "EMR_DefaultRole"
+}
+
+variable "emr_instance_profile" {
+  type        = "string"
+  description = "EMR instance profile"
+  default     = "EMR_EC2_DefaultRole"
+}
+
+variable "ecs_instance_profile" {
+  type        = "string"
+  description = "ECS instance profile"
+  default     = "ecsInstanceRole"
 }
