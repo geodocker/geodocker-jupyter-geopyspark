@@ -169,7 +169,7 @@ The changes to the kernel described in the last bullet-point would probably look
          "SPARK_HOME": "/usr/local/spark-2.1.0-bin-hadoop2.7",
          "PYTHONPATH": "/usr/local/spark-2.1.0-bin-hadoop2.7/python/lib/pyspark.zip:/usr/local/spark-2.1.0-bin-hadoop2.7/python/lib/py4j-0.10.4-src.zip",
          "GEOPYSPARK_JARS_PATH": "/opt/jars",
-         "YARN_CONF_DIR": "/yarn",
+         "YARN_CONF_DIR": "/etc/hadoop/conf",
 -        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.yarn.appMasterEnv.LD_LIBRARY_PATH=/home/hadoop/local/gdal/lib --conf spark.executorEnv.LD_LIBRARY_PATH=gdal-and-friends.tar.gz/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
 +        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/helloworld-and-friends.tar.gz,/blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.yarn.appMasterEnv.LD_LIBRARY_PATH=/home/hadoop/local/helloworld/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.LD_LIBRARY_PATH=helloworld-and-friends/lib:gdal-and-friends.tar.gz/lib:/home/hadoop/local/helloworld/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
      }

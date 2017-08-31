@@ -50,7 +50,6 @@ YARN_RM=$(xmllint --xpath "//property[name='yarn.resourcemanager.hostname']/valu
 DOCKER_ENV="-e USER=hadoop \
 -e ZOOKEEPERS=$YARN_RM \
 ${ENV_VARS[@]} \
--v /etc/hadoop/conf:/yarn \
 -v /etc/hadoop/conf:/etc/hadoop/conf \
 -v /usr/lib/hadoop-hdfs/bin:/usr/lib/hadoop-hdfs/bin"
 

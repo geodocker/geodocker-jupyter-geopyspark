@@ -3,8 +3,12 @@ archives/*.tar.*
 archives/*.whl
 archives/*.zip
 blobs/*
+emr/config-aws.mk
 geopyspark-*/
 notebooks/.ipynb_checkpoints/
-emr/config-aws.mk
 scratch/*
 target/*
+terraform/.terraform/*
+terraform/.terraform*
+terraform/terraform.tfstate*
+

@@ -1,6 +1,6 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= mapnik
+TAG ?= terraform
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 AWSBUILD := $(FAMILY):aws-build-gdal-0
 IMAGE := $(FAMILY):$(TAG)
@@ -73,6 +73,7 @@ archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/py
    archives/geopyspark-$(GEOPYSPARK_SHA).zip \
    archives/geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA).zip
 	rm -rf scratch/dot-local/lib/python3.4/site-packages/geopyspark*
+	rm -rf scratch/pip-cache/wheels/*
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
@@ -134,7 +135,6 @@ cleanest: cleaner
 
 mrproper: cleanest
 	rm -rf archives/*
-	rm -rf scratch/dot-local/*
 	rm -rf scratch/pip-cache/*
 
 publish:
