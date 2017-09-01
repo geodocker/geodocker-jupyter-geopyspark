@@ -1,15 +1,3 @@
-variable "access_key" {
-    type        = "string"
-    description = "AWS Access Key (nominally from ~/.aws/credentials)"
-    default     = ""
-}
-
-variable "secret_key" {
-    type        = "string"
-    description = "AWS Secret Key (nominally from ~/.aws/credentials)"
-    default     = ""
-}
-
 variable "region" {
     type        = "string"
     description = "AWS Region"
