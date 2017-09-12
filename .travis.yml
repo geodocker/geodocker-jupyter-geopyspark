@@ -42,7 +42,7 @@ before_install:
    - mkdir -p $HOME/.ivy2 $HOME/.m2 $HOME/.sbt $HOME/.gradle $HOME/.cache/pip
 
 install:
-   - pip3 install wheel
+   - pip3 install --user wheel
    - docker pull quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-0
 
 script:
