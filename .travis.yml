@@ -49,7 +49,6 @@ install:
 script:
    - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.2.jar
    - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.2.jar
-   - TRAVIS=1 TAG=$TAG make env
    - TRAVIS=1 TAG=$TAG make image
 
 after_success:
