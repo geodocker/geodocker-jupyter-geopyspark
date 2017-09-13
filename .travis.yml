@@ -14,7 +14,8 @@ services:
 
 env:
    global:
-      - TAG=${TRAVIS_TAG:-${TRAVIS_COMMIT:0:7}}
+      - CLEAN_TRAVIS_TAG=${TRAVIS_TAG/[[:space:]]/}
+      - TAG=${CLEAN_TRAVIS_TAG:-${TRAVIS_COMMIT:0:7}}
 
 branches:
    only:
@@ -46,8 +47,8 @@ install:
    - docker pull quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-0
 
 script:
-   - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.0.jar
-   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.0.jar
+   - TRAVIS=1 TAG=$TAG make archives/geotrellis-backend-assembly-0.2.2.jar
+   - TRAVIS=1 TAG=$TAG make archives/gddp-assembly-0.2.2.jar
    - TRAVIS=1 TAG=$TAG make image
 
 after_success:
