@@ -1,4 +1,5 @@
-FROM quay.io/geodocker/jupyter-geopyspark:centos-build-base
+FROM amazonlinux:2016.09.1.20161221
+MAINTAINER James McClain <james.mcclain@gmail.com>
 
 COPY blobs/gcc6-6.4.0-33.x86_64.rpm /blobs/
 

@@ -1,32 +1,20 @@
 .PHONY: all centos-build-base centos-build-gcc6 aws-build-base aws-build-gdal base
 
-FAMILY := quay.io/geodocker/jupyter-geopyspark
+FAMILY := quay.io/geodocker/emr-build
 VERSION := 0
-GDALIMAGE := $(FAMILY):aws-build-gdal-$(VERSION)
-BASEIMAGE := $(FAMILY):base-$(VERSION)
+GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
+GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
 
 all: centos-build-base centos-build-gcc6 aws-build-base aws-build-gdal base
 
 blobs/%: archives/%
 	cp -f $< $@
 
-centos-build-base aws-build-base:
-	docker build -t "$(FAMILY):$@" -f Dockerfile.$@ .
+gcc4:
+	docker build -t "$(FAMILY):$@-$(VERSION)" -f Dockerfile.$@ .
 
-centos-build-gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
-	docker build -t "$(FAMILY):$@" -f Dockerfile.$@ .
-
-aws-build-gdal: blobs/gdal-and-friends.tar.gz
-	docker build -t $(GDALIMAGE) -f Dockerfile.$@ .
-
-base: blobs/gdal-and-friends.tar.gz \
-   blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
-   blobs/freetype2-lib-2.8-33.x86_64.rpm \
-   blobs/boost162-lib-1_62_0-33.x86_64.rpm \
-   blobs/gdal213-lib-2.1.3-33.x86_64.rpm \
-   blobs/mapnik-093fcee-33.x86_64.rpm \
-   blobs/python-mapnik-e5f107d-33.x86_64.rpm
-	docker build -t $(BASEIMAGE) -f Dockerfile.base .
+gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
+	docker build -t "$(FAMILY):$@-$(VERSION)" -f Dockerfile.$@ .
 
 ########################################################################
 

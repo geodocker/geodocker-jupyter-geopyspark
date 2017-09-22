@@ -1,11 +1,13 @@
-FROM quay.io/geodocker/jupyter:99fceaa
+FROM amazonlinux:2016.09.1.20161221
+MAINTAINER James McClain <james.mcclain@gmail.com>
 
-USER root
+RUN yum -y groupinstall "Development Tools" || echo
+RUN yum -y install python34-devel cmake less nano && yum clean all
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.4
 RUN yum clean all -y && yum update -y && \
     yum install -y \
       bzip2-devel \
       cairo-devel \
-      freetype-devel \
       gcc gcc-c++ \
       gmp-devel \
       harfbuzz-devel \
@@ -19,14 +21,7 @@ RUN yum clean all -y && yum update -y && \
       make \
       mpfr-devel \
       pkgconfig \
-      python34-devel \
       rpm-build \
       which \
-      zlib-devel && \
-    ln -s /usr/include/python3.4m /usr/include/python3.4 && \
-    yum autoremove -y
-
-RUN yum install -y gdal-devel proj-devel && yum autoremove -y
-
-WORKDIR /tmp
-CMD ["bash"]
+      zlib-devel
+RUN ln -s /usr/include/python3.4m /usr/include/python3.4
