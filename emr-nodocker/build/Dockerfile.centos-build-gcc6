@@ -1,0 +1,6 @@
+FROM quay.io/geodocker/jupyter-geopyspark:centos-build-base
+
+COPY blobs/gcc6-6.4.0-33.x86_64.rpm /blobs/
+
+RUN yum localinstall -y /blobs/gcc6-6.4.0-33.x86_64.rpm && \
+    ln -s /usr/local/bin/gcc /usr/local/bin/cc
