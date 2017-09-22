@@ -1,7 +1,8 @@
-FROM amazonlinux:2016.09.1.20161221
+FROM quay.io/geodocker/emr-build:gcc4-0
 MAINTAINER James McClain <james.mcclain@gmail.com>
 
 COPY blobs/gcc6-6.4.0-33.x86_64.rpm /blobs/
 
-RUN yum localinstall -y /blobs/gcc6-6.4.0-33.x86_64.rpm && \
-    ln -s /usr/local/bin/gcc /usr/local/bin/cc
+RUN yum remove -y gcc48 && \
+    yum localinstall -y /blobs/gcc6-6.4.0-33.x86_64.rpm && \
+      ln -s /usr/local/bin/gcc /usr/local/bin/cc

@@ -5,7 +5,13 @@ VERSION := 0
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
 
-all: centos-build-base centos-build-gcc6 aws-build-base aws-build-gdal base
+all: blobs/gdal-and-friends.tar.gz \
+   blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
+   blobs/freetype2-lib-2.8-33.x86_64.rpm \
+   blobs/boost162-lib-1_62_0-33.x86_64.rpm \
+   blobs/gdal213-lib-2.1.3-33.x86_64.rpm \
+   blobs/mapnik-093fcee-33.x86_64.rpm \
+   blobs/python-mapnik-e5f107d-33.x86_64.rpm
 
 blobs/%: archives/%
 	cp -f $< $@
@@ -74,37 +80,37 @@ archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: $(shell
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(FAMILY):centos-build-base /scripts/gcc6.sh $(shell id -u) $(shell id -g)
+          $(GCC4IMAGE) /scripts/gcc6.sh $(shell id -u) $(shell id -g)
 
 archives/boost162-1_62_0-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(FAMILY):centos-build-gcc6 /scripts/boost162.sh $(shell id -u) $(shell id -g)
+          $(GCC6IMAGE) /scripts/boost162.sh $(shell id -u) $(shell id -g)
 
 archives/freetype2-2.8-33.x86_64.rpm archives/freetype2-lib-2.8-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(FAMILY):centos-build-gcc6 /scripts/freetype.sh $(shell id -u) $(shell id -g)
+          $(GCC6IMAGE) /scripts/freetype.sh $(shell id -u) $(shell id -g)
 
 archives/gdal213-2.1.3-33.x86_64.rpm archives/gdal213-lib-2.1.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/gdal-2.1.3.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(FAMILY):centos-build-gcc6 /scripts/gdal.sh $(shell id -u) $(shell id -g)
+          $(GCC6IMAGE) /scripts/gdal.sh $(shell id -u) $(shell id -g)
 
 archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(FAMILY):centos-build-gcc6 /scripts/mapnik.sh $(shell id -u) $(shell id -g)
+          $(GCC6IMAGE) /scripts/mapnik.sh $(shell id -u) $(shell id -g)
 
 archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype2-2.8-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(FAMILY):centos-build-gcc6 /scripts/python-mapnik.sh $(shell id -u) $(shell id -g)
+          $(GCC6IMAGE) /scripts/python-mapnik.sh $(shell id -u) $(shell id -g)
 
 ########################################################################
 
