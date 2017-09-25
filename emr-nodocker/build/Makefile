@@ -58,9 +58,12 @@ archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip:
 archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip:
 	curl -L "https://github.com/mapnik/python-mapnik/archive/e5f107d8d459590829d50c976c7a4222d8f4737c.zip" -o $@
 
+archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip:
+	curl -L "https://github.com/ipython/ipykernel/archive/629ac54cae9767310616d47d769665453619ac64.zip" -o $@
+
 ########################################################################
 
-archives/rpmbuild.tar: rpmbuild/
+archives/%.tar: %/
 	tar cvf $@ $<
 
 archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) $(shell scripts/not.sh archives/gcc-6.4.0.tar.xz) $(shell scripts/not.sh archives/isl-0.16.1.tar.bz2)
@@ -110,6 +113,12 @@ archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rp
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/python-mapnik.sh $(shell id -u) $(shell id -g)
+
+archives/jupyterhub-0.7.2-13.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/jupyterhub.tar archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip archives/nodejs-8.5.0-13.x86_64.rpm
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          $(GCC6IMAGE) /scripts/jupyterhub.sh $(shell id -u) $(shell id -g)
 
 ########################################################################
 
