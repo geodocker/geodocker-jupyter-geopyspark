@@ -20,7 +20,7 @@ GDAL
 %setup -q -n gdal-2.1.3
 
 %build
-./configure --prefix=/usr/local --with-static-proj4=/usr/local
+LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' ./configure --prefix=/usr/local
 make -k -j 33 || make
 
 %install
