@@ -66,55 +66,55 @@ archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip:
 archives/%.tar: %/
 	tar cvf $@ $<
 
-archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) $(shell scripts/not.sh archives/gcc-6.4.0.tar.xz) $(shell scripts/not.sh archives/isl-0.16.1.tar.bz2)
+archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: rpmbuild/SPECS/gcc6.spec $(shell scripts/not.sh archives/rpmbuild.tar) $(shell scripts/not.sh archives/gcc-6.4.0.tar.xz) $(shell scripts/not.sh archives/isl-0.16.1.tar.bz2)
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC4IMAGE) /scripts/gcc6.sh $(shell id -u) $(shell id -g)
 
-archives/nodejs-8.5.0-13.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/node-v8.5.0.tar.gz
+archives/nodejs-8.5.0-13.x86_64.rpm: rpmbuild/SPECS/nodejs.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/node-v8.5.0.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/nodejs.sh $(shell id -u) $(shell id -g)
 
-archives/boost162-1_62_0-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
+archives/boost162-1_62_0-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm: rpmbuild/SPECS/boost162.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/boost162.sh $(shell id -u) $(shell id -g)
 
-archives/freetype2-2.8-33.x86_64.rpm archives/freetype2-lib-2.8-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8.tar.gz
+archives/freetype2-2.8-33.x86_64.rpm archives/freetype2-lib-2.8-33.x86_64.rpm: rpmbuild/SPECS/freetype.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/freetype-2.8.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/freetype.sh $(shell id -u) $(shell id -g)
 
-archives/proj493-4.9.3-33.x86_64.rpm archives/proj493-lib-4.9.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3.tar.gz
+archives/proj493-4.9.3-33.x86_64.rpm archives/proj493-lib-4.9.3-33.x86_64.rpm: rpmbuild/SPECS/proj.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/proj.sh $(shell id -u) $(shell id -g)
 
-archives/gdal213-2.1.3-33.x86_64.rpm archives/gdal213-lib-2.1.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj493-4.9.3-33.x86_64.rpm archives/gdal-2.1.3.tar.gz
+archives/gdal213-2.1.3-33.x86_64.rpm archives/gdal213-lib-2.1.3-33.x86_64.rpm: rpmbuild/SPECS/gdal.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj493-4.9.3-33.x86_64.rpm archives/gdal-2.1.3.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/gdal.sh $(shell id -u) $(shell id -g)
 
-archives/mapnik-093fcee-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj493-4.9.3-33.x86_64.rpm archives/freetype2-2.8-33.x86_64.rpm archives/boost162-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
+archives/mapnik-093fcee-33.x86_64.rpm: rpmbuild/SPECS/mapnik.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj493-4.9.3-33.x86_64.rpm archives/freetype2-2.8-33.x86_64.rpm archives/boost162-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/python-mapnik-e5f107d-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj493-4.9.3-33.x86_64.rpm archives/freetype2-2.8-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
+archives/python-mapnik-e5f107d-33.x86_64.rpm: rpmbuild/SPECS/python-mapnik.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj493-4.9.3-33.x86_64.rpm archives/freetype2-2.8-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/mapbox-geometry-v0.9.2.tar.gz archives/mapbox-variant-v1.1.3.tar.gz archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/python-mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/jupyterhub-0.7.2-13.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/jupyterhub.tar archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip archives/nodejs-8.5.0-13.x86_64.rpm
+archives/jupyterhub-0.7.2-13.x86_64.rpm: rpmbuild/SPECS/jupyterhub.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/jupyterhub.tar archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip archives/nodejs-8.5.0-13.x86_64.rpm
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \

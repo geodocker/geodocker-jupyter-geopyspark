@@ -10,7 +10,7 @@ Name:      %{name}
 Version:   %{version}
 Release:   %{release}
 Source:    python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
-Prefix:    /usr/lib/python3.4/site-package
+Prefix:    /usr/local/lib/python3.4/site-package
 Group:     Geography
 
 %description
@@ -23,8 +23,8 @@ Mapnik Python e5f107d
 echo
 
 %install
-pip3 install --target %{buildroot}/usr/lib/python3.4/site-packages .
+pip3 install --target %{buildroot}/usr/local/lib/python3.4/site-packages .
 
 %files
 %defattr(-,root,root)
-/usr/lib/python3.4/site-packages/*
+/usr/local/lib/python3.4/site-packages/*
