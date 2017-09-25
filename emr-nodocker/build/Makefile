@@ -146,7 +146,7 @@ archives/gdal-and-friends.tar.gz: $(shell scripts/not.sh scripts/build-gdal.sh) 
 ########################################################################
 
 clean:
-	rm -f archives/*debug*.rpm
+	rm -f blobs/* archives/*debug*.rpm
 
 cleaner: clean
 	rm -f archives/rpmbuild.tar
