@@ -25,6 +25,9 @@ gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
 
 ########################################################################
 
+archives/node-v8.5.0.tar.gz:
+	curl -L "https://nodejs.org/dist/v8.5.0/node-v8.5.0.tar.gz" -o $@
+
 archives/zlib-1.2.11.tar.gz:
 	curl -L "https://downloads.sourceforge.net/project/libpng/zlib/1.2.11/zlib-1.2.11.tar.gz?r=http%3A%2F%2Fwww.zlib.net%2F&ts=1490316463&use_mirror=pilotfiber" -o $@
 
@@ -83,7 +86,13 @@ archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: $(shell
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC4IMAGE) /scripts/gcc6.sh $(shell id -u) $(shell id -g)
 
-archives/proj493-4.9.3-33.x86_64.rpm archives/proj493-lib-4.9.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) scripts/not.sh archives/proj-4.9.3.tar.gz
+archives/nodejs-8.5.0-13.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/node-v8.5.0.tar.gz
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          $(GCC6IMAGE) /scripts/nodejs.sh $(shell id -u) $(shell id -g)
+
+archives/proj493-4.9.3-33.x86_64.rpm archives/proj493-lib-4.9.3-33.x86_64.rpm: $(shell scripts/not.sh archives/rpmbuild.tar) archives/proj-4.9.3.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
