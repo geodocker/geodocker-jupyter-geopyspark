@@ -5,7 +5,7 @@ GROUPID=$2
 
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
 yum remove -y gdal-devel
-yum localinstall -y /archives/freetype2-2.8-33.x86_64.rpm /archives/boost162-1_62_0-33.x86_64.rpm /archives/gdal213-2.1.3-33.x86_64.rpm /archives/mapnik-093fcee-33.x86_64.rpm
+yum localinstall -y /archives/proj493-4.9.3-33.x86_64.rpm /archives/freetype2-2.8-33.x86_64.rpm /archives/boost162-1_62_0-33.x86_64.rpm /archives/gdal213-2.1.3-33.x86_64.rpm /archives/mapnik-093fcee-33.x86_64.rpm
 
 cd /tmp
 tar axvf /archives/mapbox-geometry-v0.9.2.tar.gz
