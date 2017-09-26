@@ -4,6 +4,7 @@ USERID=$1
 GROUPID=$2
 
 yum remove -y freetype freetype-devel
+ldconfig
 
 cd /tmp
 tar axvf /archives/rpmbuild.tar

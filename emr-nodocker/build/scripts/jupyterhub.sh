@@ -5,6 +5,7 @@ GROUPID=$2
 RPM=$3
 
 yum install -y /archives/nodejs-8.5.0-13.x86_64.rpm /archives/$RPM
+ldconfig
 npm install -g configurable-http-proxy
 
 cd /tmp

@@ -5,6 +5,7 @@ GROUPID=$2
 
 yum install -y geos-devel lcms2-devel libpng-devel openjpeg-devel zlib-devel
 yum localinstall -y /archives/proj493-4.9.3-33.x86_64.rpm
+ldconfig
 
 cd /tmp
 tar axvf /archives/rpmbuild.tar

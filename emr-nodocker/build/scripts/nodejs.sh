@@ -3,8 +3,6 @@
 USERID=$1
 GROUPID=$2
 
-export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
-
 cd /tmp
 tar axvf /archives/rpmbuild.tar
 cd rpmbuild

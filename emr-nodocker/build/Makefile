@@ -131,7 +131,7 @@ clean:
 	rm -f blobs/* archives/*debug*.rpm
 
 cleaner: clean
-	rm -f archives/rpmbuild.tar
+	rm -f archives/rpmbuild.tar archives/geopyspark.tar archives/jupyterhub.tar archives/geonotebook.tar
 
 cleanest: cleaner
 	rm -f archives/*.rpm archives/*.jar

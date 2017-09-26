@@ -1,21 +1,15 @@
 archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
 	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
 
-# archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR): scripts/geopyspark-jar.sh archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/$(CDM_JAR)
-# 	docker run -it --rm \
-#            -v $(shell pwd)/archives:/archives:rw \
-#            -v $(shell pwd)/scripts:/scripts:ro \
-#            -v $(HOME)/.m2:/root/.m2:rw \
-#            -v $(HOME)/.ivy2:/root/.ivy2:rw \
-#            openjdk:8-jdk /scripts/geopyspark-jar.sh $(shell id -u) $(shell id -g) \
-# 	   $(GEOPYSPARK_SHA) $(GEOPYSPARK_JAR) $(NETCDF_SHA) $(NETCDF_JAR)
-
-# archives/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm archives/geopyspark-worker-$(GEOPYSPARK_VERSION)-13.x86_64.rpm: rpmbuild/SPECS/geopyspark.spec scripts/geopyspark.sh $(shell scripts/not.sh archives/rpmbuild.tar) archives/geopyspark.tar archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
-# 	cp -f archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/geopyspark-netcdf.zip
-# 	cp -f archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark.zip
-# 	docker run -it --rm \
-#           -v $(shell pwd)/archives:/archives:rw \
-#           -v $(shell pwd)/scripts:/scripts:ro \
-#           $(GCC4IMAGE) /scripts/geopyspark.sh $(shell id -u) $(shell id -g)
-# 	rm -f archives/geopyspark.zip
-# 	rm -f archives/geopyspark-netcdf.zip
+archives/geonotebook-0.0.0-13.x86_64.rpm: rpmbuild/SPECS/geonotebook.spec scripts/geonotebook.sh $(shell scripts/not.sh archives/rpmbuild.tar) archives/geonotebook.tar \
+archives/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm \
+archives/nodejs-8.5.0-13.x86_64.rpm archives/jupyterhub-0.7.2-13.x86_64.rpm \
+archives/freetype2-2.8-33.x86_64.rpm archives/proj493-4.9.3-33.x86_64.rpm archives/gdal213-2.1.3-33.x86_64.rpm \
+archives/boost162-lib-1_62_0-33.x86_64.rpm archives/mapnik-093fcee-33.x86_64.rpm archives/python-mapnik-e5f107d-33.x86_64.rpm \
+archives/geonotebook-$(GEONOTEBOOK_SHA).zip
+	cp -f archives/geonotebook-$(GEONOTEBOOK_SHA).zip archives/geonotebook.zip
+	docker run -it --rm \
+          -v $(shell pwd)/archives:/archives:rw \
+          -v $(shell pwd)/scripts:/scripts:ro \
+          $(GCC6IMAGE) /scripts/geonotebook.sh $(shell id -u) $(shell id -g) geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm
+	rm -f archives/geonotebook.zip
