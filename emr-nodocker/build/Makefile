@@ -1,9 +1,17 @@
-.PHONY: all gcc4 gcc6
+.PHONY: all gcc4 gcc6 jars
 
 FAMILY := quay.io/geodocker/emr-build
 VERSION := 0
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
+GEOPYSPARK_SHA ?= 686ad28724d7648bec5e7e1a39cd48d5d80fca79
+NETCDF_SHA ?= 8e059120f4f7b49c38a326633e31d8120906ef4a
+GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
+GEOPYSPARK_VERSION ?= 0.2.2
+GEOPYSPARK_JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
+NETCDF_JAR := gddp-assembly-$(GEOPYSPARK_VERSION).jar
+CDM_JAR := netcdfAll-5.0.0-SNAPSHOT.jar
+
 
 all: blobs/gdal-and-friends.tar.gz \
    blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
@@ -22,6 +30,39 @@ gcc4:
 
 gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
 	docker build -t "$(FAMILY):$@-$(VERSION)" -f Dockerfile.$@ .
+
+########################################################################
+
+archives/s3+hdfs.zip:
+	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
+
+archives/geopyspark-$(GEOPYSPARK_SHA).zip:
+	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK_SHA).zip" -o $@
+
+archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
+	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
+
+archives/geopyspark-netcdf-$(NETCDF_SHA).zip:
+	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(NETCDF_SHA).zip" -o $@
+
+jars: archives/$(CDM_JAR) archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
+
+archives/$(CDM_JAR): scripts/netcdf-jar.sh archives/s3+hdfs.zip
+	docker run -it --rm \
+           -v $(shell pwd)/archives:/archives:rw \
+           -v $(shell pwd)/scripts:/scripts:ro \
+           -v $(HOME)/.m2:/root/.m2:rw \
+           -v $(HOME)/.gradle:/root/.gradle:rw \
+           openjdk:8-jdk /scripts/netcdf-jar.sh $(shell id -u) $(shell id -g) $(CDM_JAR)
+
+archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR): scripts/geopyspark-jar.sh archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/$(CDM_JAR)
+	docker run -it --rm \
+           -v $(shell pwd)/archives:/archives:rw \
+           -v $(shell pwd)/scripts:/scripts:ro \
+           -v $(HOME)/.m2:/root/.m2:rw \
+           -v $(HOME)/.ivy2:/root/.ivy2:rw \
+           openjdk:8-jdk /scripts/geopyspark-jar.sh $(shell id -u) $(shell id -g) \
+	   $(GEOPYSPARK_SHA) $(GEOPYSPARK_JAR) $(NETCDF_SHA) $(NETCDF_JAR)
 
 ########################################################################
 
@@ -144,7 +185,7 @@ cleaner: clean
 	rm -f archives/rpmbuild.tar
 
 cleanest: cleaner
-	rm -f archives/*.rpm
+	rm -f archives/*.rpm archives/*.jar
 
 mrproper: cleanest
 	rm -f archives/*.tar.gz archives/*.tar.bz2 archives/*.tar.xz archives/*.zip
