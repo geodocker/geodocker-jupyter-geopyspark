@@ -8,9 +8,6 @@ GEOPYSPARK_SHA ?= 686ad28724d7648bec5e7e1a39cd48d5d80fca79
 NETCDF_SHA ?= 8e059120f4f7b49c38a326633e31d8120906ef4a
 GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
 GEOPYSPARK_VERSION ?= 0.2.2
-GEOPYSPARK_JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
-NETCDF_JAR := gddp-assembly-$(GEOPYSPARK_VERSION).jar
-CDM_JAR := netcdfAll-5.0.0-SNAPSHOT.jar
 
 
 all: blobs/gdal-and-friends.tar.gz \
@@ -31,40 +28,8 @@ gcc4:
 gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
 	docker build -t "$(FAMILY):$@-$(VERSION)" -f Dockerfile.$@ .
 
-########################################################################
-
-archives/s3+hdfs.zip:
-	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
-
-archives/geopyspark-$(GEOPYSPARK_SHA).zip:
-	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK_SHA).zip" -o $@
-
-archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
-	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
-
-archives/geopyspark-netcdf-$(NETCDF_SHA).zip:
-	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(NETCDF_SHA).zip" -o $@
-
-jars: archives/$(CDM_JAR) archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
-
-archives/$(CDM_JAR): scripts/netcdf-jar.sh archives/s3+hdfs.zip
-	docker run -it --rm \
-           -v $(shell pwd)/archives:/archives:rw \
-           -v $(shell pwd)/scripts:/scripts:ro \
-           -v $(HOME)/.m2:/root/.m2:rw \
-           -v $(HOME)/.gradle:/root/.gradle:rw \
-           openjdk:8-jdk /scripts/netcdf-jar.sh $(shell id -u) $(shell id -g) $(CDM_JAR)
-
-archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR): scripts/geopyspark-jar.sh archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/$(CDM_JAR)
-	docker run -it --rm \
-           -v $(shell pwd)/archives:/archives:rw \
-           -v $(shell pwd)/scripts:/scripts:ro \
-           -v $(HOME)/.m2:/root/.m2:rw \
-           -v $(HOME)/.ivy2:/root/.ivy2:rw \
-           openjdk:8-jdk /scripts/geopyspark-jar.sh $(shell id -u) $(shell id -g) \
-	   $(GEOPYSPARK_SHA) $(GEOPYSPARK_JAR) $(NETCDF_SHA) $(NETCDF_JAR)
-
-########################################################################
+include geopyspark.mk
+include jupyterhub.mk
 
 archives/isl-0.16.1.tar.bz2:
 	curl -L "ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2" -o $@
@@ -77,9 +42,6 @@ archives/proj-4.9.3.tar.gz:
 
 archives/gdal-2.1.3.tar.gz:
 	curl -L "http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz" -o $@
-
-archives/node-v8.5.0.tar.gz:
-	curl -L "https://nodejs.org/dist/v8.5.0/node-v8.5.0.tar.gz" -o $@
 
 archives/boost_1_62_0.tar.bz2:
 	curl -L "https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2" -o $@
@@ -112,12 +74,6 @@ archives/gcc6-6.4.0-33.x86_64.rpm archives/gcc6-lib-6.4.0-33.x86_64.rpm: rpmbuil
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC4IMAGE) /scripts/gcc6.sh $(shell id -u) $(shell id -g)
-
-archives/nodejs-8.5.0-13.x86_64.rpm: rpmbuild/SPECS/nodejs.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/node-v8.5.0.tar.gz
-	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scripts:/scripts:ro \
-          $(GCC6IMAGE) /scripts/nodejs.sh $(shell id -u) $(shell id -g)
 
 archives/boost162-1_62_0-33.x86_64.rpm archives/boost162-lib-1_62_0-33.x86_64.rpm: rpmbuild/SPECS/boost162.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/boost_1_62_0.tar.bz2
 	docker run -it --rm \
@@ -155,11 +111,6 @@ archives/python-mapnik-e5f107d-33.x86_64.rpm: rpmbuild/SPECS/python-mapnik.spec 
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/python-mapnik.sh $(shell id -u) $(shell id -g)
 
-archives/jupyterhub-0.7.2-13.x86_64.rpm: rpmbuild/SPECS/jupyterhub.spec $(shell scripts/not.sh archives/rpmbuild.tar) archives/jupyterhub.tar archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip archives/nodejs-8.5.0-13.x86_64.rpm
-	docker run -it --rm \
-          -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scripts:/scripts:ro \
-          $(GCC6IMAGE) /scripts/jupyterhub.sh $(shell id -u) $(shell id -g)
 
 ########################################################################
 

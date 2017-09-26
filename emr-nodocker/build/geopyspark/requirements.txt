@@ -1,0 +1,6 @@
+appdirs==1.4.3
+packaging==16.8
+protobuf==3.3.0
+pyparsing==2.2.0
+Shapely==1.6b4
+six==1.10.0
