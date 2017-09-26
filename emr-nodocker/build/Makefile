@@ -30,6 +30,7 @@ gcc6: blobs/gcc6-6.4.0-33.x86_64.rpm
 
 include geopyspark.mk
 include jupyterhub.mk
+include geonotebook.mk
 
 archives/isl-0.16.1.tar.bz2:
 	curl -L "ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2" -o $@
@@ -60,9 +61,6 @@ archives/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip:
 
 archives/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip:
 	curl -L "https://github.com/mapnik/python-mapnik/archive/e5f107d8d459590829d50c976c7a4222d8f4737c.zip" -o $@
-
-archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip:
-	curl -L "https://github.com/ipython/ipykernel/archive/629ac54cae9767310616d47d769665453619ac64.zip" -o $@
 
 ########################################################################
 

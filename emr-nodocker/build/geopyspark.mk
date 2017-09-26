@@ -8,9 +8,6 @@ archives/s3+hdfs.zip:
 archives/geopyspark-$(GEOPYSPARK_SHA).zip:
 	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK_SHA).zip" -o $@
 
-archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
-	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
-
 archives/geopyspark-netcdf-$(NETCDF_SHA).zip:
 	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(NETCDF_SHA).zip" -o $@
 

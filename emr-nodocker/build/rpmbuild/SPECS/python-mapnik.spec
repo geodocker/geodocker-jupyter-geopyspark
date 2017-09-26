@@ -13,6 +13,10 @@ Source:    python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 Prefix:    /usr/local/lib/python3.4/site-package
 Group:     Geography
 
+%global _enable_debug_package 0
+%global debug_package %{nil}
+%global __os_install_post /usr/lib/rpm/brp-compress %{nil}
+
 %description
 Mapnik Python e5f107d
 

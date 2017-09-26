@@ -1,6 +1,9 @@
 archives/node-v8.5.0.tar.gz:
 	curl -L "https://nodejs.org/dist/v8.5.0/node-v8.5.0.tar.gz" -o $@
 
+archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip:
+	curl -L "https://github.com/ipython/ipykernel/archive/629ac54cae9767310616d47d769665453619ac64.zip" -o $@
+
 archives/nodejs-8.5.0-13.x86_64.rpm: rpmbuild/SPECS/nodejs.spec scripts/nodejs.sh $(shell scripts/not.sh archives/rpmbuild.tar) archives/node-v8.5.0.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
