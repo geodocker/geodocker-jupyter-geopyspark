@@ -10,7 +10,7 @@ Name:      %{name}
 Version:   %{version}
 Release:   %{release}
 Source:    geonotebook.tar
-Prefix:    /
+Prefix:    /usr
 Group:     Geography
 AutoReq:   no
 

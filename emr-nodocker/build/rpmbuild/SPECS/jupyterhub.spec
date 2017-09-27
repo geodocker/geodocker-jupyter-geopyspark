@@ -12,6 +12,7 @@ Release:   %{release}
 Source:    jupyterhub.tar
 Prefix:    /usr/local
 Group:     Development
+AutoReq:   no
 
 %global _enable_debug_package 0
 %global debug_package %{nil}
@@ -27,7 +28,8 @@ JupyterHub 0.7.2
 echo
 
 %install
-find /usr/local | grep 'site-packages/[^/]\+$' | sort > before.txt
+find /usr/local/lib /usr/local/lib64 | grep 'site-packages/[^/]\+$' | sort > before.txt
+find /usr/local/share /usr/local/bin | sort >> before.txt
 pip3 install -r requirements-1.txt
 unzip /archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip
 cd ipykernel-629ac54cae9767310616d47d769665453619ac64
@@ -35,22 +37,15 @@ patch -p1 < ../patch.diff
 pip3 install .
 cd ..
 pip3 install -r requirements-2.txt
-pip3 install "https://github.com/jupyterhub/oauthenticator/archive/f5e39b1ece62b8d075832054ed3213cc04f85030.zip"
-find /usr/local | grep 'site-packages/[^/]\+$' | sort > after.txt
-tar cvf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')
+find /usr/local/lib /usr/local/lib64 | grep 'site-packages/[^/]\+$' | sort > after.txt
+find /usr/local/share /usr/local/bin | sort >> after.txt
+echo /usr/local/lib/node_modules/configurable-http-proxy >> after.txt
+tar cf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')
 cd %{buildroot}
-tar axvf /tmp/packages.tar
-cp -r /usr/local/lib/node_modules %{buildroot}/usr/local/lib/node_modules
-mkdir -p %{buildroot}/usr/local/bin
+tar axf /tmp/packages.tar
 cd %{buildroot}/usr/local/bin
-cp /usr/local/bin/jupyter* .
 ln -s ../lib/node_modules/configurable-http-proxy/bin/configurable-http-proxy configurable-http-proxy
-mkdir -p %{buildroot}/usr/local/share/
-cp -r /usr/local/share/jupyter %{buildroot}/usr/local/share/
 
 %files
 %defattr(-,root,root)
-/usr/local/bin/*
-/usr/local/lib/*
-/usr/local/lib64/*
-/usr/local/share/*
+/usr/local/*

@@ -12,6 +12,7 @@ Release:   %{release}
 Source:    geopyspark.tar
 Prefix:    /
 Group:     Geography
+AutoReq:   no
 
 %global _enable_debug_package 0
 %global debug_package %{nil}
@@ -27,13 +28,9 @@ GeoPySpark 0.2.2
 echo
 
 %install
-find /usr/local | grep 'site-packages/[^/]\+$' | sort > before.txt
-pip3 install Cython==0.27
-pip3 install 'https://github.com/numpy/numpy/archive/a1ec2867999293db3e31ba3af122c0e36f56dede.zip'
+find /usr/local/lib /usr/local/lib64 | sort > before.txt
 pip3 install -r requirements.txt
-pip3 install /archives/geopyspark.zip
-pip3 install /archives/geopyspark-netcdf.zip
-find /usr/local | grep 'site-packages/[^/]\+$' | sort > after.txt
+find /usr/local/lib /usr/local/lib64 | sort > after.txt
 tar cvf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')
 cd %{buildroot}
 tar axvf /tmp/packages.tar
@@ -41,8 +38,9 @@ mkdir -p %{buildroot}/opt/jars
 cp /archives/gddp-assembly-%{version}.jar /archives/geotrellis-backend-assembly-%{version}.jar %{buildroot}/opt/jars
 
 %package worker
-Group: Geography
 Summary: GeoPySpark
+Group:   Geography
+AutoReq: no
 %description worker
 Just the Python parts
 
