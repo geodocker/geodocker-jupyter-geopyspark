@@ -11,8 +11,6 @@ archives/geopyspark-$(GEOPYSPARK_SHA).zip:
 archives/geopyspark-netcdf-$(NETCDF_SHA).zip:
 	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(NETCDF_SHA).zip" -o $@
 
-jars: archives/$(CDM_JAR) archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
-
 archives/$(CDM_JAR): scripts/netcdf-jar.sh archives/s3+hdfs.zip
 	docker run -it --rm \
            -v $(shell pwd)/archives:/archives:rw \
