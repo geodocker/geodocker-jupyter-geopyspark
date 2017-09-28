@@ -85,7 +85,7 @@ and document how the various pieces interact as part of the build process.
      Please see the [README](bootstrap/README.md) in that directory for more information.
    - [`config`](config) contains the [GeoNotebook configuration file](config/geonotebook.ini)
      and a [list of python dependencies](config/requirements.txt) that GeoNotebook requires.
-   - [`emr`](emr) contains files useful for running the image on Amazon EMR (please see the [README](emr/README.md) in that directory for more information).
+   - [`emr-docker`](emr-docker) contains files useful for running the image on Amazon EMR (please see the [README](emr-docker/README.md) in that directory for more information).
    - [`kernels`](kernels) contains Jupyter kernel configuration files.
      The one most likely to be of interest is [the one](geonotebook/kernel.json) that enables GeoNotebook and GeoPySpark, the other two kernels are mostly vestigial/ceremonial.
    - [`notebooks`](notebook) contains various sample notebooks.
