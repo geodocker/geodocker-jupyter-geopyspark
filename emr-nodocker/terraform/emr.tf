@@ -14,7 +14,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   }
 
   instance_group {
-    # bid_price      = "0.05"
+    bid_price      = "0.05"
     instance_count = 1
     instance_role  = "MASTER"
     instance_type  = "m3.xlarge"
@@ -22,7 +22,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   }
 
   instance_group {
-    # bid_price      = "0.05"
+    bid_price      = "0.05"
     instance_count = "${var.worker_count}"
     instance_role  = "CORE"
     instance_type  = "m3.xlarge"
