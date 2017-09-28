@@ -1,0 +1,17 @@
+FROM quay.io/geodocker/emr-build:gcc4-0
+MAINTAINER James McClain <james.mcclain@gmail.com>
+
+COPY blobs/gcc6-6.4.0-33.x86_64.rpm /blobs/
+
+RUN yum remove -y gcc48 && \
+    yum localinstall -y /blobs/gcc6-6.4.0-33.x86_64.rpm && \
+    ln -s /usr/local/bin/gcc /usr/local/bin/cc && \
+    echo /usr/local/lib >> /etc/ld.so.conf.d/local.conf && \
+    echo /usr/local/lib64 >> /etc/ld.so.conf.d/local.conf && \
+    ldconfig
+
+# The packed libtool depends on gcc-4.8
+RUN curl -L "ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz" -o /tmp/libtool-2.4.6.tar.xz && \
+    tar axvf /tmp/libtool-2.4.6.tar.xz && rm -r /tmp/libtool-2.4.6.tar.xz && \
+    cd libtool-2.4.6 && ./configure --prefix=/usr/local && make -j33 && make install && \
+    cd .. && rm -rf libtool-2.4.6

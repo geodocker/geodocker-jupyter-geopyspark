@@ -1,0 +1,16 @@
+diff --git a/ipykernel/jsonutil.py b/ipykernel/jsonutil.py
+index 3121e53..01b5d34 100644
+--- a/ipykernel/jsonutil.py
++++ b/ipykernel/jsonutil.py
+@@ -164,7 +164,10 @@ def json_clean(obj):
+         # If all OK, proceed by making the new dict that will be json-safe
+         out = {}
+         for k,v in iteritems(obj):
+-            out[unicode_type(k)] = json_clean(v)
++            if str(type(v)) == "<class 'dict_values'>":
++                out[unicode_type(k)] = json_clean(list(v))
++            else:
++                out[unicode_type(k)] = json_clean(v)
+         return out
+     if isinstance(obj, datetime):
+         return obj.strftime(ISO8601)
