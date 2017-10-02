@@ -24,7 +24,11 @@ if is_master; then
     rm -f /tmp/*.rpm
 
     # To ensure `pkg_resources` package, may not be needed
-    sudo pip-3.4 install --upgrade pip
+    # NOTE: This might be causing problems with using pip-3.4
+    # sudo pip-3.4 install --upgrade pip
+
+    # install the sudospawner package for multiuser jupyterhub access
+    sudo pip-3.4 install sudospawner
 
     # Install GeoPySpark + GeoNotebook kernel
     cat <<EOF > /tmp/kernel.json
@@ -61,9 +65,26 @@ EOF
     # Set password
     echo 'hadoop:hadoop' | sudo chpasswd
 
+    # Set up user account to manage JupyterHub
+    sudo groupadd shadow
+    sudo chgrp shadow /etc/shadow
+    sudo chmod 640 /etc/shadow
+    # sudo usermod -a -G shadow hadoop
+    sudo useradd -G shadow -r hublauncher
+
+    # Do setup for user accounts that can spawn jupyter notebook instances
+    sudo groupadd jupyterhub
+    sudo adduser -G hadoop,jupyterhub user
+    echo 'user:password' | sudo chpasswd
+
+    # Ensure that all members of `jupyterhub` group may log in to JupyterHub
+    echo 'hublauncher ALL=(%jupyterhub) NOPASSWD: /usr/local/bin/sudospawner' | sudo tee -a /etc/sudoers
+    
     # Execute
     export PATH=/usr/local/bin:$PATH
-    jupyterhub --no-ssl --Spawner.notebook_dir=/home/hadoop &
+    cd /tmp
+    sudo -u hublauncher -E env "PATH=$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} &
+
 else
     # Download packages
     for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
