@@ -6,7 +6,7 @@ AWSBUILD := $(FAMILY):aws-build-gdal-1
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= 686ad28724d7648bec5e7e1a39cd48d5d80fca79
 GEOPYSPARK_NETCDF_SHA ?= 8e059120f4f7b49c38a326633e31d8120906ef4a
-GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
+GEONOTEBOOK_SHA ?= 34e880741005ffae5852ec9dc7e09d1e118ef588
 GEOPYSPARK_VERSION ?= 0.2.2
 GEOPYSPARK_JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
 PYTHON_BLOB1 := friends-of-geopyspark.tar.gz
@@ -20,7 +20,7 @@ archives/geopyspark-$(GEOPYSPARK_SHA).zip:
 	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK_SHA).zip" -o $@
 
 archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
-	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
+	curl -L "https://github.com/OpenGeoscience/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
 
 archives/geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA).zip:
 	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(GEOPYSPARK_NETCDF_SHA).zip" -o $@
