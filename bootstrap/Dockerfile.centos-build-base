@@ -2,6 +2,7 @@ FROM quay.io/geodocker/jupyter:99fceaa
 
 USER root
 RUN yum install -y \
+      libcurl-devel \
       bzip2-devel \
       cairo-devel \
       freetype-devel \

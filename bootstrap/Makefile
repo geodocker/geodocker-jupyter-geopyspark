@@ -23,7 +23,7 @@ base: blobs/gdal-and-friends.tar.gz \
    blobs/gcc6-lib-6.4.0-33.x86_64.rpm \
    blobs/freetype2-lib-2.8-33.x86_64.rpm \
    blobs/boost162-lib-1_62_0-33.x86_64.rpm \
-   blobs/gdal213-lib-2.1.3-33.x86_64.rpm \
+   blobs/gdal213-2.1.3-33.x86_64.rpm \
    blobs/mapnik-093fcee-33.x86_64.rpm \
    blobs/python-mapnik-e5f107d-33.x86_64.rpm
 	docker build -t $(BASEIMAGE) -f Dockerfile.base .
