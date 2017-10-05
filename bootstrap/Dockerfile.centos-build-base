@@ -1,8 +1,8 @@
 FROM quay.io/geodocker/jupyter:99fceaa
 
 USER root
-RUN yum clean all -y && yum update -y && \
-    yum install -y \
+RUN yum install -y \
+      libcurl-devel \
       bzip2-devel \
       cairo-devel \
       freetype-devel \
