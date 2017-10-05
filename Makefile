@@ -1,8 +1,8 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= 19
+TAG ?= curl
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-AWSBUILD := $(FAMILY):aws-build-gdal-0
+AWSBUILD := $(FAMILY):aws-build-gdal-1
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= 686ad28724d7648bec5e7e1a39cd48d5d80fca79
 GEOPYSPARK_NETCDF_SHA ?= 8e059120f4f7b49c38a326633e31d8120906ef4a

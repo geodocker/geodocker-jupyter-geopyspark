@@ -1,7 +1,7 @@
 .PHONY: all centos-build-base centos-build-gcc6 aws-build-base aws-build-gdal base
 
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-VERSION := 0
+VERSION := 1
 GDALIMAGE := $(FAMILY):aws-build-gdal-$(VERSION)
 BASEIMAGE := $(FAMILY):base-$(VERSION)
 
