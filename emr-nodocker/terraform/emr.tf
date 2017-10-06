@@ -32,7 +32,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   bootstrap_action {
     path = "${var.bootstrap_script}"
     name = "geopyspark"
-    args = ["${var.rpm_bucket}", "${var.jupyterhub_oauth_class}", "${var.oauth_client_id}", "${var.oauth_client_secret}"]
+    args = ["${var.rpm_bucket}", "${var.jupyterhub_oauth_module}", "${var.jupyterhub_oauth_class}", "${var.oauth_client_id}", "${var.oauth_client_secret}"]
   }
 }
 

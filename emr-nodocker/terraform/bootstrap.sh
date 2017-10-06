@@ -1,7 +1,10 @@
 #!/bin/bash
 
 BUCKET=$1
-OAUTH_CLASS=$2
+OAUTH_MODULE=$2
+OAUTH_CLASS=$3
+OAUTH_CLIENT_ID=$4
+OAUTH_CLIENT_SECRET=$5
 
 # Parses a configuration file put in place by EMR to determine the role of this node
 is_master() {
@@ -88,22 +91,18 @@ EOF
 
     # Environment setup
     cat <<EOF > /tmp/oauth_profile.sh
-
 export AWS_DNS_NAME=$(aws ec2 describe-network-interfaces --filters Name=private-ip-address,Values=$(hostname -i) | jq -r '.[] | .[] | .Association.PublicDnsName')
 export OAUTH_CALLBACK_URL=http://\$AWS_DNS_NAME:8000/hub/oauth_callback
-export OAUTH_CLIENT_ID=$3
-export OAUTH_CLIENT_SECRET=$4
+export OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID
+export OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET
 
-alias launch_hub='sudo -u hublauncher -E env "PATH=$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} &'
+alias launch_hub='sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username}'
 EOF
     sudo mv /tmp/oauth_profile.sh /etc/profile.d
-    . /etc/profile.d
+    . /etc/profile.d/oauth_profile.sh
 
-    # Execute
-    export PATH=/usr/local/bin:$PATH
-
-    cd /tmp
-    cat <<EOF > new_user
+    # Setup required scripts/configurations for launching JupyterHub
+    cat <<EOF > /tmp/new_user
 #!/bin/bash
 
 user=\$1
@@ -112,12 +111,12 @@ sudo useradd -m -G jupyterhub,hadoop \$user
 sudo -u hdfs hdfs dfs -mkdir /user/\$user
 
 EOF
-    chmod +x new_user
-    sudo chown root:root new_user
-    sudo mv new_user /usr/local/bin
+    chmod +x /tmp/new_user
+    sudo chown root:root /tmp/new_user
+    sudo mv /tmp/new_user /usr/local/bin
     
     cat <<EOF > /tmp/jupyterhub_config.py
-from oauthenticator.github import LocalGitHubOAuthenticator
+from oauthenticator.$OAUTH_MODULE import $OAUTH_CLASS
 
 c = get_config()
 c.JupyterHub.authenticator_class = $OAUTH_CLASS
@@ -130,7 +129,9 @@ c.LocalAuthenticator.add_user_cmd = ['new_user']
 
 EOF
 
-    launch_hub
+    # Execute
+    cd /tmp
+    sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} -f /tmp/jupyterhub_config.py &
 else
     # Download packages
     for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm

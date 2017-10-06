@@ -61,6 +61,12 @@ variable "bootstrap_script" {
   description = "Bootstrap Script"
 }
 
+variable "jupyterhub_oauth_module" {
+  type        = "string"
+  description = "Name of the jupyterhub/oauthenticator module to import the jupyterhub_oauth_class from"
+  default     = "github"
+}
+
 variable "jupyterhub_oauth_class" {
   type        = "string"
   description = "Name of the OAuth class provided by jupyterhub/oauthenticator"
