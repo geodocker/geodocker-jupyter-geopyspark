@@ -4,6 +4,8 @@ archives/*.whl
 archives/*.zip
 blobs/*
 emr/config-aws.mk
+emr-nodocker/build/rpmbuild/RPMS/x86_64/*
+emr-nodocker/build/rpmbuild/SOURCES/*
 geopyspark-*/
 notebooks/.ipynb_checkpoints/
 scratch/*
