@@ -1,4 +1,2 @@
 archives/
-rpmbuild/
-scratch/
-
+rpmbuild/SOURCES/

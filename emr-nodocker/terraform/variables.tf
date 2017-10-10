@@ -53,7 +53,12 @@ variable "ecs_instance_profile" {
 
 variable "rpm_bucket" {
   type        = "string"
-  description = "S3 Bucket containing RPMs"
+  description = "S3 Bucket containing RPMs (e.g. s3://bucket/containing/rpms)"
+}
+
+variable "nb_bucket" {
+  type        = "string"
+  description = "S3 Bucket containing notebooks (e.g. bucket:/containing/notebooks)"
 }
 
 variable "bootstrap_script" {
@@ -81,4 +86,9 @@ variable "oauth_client_id" {
 variable "oauth_client_secret" {
   type        = "string"
   description = "Client secret token for OAuth server"
+
+variable "bid_price" {
+  type        = "string"
+  description = "Bid Price"
+  default     = "0.06"
 }

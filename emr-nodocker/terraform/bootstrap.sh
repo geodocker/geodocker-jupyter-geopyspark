@@ -1,10 +1,11 @@
 #!/bin/bash
 
-BUCKET=$1
-OAUTH_MODULE=$2
-OAUTH_CLASS=$3
-OAUTH_CLIENT_ID=$4
-OAUTH_CLIENT_SECRET=$5
+RPM_BUCKET=$(echo $1 | sed 's,/$,,')
+NB_BUCKET=$2
+OAUTH_MODULE=$3
+OAUTH_CLASS=$4
+OAUTH_CLIENT_ID=$5
+OAUTH_CLIENT_SECRET=$6
 
 # Parses a configuration file put in place by EMR to determine the role of this node
 is_master() {
@@ -17,14 +18,13 @@ is_master() {
 
 if is_master; then
     # Download packages
-    for i in boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-0.2.2-13.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm
+    for i in boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-0.2.2-13.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm s3fs-fuse-1.82-33.x86_64.rpm
     do
-	aws s3 cp $BUCKET/$i /tmp/$i
+	aws s3 cp $RPM_BUCKET/$i /tmp/$i
     done
 
     # Install packages
-    cd /tmp
-    sudo yum localinstall -y boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-0.2.2-13.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm
+    sudo yum localinstall -y /tmp/*.rpm
     rm -f /tmp/*.rpm
 
     # To ensure `pkg_resources` package, may not be needed
@@ -130,18 +130,21 @@ c.LocalAuthenticator.add_user_cmd = ['new_user']
 EOF
 
     # Execute
+    export PATH=/usr/local/bin:$PATH
+    # mkdir -p /home/hadoop/s3
+    # s3fs $NB_BUCKET /home/hadoop/s3 -o iam_role=auto,umask=0000
     cd /tmp
     sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} -f /tmp/jupyterhub_config.py &
+
 else
     # Download packages
     for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
     do
-	aws s3 cp $BUCKET/$i /tmp/$i
+	aws s3 cp $RPM_BUCKET/$i /tmp/$i
     done
 
     # Install packages
-    cd /tmp
-    sudo yum localinstall -y freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
+    sudo yum localinstall -y /tmp/*.rpm
     rm -f /tmp/*.rpm
 
     # To ensure `pkg_resources` package, may not be needed
