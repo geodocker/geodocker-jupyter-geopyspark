@@ -4,7 +4,7 @@
 %define version   8.5.0
 
 BuildRoot: %{buildroot}
-Summary:   Proj4
+Summary:   NodeJS
 License:   node.js
 Name:      %{name}
 Version:   %{version}

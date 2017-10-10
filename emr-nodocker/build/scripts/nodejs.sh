@@ -3,10 +3,9 @@
 USERID=$1
 GROUPID=$2
 
-cd /tmp
-tar axvf /archives/rpmbuild.tar
-cd rpmbuild
-cp /archives/node-v8.5.0.tar.gz  SOURCES/
+ldconfig
+
+cd /tmp/rpmbuild
+chown -R root:root /tmp/rpmbuild/SOURCES/node-v8.5.0.tar.gz
 rpmbuild -v -bb --clean SPECS/nodejs.spec
-cp -f RPMS/x86_64/*.rpm /archives/
-chown -R $USERID:$GROUPID /archives/*
+chown -R $USERID:$GROUPID /tmp/rpmbuild
