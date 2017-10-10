@@ -35,13 +35,13 @@ include jupyterhub.mk
 include geonotebook.mk
 
 clean:
-	rm -f rpmbuild/RPMS/x86_64/* archives/*debug*.rpm
+	rm -f rpmbuild/SOURCES/*.tar rpmbuild/RPMS/x86_64/*-debuginfo-*.rpm
 
 cleaner: clean
-	rm -f archives/*.tar
+	rm -f archives/*.jar
 
 cleanest: cleaner
-	rm -f archives/*.rpm archives/*.jar
+	rm -f rpmbuild/RPMS/x86_64/*
 
 mrproper: cleanest
-	rm -f archives/*.tar.gz archives/*.tar.bz2 archives/*.tar.xz archives/*.zip
+	rm -f rpmbuild/SOURCES/SOURCES/*
