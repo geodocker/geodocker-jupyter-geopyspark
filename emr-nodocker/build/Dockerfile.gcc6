@@ -1,7 +1,7 @@
 FROM quay.io/geodocker/emr-build:gcc4-0
 MAINTAINER James McClain <james.mcclain@gmail.com>
 
-COPY blobs/gcc6-6.4.0-33.x86_64.rpm /blobs/
+COPY rpmbuild/RPMS/x86_64/gcc6-6.4.0-33.x86_64.rpm /blobs/
 
 RUN yum remove -y gcc48 && \
     yum localinstall -y /blobs/gcc6-6.4.0-33.x86_64.rpm && \

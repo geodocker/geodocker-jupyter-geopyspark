@@ -20,7 +20,7 @@ Gnu Compiler Collection 6.4.0
 %setup -q -n gcc-6.4.0
 
 %build
-tar axvf /archives/isl-0.16.1.tar.bz2
+tar axvf /tmp/rpmbuild/SOURCES/isl-0.16.1.tar.bz2
 mv isl-0.16.1/ isl/
 ./configure --prefix=/usr/local --disable-nls --disable-multilib --disable-bootstrap --enable-linker-build-id --enable-languages='c,c++'
 make -j 33
