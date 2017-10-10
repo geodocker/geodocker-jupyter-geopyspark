@@ -22,6 +22,7 @@ gcc6: rpmbuild/RPMS/x86_64/gcc6-6.4.0-33.x86_64.rpm
 jars: archives/$(CDM_JAR) archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
 
 rpms: rpmbuild/RPMS/x86_64/gcc6-lib-6.4.0-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/s3fs-fuse-1.82-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/freetype2-lib-2.8-33.x86_64.rpm rpmbuild/RPMS/x86_64/proj493-lib-4.9.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/gdal213-lib-2.1.3-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/geopyspark-0.2.2-13.x86_64.rpm rpmbuild/RPMS/x86_64/geopyspark-worker-0.2.2-13.x86_64.rpm \
 rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm \
@@ -33,6 +34,7 @@ include mapnik.mk
 include geopyspark.mk
 include jupyterhub.mk
 include geonotebook.mk
+include s3fs.mk
 
 clean:
 	rm -f rpmbuild/SOURCES/*.tar rpmbuild/RPMS/x86_64/*-debuginfo-*.rpm
