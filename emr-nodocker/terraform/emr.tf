@@ -8,6 +8,9 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   ec2_attributes {
     instance_profile = "${var.emr_instance_profile}"
     key_name         = "${var.key_name}"
+
+    emr_managed_master_security_group = "${aws_security_group.security-group.id}"
+    emr_managed_slave_security_group  = "${aws_security_group.security-group.id}"
   }
 
   instance_group {
