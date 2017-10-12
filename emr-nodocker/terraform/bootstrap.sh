@@ -1,6 +1,10 @@
 #!/bin/bash
 
 BUCKET=$1
+OAUTH_MODULE=$2
+OAUTH_CLASS=$3
+OAUTH_CLIENT_ID=$4
+OAUTH_CLIENT_SECRET=$5
 
 # Parses a configuration file put in place by EMR to determine the role of this node
 is_master() {
@@ -24,7 +28,14 @@ if is_master; then
     rm -f /tmp/*.rpm
 
     # To ensure `pkg_resources` package, may not be needed
-    sudo pip-3.4 install --upgrade pip
+    # NOTE: This might be causing problems with using pip-3.4
+    # sudo pip-3.4 install --upgrade pip
+
+    # install the sudospawner package for multiuser jupyterhub access
+    sudo pip-3.4 install sudospawner
+
+    # install the oauthenticator jupyterhub extension and configure
+    sudo pip-3.4 install "https://github.com/jupyterhub/oauthenticator/archive/f5e39b1ece62b8d075832054ed3213cc04f85030.zip"
 
     # Install GeoPySpark + GeoNotebook kernel
     cat <<EOF > /tmp/kernel.json
@@ -61,9 +72,66 @@ EOF
     # Set password
     echo 'hadoop:hadoop' | sudo chpasswd
 
+    # Set up user account to manage JupyterHub
+    sudo groupadd shadow
+    sudo chgrp shadow /etc/shadow
+    sudo chmod 640 /etc/shadow
+    # sudo usermod -a -G shadow hadoop
+    sudo useradd -G shadow -r hublauncher
+
+    # Do setup for user accounts that can spawn jupyter notebook instances
+    sudo groupadd jupyterhub
+    sudo adduser -G hadoop,jupyterhub user
+    echo 'user:password' | sudo chpasswd
+
+    # Ensure that all members of `jupyterhub` group may log in to JupyterHub
+    echo 'hublauncher ALL=(%jupyterhub) NOPASSWD: /usr/local/bin/sudospawner' | sudo tee -a /etc/sudoers
+    echo 'hublauncher ALL=(ALL) NOPASSWD: /usr/sbin/useradd' | sudo tee -a /etc/sudoers
+    echo 'hublauncher ALL=(hdfs) NOPASSWD: /usr/bin/hdfs' | sudo tee -a /etc/sudoers
+
+    # Environment setup
+    cat <<EOF > /tmp/oauth_profile.sh
+export AWS_DNS_NAME=$(aws ec2 describe-network-interfaces --filters Name=private-ip-address,Values=$(hostname -i) | jq -r '.[] | .[] | .Association.PublicDnsName')
+export OAUTH_CALLBACK_URL=http://\$AWS_DNS_NAME:8000/hub/oauth_callback
+export OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID
+export OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET
+
+alias launch_hub='sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username}'
+EOF
+    sudo mv /tmp/oauth_profile.sh /etc/profile.d
+    . /etc/profile.d/oauth_profile.sh
+
+    # Setup required scripts/configurations for launching JupyterHub
+    cat <<EOF > /tmp/new_user
+#!/bin/bash
+
+user=\$1
+
+sudo useradd -m -G jupyterhub,hadoop \$user
+sudo -u hdfs hdfs dfs -mkdir /user/\$user
+
+EOF
+    chmod +x /tmp/new_user
+    sudo chown root:root /tmp/new_user
+    sudo mv /tmp/new_user /usr/local/bin
+    
+    cat <<EOF > /tmp/jupyterhub_config.py
+from oauthenticator.$OAUTH_MODULE import $OAUTH_CLASS
+
+c = get_config()
+c.JupyterHub.authenticator_class = $OAUTH_CLASS
+c.${OAUTH_CLASS}.create_system_users = True
+
+c.JupyterHub.spawner_class='sudospawner.SudoSpawner'
+c.SudoSpawner.sudospawner_path='/usr/local/bin/sudospawner'
+c.Spawner.notebook_dir='/home/{username}'
+c.LocalAuthenticator.add_user_cmd = ['new_user']
+
+EOF
+
     # Execute
-    export PATH=/usr/local/bin:$PATH
-    jupyterhub --no-ssl --Spawner.notebook_dir=/home/hadoop &
+    cd /tmp
+    sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} -f /tmp/jupyterhub_config.py &
 else
     # Download packages
     for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
