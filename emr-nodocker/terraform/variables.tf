@@ -86,6 +86,7 @@ variable "oauth_client_id" {
 variable "oauth_client_secret" {
   type        = "string"
   description = "Client secret token for OAuth server"
+}
 
 variable "bid_price" {
   type        = "string"

@@ -27,15 +27,8 @@ if is_master; then
     sudo yum localinstall -y /tmp/*.rpm
     rm -f /tmp/*.rpm
 
-    # To ensure `pkg_resources` package, may not be needed
-    # NOTE: This might be causing problems with using pip-3.4
-    # sudo pip-3.4 install --upgrade pip
-
     # install the sudospawner package for multiuser jupyterhub access
     sudo pip-3.4 install sudospawner
-
-    # install the oauthenticator jupyterhub extension and configure
-    sudo pip-3.4 install "https://github.com/jupyterhub/oauthenticator/archive/f5e39b1ece62b8d075832054ed3213cc04f85030.zip"
 
     # Install GeoPySpark + GeoNotebook kernel
     cat <<EOF > /tmp/kernel.json
@@ -69,20 +62,13 @@ EOF
     sudo ldconfig
     rm -f /tmp/local.conf
 
-    # Set password
-    echo 'hadoop:hadoop' | sudo chpasswd
-
     # Set up user account to manage JupyterHub
     sudo groupadd shadow
     sudo chgrp shadow /etc/shadow
     sudo chmod 640 /etc/shadow
     # sudo usermod -a -G shadow hadoop
     sudo useradd -G shadow -r hublauncher
-
-    # Do setup for user accounts that can spawn jupyter notebook instances
     sudo groupadd jupyterhub
-    sudo adduser -G hadoop,jupyterhub user
-    echo 'user:password' | sudo chpasswd
 
     # Ensure that all members of `jupyterhub` group may log in to JupyterHub
     echo 'hublauncher ALL=(%jupyterhub) NOPASSWD: /usr/local/bin/sudospawner' | sudo tee -a /etc/sudoers
@@ -131,8 +117,6 @@ EOF
 
     # Execute
     export PATH=/usr/local/bin:$PATH
-    # mkdir -p /home/hadoop/s3
-    # s3fs $NB_BUCKET /home/hadoop/s3 -o iam_role=auto,umask=0000
     cd /tmp
     sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} -f /tmp/jupyterhub_config.py &
 
@@ -146,9 +130,6 @@ else
     # Install packages
     sudo yum localinstall -y /tmp/*.rpm
     rm -f /tmp/*.rpm
-
-    # To ensure `pkg_resources` package, may not be needed
-    sudo pip-3.4 install --upgrade pip
 
     # Linkage
     echo '/usr/local/lib' > /tmp/local.conf
