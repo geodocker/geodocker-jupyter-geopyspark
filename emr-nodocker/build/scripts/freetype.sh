@@ -6,10 +6,7 @@ GROUPID=$2
 yum remove -y freetype freetype-devel
 ldconfig
 
-cd /tmp
-tar axvf /archives/rpmbuild.tar
-cd rpmbuild
-cp /archives/freetype-2.8.tar.gz SOURCES/
+cd /tmp/rpmbuild
+chown -R root:root /tmp/rpmbuild/SOURCES/freetype-2.8.tar.gz
 rpmbuild -v -bb --clean SPECS/freetype.spec
-cp -f RPMS/x86_64/*.rpm /archives/
-chown -R $USERID:$GROUPID /archives/*
+chown -R $USERID:$GROUPID /tmp/rpmbuild

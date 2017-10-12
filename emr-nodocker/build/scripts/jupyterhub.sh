@@ -4,14 +4,11 @@ USERID=$1
 GROUPID=$2
 RPM=$3
 
-yum install -y /archives/nodejs-8.5.0-13.x86_64.rpm /archives/$RPM
+yum install -y /tmp/rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm /tmp/rpmbuild/RPMS/x86_64/$RPM
 ldconfig
 npm install -g configurable-http-proxy
 
-cd /tmp
-tar axvf /archives/rpmbuild.tar
-cd rpmbuild
-cp /archives/jupyterhub.tar SOURCES/
+cd /tmp/rpmbuild
+chown -R root:root /tmp/rpmbuild/SOURCES/jupyterhub.tar
 rpmbuild -v -bb --clean SPECS/jupyterhub.spec
-cp -f RPMS/x86_64/*.rpm /archives/
-chown -R $USERID:$GROUPID /archives/*
+chown -R $USERID:$GROUPID /tmp/rpmbuild
