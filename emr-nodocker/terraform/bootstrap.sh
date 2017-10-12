@@ -65,6 +65,7 @@ EOF
     # Mount Bucket
     sudo mkdir /s3
     sudo /usr/local/bin/s3fs $NB_BUCKET /s3 -o allow_other,iam_role=auto,umask=0000
+    sudo ln -s /mnt/s3 /etc/skel/s3
 
     # Set up user account to manage JupyterHub
     sudo groupadd shadow
@@ -103,7 +104,7 @@ sudo -u hdfs hdfs dfs -mkdir /user/\$user
 bucket=$(echo $NB_BUCKET | cut '-d:' -f1)
 prefix=$(echo $NB_BUCKET | cut '-d:' -f2 | sed 's,^/,,')
 aws s3api put-object --bucket \$bucket --key \$prefix/\$user/
-sudo -E ln -s /s3/\$(echo $user) /home/\$(echo $user)/s3
+# sudo -E ln -s /s3/\$(echo $user) /home/\$(echo $user)/s3
 
 EOF
     chmod +x /tmp/new_user
