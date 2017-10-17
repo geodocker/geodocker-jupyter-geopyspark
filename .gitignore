@@ -6,6 +6,7 @@ blobs/*
 emr/config-aws.mk
 geopyspark-*/
 notebooks/.ipynb_checkpoints/
+rpms/build/blobs/*
 rpms/build/rpmbuild/RPMS/x86_64/*
 rpms/build/rpmbuild/SOURCES/*
 scratch/*

@@ -35,6 +35,7 @@ include geopyspark.mk
 include jupyterhub.mk
 include geonotebook.mk
 include s3fs.mk
+include gdal-and-friends.mk
 
 clean:
 	rm -f rpmbuild/SOURCES/*.tar rpmbuild/RPMS/x86_64/*-debuginfo-*.rpm
