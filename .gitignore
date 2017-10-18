@@ -11,6 +11,6 @@ rpms/build/rpmbuild/RPMS/x86_64/*
 rpms/build/rpmbuild/SOURCES/*
 scratch/*
 target/*
-terraform/.terraform/*
-terraform/.terraform*
-terraform/terraform.tfstate*
+terraform-docker/.terraform/*
+terraform-docker/.terraform*
+terraform-docker/terraform.tfstate*
