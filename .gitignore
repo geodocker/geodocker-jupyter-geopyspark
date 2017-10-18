@@ -14,3 +14,6 @@ target/*
 terraform-docker/.terraform/*
 terraform-docker/.terraform*
 terraform-docker/terraform.tfstate*
+terraform-nodocker/.terraform/*
+terraform-nodocker/.terraform*
+terraform-nodocker/terraform.tfstate*
