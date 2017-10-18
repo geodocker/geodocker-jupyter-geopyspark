@@ -1,9 +1,11 @@
 .PHONY: all gcc4 gcc6 jars rpms
 
 FAMILY := quay.io/geodocker/emr-build
-VERSION := 0
+VERSION := 2
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
+BASEIMAGE := quay.io/geodocker/jupyter-geopyspark:base-$(VERSION)
+GDALIMAGE := quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-$(VERSION)
 GEOPYSPARK_SHA ?= 686ad28724d7648bec5e7e1a39cd48d5d80fca79
 NETCDF_SHA ?= 8e059120f4f7b49c38a326633e31d8120906ef4a
 GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
@@ -14,19 +16,28 @@ all:
 	echo "see build.sh"
 
 gcc4:
-	docker build -t "$(FAMILY):$@-$(VERSION)" -f Dockerfile.$@ .
+	docker build -t $(GCC4IMAGE) -f Dockerfile.$@ .
 
 gcc6: rpmbuild/RPMS/x86_64/gcc6-6.4.0-33.x86_64.rpm
-	docker build -t "$(FAMILY):$@-$(VERSION)" -f Dockerfile.$@ .
+	docker build -t $(GCC6IMAGE) -f Dockerfile.$@ .
+
+aws-build-gdal: blobs/gdal-and-friends.tar.gz
+	docker build -t $(GDALIMAGE) -f Dockerfile.aws-build-gdal .
+
+base: blobs/gdal-and-friends.tar.gz blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms
+	docker build -t $(BASEIMAGE) -f Dockerfile.base .
 
 jars: archives/$(CDM_JAR) archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
 
 rpms: rpmbuild/RPMS/x86_64/gcc6-lib-6.4.0-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/s3fs-fuse-1.82-33.x86_64.rpm \
-rpmbuild/RPMS/x86_64/freetype2-lib-2.8-33.x86_64.rpm rpmbuild/RPMS/x86_64/proj493-lib-4.9.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/gdal213-lib-2.1.3-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/freetype2-lib-2.8-33.x86_64.rpm rpmbuild/RPMS/x86_64/proj493-lib-4.9.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/geopyspark-0.2.2-13.x86_64.rpm rpmbuild/RPMS/x86_64/geopyspark-worker-0.2.2-13.x86_64.rpm \
 rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm rpmbuild/RPMS/x86_64/jupyterhub-0.7.2-13.x86_64.rpm rpmbuild/RPMS/x86_64/geonotebook-0.0.0-13.x86_64.rpm
+
+blobs/spark-2.1.0-bin-hadoop2.7.tgz:
+	curl -L "http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz" -o $@
 
 include gcc.mk
 include gdal.mk
