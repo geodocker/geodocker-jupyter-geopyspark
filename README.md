@@ -81,7 +81,6 @@ and document how the various pieces interact as part of the build process.
    - [`blobs`](blobs) is an initially-empty directory that is populated with built artifacts from the `archives` directory.
      This directory exists because `archives` is listed in the [`.dockerignore`](.dockerignore) file
      (which was done to reduce the size of the [build context](https://docs.docker.com/engine/reference/commandline/build/) of the final image).
-   - [`bootstrap`](bootstrap) contains the files necessary to build the bootstrap images that are used to produce the final image.
      Please see the [README](bootstrap/README.md) in that directory for more information.
    - [`config`](config) contains the [GeoNotebook configuration file](config/geonotebook.ini)
      and a [list of python dependencies](config/requirements.txt) that GeoNotebook requires.
