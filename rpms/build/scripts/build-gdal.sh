@@ -5,7 +5,23 @@ GROUPID=$2
 
 export CPPFLAGS="-I/usr/local/include"
 export CFLAGS="-I/usr/local/include"
-export LDFLAGS="-I/usr/local/lib"
+export LDFLAGS="-L/usr/local/lib -L/usr/local/lib64"
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
+
+yum remove -y \
+    bzip2-devel \
+    cairo-devel \
+    gmp-devel \
+    harfbuzz-devel \
+    libicu-devel \
+    libjpeg-turbo-devel \
+    libmpc-devel \
+    libpng-devel \
+    libtiff-devel \
+    libwebp-devel \
+    libxml2-devel \
+    mpfr-devel \
+    zlib-devel
 
 # ensure
 mkdir -p $HOME/local/src
@@ -15,7 +31,7 @@ rm -rf /usr/local/*
 # untar source
 for archive in zlib-1.2.11.tar.gz libpng-1.6.30.tar.xz geos-3.6.1.tar.bz2 proj-4.9.3.tar.gz lcms2-2.8.tar.gz openjpeg-v2.1.2.tar.gz gdal-2.1.3.tar.gz
 do
-    tar axvfk /archives/$archive
+    tar axvfk /src/$archive
 done
 
 # build zlib
@@ -52,7 +68,7 @@ cd $HOME/local/src/gdal-2.1.3
 
 # archive binaries
 cd /usr/local
-tar acvf /archives/gdal-and-friends.tar.gz .
+tar acvf /blobs/gdal-and-friends.tar.gz .
 
 # permissions
-chown -R $USERID:$GROUPID /archives
+chown -R $USERID:$GROUPID /blobs

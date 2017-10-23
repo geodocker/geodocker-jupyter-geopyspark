@@ -1,9 +1,11 @@
 archives/
 bootstrap/
 emr/
+emr-nodocker/
 geopyspark-*/
 netcdf-backend/
 notebooks/
+rpms/
 scratch/
 thredds-feature-s3-hdfs/
 .travis/

@@ -4,7 +4,7 @@ resource "aws_spot_instance_request" "jupyterhub" {
   instance_type        = "m3.xlarge"
   key_name             = "${var.key_name}"
   security_groups      = ["${aws_security_group.security-group.name}"]
-  spot_price           = "0.05"
+  spot_price           = "${var.bid_price}"
   wait_for_fulfillment = true
 
   user_data = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.jupyterhub.name} >> /etc/ecs/ecs.config"

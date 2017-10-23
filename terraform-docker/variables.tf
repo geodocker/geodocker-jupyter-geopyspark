@@ -55,3 +55,9 @@ variable "ecs_instance_profile" {
   description = "ECS instance profile"
   default     = "ecsInstanceRole"
 }
+
+variable "bid_price" {
+  type        = "string"
+  description = "Bid Price"
+  default     = "0.07"
+}
