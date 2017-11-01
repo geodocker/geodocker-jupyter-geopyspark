@@ -91,5 +91,5 @@ variable "oauth_client_secret" {
 variable "bid_price" {
   type        = "string"
   description = "Bid Price"
-  default     = "0.06"
+  default     = "0.07"
 }
