@@ -30,10 +30,39 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   }
 
   bootstrap_action {
-    path = "${var.bootstrap_script}"
+    path = "s3://${var.rpm_bucket}/${var.rpm_prefix}/bootstrap.sh"
     name = "geopyspark"
-    args = ["${var.rpm_bucket}", "${var.nb_bucket}", "${var.jupyterhub_oauth_module}", "${var.jupyterhub_oauth_class}", "${var.oauth_client_id}", "${var.oauth_client_secret}"]
+    args = [
+      "s3://${var.rpm_bucket}/${var.rpm_prefix}",
+      "${var.nb_bucket}",
+      "${var.jupyterhub_oauth_module}",
+      "${var.jupyterhub_oauth_class}",
+      "${var.oauth_client_id}",
+      "${var.oauth_client_secret}"
+    ]
   }
+
+  depends_on = [
+    "aws_s3_bucket_object.boost162",
+    "aws_s3_bucket_object.boost162-lib",
+    "aws_s3_bucket_object.freetype2",
+    "aws_s3_bucket_object.freetype2-lib",
+    "aws_s3_bucket_object.gcc6",
+    "aws_s3_bucket_object.gcc6-lib",
+    "aws_s3_bucket_object.gdal213",
+    "aws_s3_bucket_object.gdal213-lib",
+    "aws_s3_bucket_object.geonotebook",
+    "aws_s3_bucket_object.geopyspark",
+    "aws_s3_bucket_object.geopyspark-worker",
+    "aws_s3_bucket_object.jupyterhub",
+    "aws_s3_bucket_object.mapnik",
+    "aws_s3_bucket_object.nodejs",
+    "aws_s3_bucket_object.proj493",
+    "aws_s3_bucket_object.proj493-lib",
+    "aws_s3_bucket_object.python-mapnik",
+    "aws_s3_bucket_object.s3fs",
+    "aws_s3_bucket_object.bootstrap"
+  ]
 }
 
 output "emr-id" {
