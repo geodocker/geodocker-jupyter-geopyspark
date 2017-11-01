@@ -42,27 +42,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
     ]
   }
 
-  depends_on = [
-    "aws_s3_bucket_object.boost162",
-    "aws_s3_bucket_object.boost162-lib",
-    "aws_s3_bucket_object.freetype2",
-    "aws_s3_bucket_object.freetype2-lib",
-    "aws_s3_bucket_object.gcc6",
-    "aws_s3_bucket_object.gcc6-lib",
-    "aws_s3_bucket_object.gdal213",
-    "aws_s3_bucket_object.gdal213-lib",
-    "aws_s3_bucket_object.geonotebook",
-    "aws_s3_bucket_object.geopyspark",
-    "aws_s3_bucket_object.geopyspark-worker",
-    "aws_s3_bucket_object.jupyterhub",
-    "aws_s3_bucket_object.mapnik",
-    "aws_s3_bucket_object.nodejs",
-    "aws_s3_bucket_object.proj493",
-    "aws_s3_bucket_object.proj493-lib",
-    "aws_s3_bucket_object.python-mapnik",
-    "aws_s3_bucket_object.s3fs",
-    "aws_s3_bucket_object.bootstrap"
-  ]
+  depends_on = ["aws_s3_bucket_object.bootstrap"]
 }
 
 output "emr-id" {
