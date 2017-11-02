@@ -43,6 +43,9 @@ COPY blobs/gddp-assembly-$VERSION.jar /opt/jars/
 # YARN
 COPY config/core-site.xml /etc/hadoop/conf/
 COPY config/yarn-site.xml /etc/hadoop/conf/
+COPY config/jupyterhub_config_generic.py /etc/jupterhub/
+COPY config/jupyterhub_config_github.py /etc/jupterhub/
+COPY config/jupyterhub_config_google.py /etc/jupterhub/
 COPY scripts/jupyterhub.sh /scripts/
 USER root
 RUN chown hadoop:hadoop -R /etc/hadoop/conf
