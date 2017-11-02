@@ -65,7 +65,7 @@ EOF
     # Mount Bucket
     sudo mkdir /s3
     sudo /usr/local/bin/s3fs $NB_BUCKET /s3 -o allow_other,iam_role=auto,umask=0000
-    sudo ln -s /mnt/s3 /etc/skel/s3
+    sudo ln -s /s3 /etc/skel/s3
 
     # Set up user account to manage JupyterHub
     sudo groupadd shadow

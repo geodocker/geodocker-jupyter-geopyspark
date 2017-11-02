@@ -30,10 +30,19 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   }
 
   bootstrap_action {
-    path = "${var.bootstrap_script}"
+    path = "s3://${var.rpm_bucket}/${var.rpm_prefix}/bootstrap.sh"
     name = "geopyspark"
-    args = ["${var.rpm_bucket}", "${var.nb_bucket}", "${var.jupyterhub_oauth_module}", "${var.jupyterhub_oauth_class}", "${var.oauth_client_id}", "${var.oauth_client_secret}"]
+    args = [
+      "s3://${var.rpm_bucket}/${var.rpm_prefix}",
+      "${var.nb_bucket}",
+      "${var.jupyterhub_oauth_module}",
+      "${var.jupyterhub_oauth_class}",
+      "${var.oauth_client_id}",
+      "${var.oauth_client_secret}"
+    ]
   }
+
+  depends_on = ["aws_s3_bucket_object.bootstrap"]
 }
 
 output "emr-id" {

@@ -53,17 +53,17 @@ variable "ecs_instance_profile" {
 
 variable "rpm_bucket" {
   type        = "string"
-  description = "S3 Bucket containing RPMs (e.g. s3://bucket/containing/rpms)"
+  description = "S3 Bucket containing RPMs (e.g. bucket if the whole path is s3://bucket/containing/rpms)"
+}
+
+variable "rpm_prefix" {
+  type        = "string"
+  description = "The prefix of the RPMS within the s3 bucket (e.g. containing/rpms if the whole path is s3://bucket/containing/rpms)"
 }
 
 variable "nb_bucket" {
   type        = "string"
   description = "S3 Bucket containing notebooks (e.g. bucket:/containing/notebooks)"
-}
-
-variable "bootstrap_script" {
-  type        = "string"
-  description = "Bootstrap Script"
 }
 
 variable "jupyterhub_oauth_module" {
@@ -91,5 +91,5 @@ variable "oauth_client_secret" {
 variable "bid_price" {
   type        = "string"
   description = "Bid Price"
-  default     = "0.06"
+  default     = "0.07"
 }
