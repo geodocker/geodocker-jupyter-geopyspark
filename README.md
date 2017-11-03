@@ -177,9 +177,28 @@ and additions most-probably will need to be made to the `--conf spark.executorEn
 
 # RPM-based Deployment #
 
+## Build RPMs ##
+
+To build the RPMs, navigate into the [`rpms/build`](rpms/build/) directory and type `./build.sh`.
+
+## Terraform And AWS ##
+
+To use the RPM-based deployment, navigate into the [`terraform-nodocker`](terraform-nodocker/) directory.
+The configuration in that directory require [Terraform](https://www.terraform.io/) version 0.10.6 or greater.
+If you want to use Google OAuth, GitHub OAuth, or some supported generic type of OAuth, then type
+```bash
+terraform init
+terraform apply
+```
+and respond appropriatly to the prompts.
+
+Doing that will upload (or sync) the RPMs to the S3 location that you specify, and will also upload the [`terraform-nodocker/bootstrap.sh`](terraform-nodocker/bootstrap.sh) bootstrap script.
+
+If you do not wish to use OAuth, then [some modifications to the bootstrap script](terraform-nodocker/bootstrap.sh#L84-L93) will be required.
+
 # OAuth #
 
-## Image ##
+## With The Docker Image ##
 
 In to use OAuth for login, two things are necessary:
 It is necessary to [set three environment](https://github.com/jupyterhub/oauthenticator/blame/f5e39b1ece62b8d075832054ed3213cc04f85030/README.md#L74-L78) variables inside of the container before the JupyterHub process is launched, and
@@ -222,4 +241,6 @@ docker run -it --rm --name geopyspark \
       --no-ssl --Spawner.notebook_dir=/home/hadoop/notebooks
 ```
 
-## RPM-based Deployment ##
+## With The RPM-based Deployment ##
+
+This was discussed [earlier](#terraform-and-aws).
