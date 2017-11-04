@@ -30,7 +30,7 @@ or perhaps
 ```
 docker run -it --rm --name geopyspark \
    -p 8000:8000 \
-   -v $(HOME)/.aws:/home/hadoop/.aws:ro \
+   -v $HOME/.aws:/home/hadoop/.aws:ro \
    quay.io/geodocker/jupyter-geopyspark
 ```
 if you wish to have your AWS credentials available in the container (e.g. for pulling data from S3).
@@ -50,7 +50,7 @@ TAG=a1b78b9 make run
 will launch a container using the image `quay.io/geodocker/jupyter-geopyspark:a1b78b9`.
 
 The `run-editable` target also exists, which attempts to map one's local clone of the GeoPySpark into the container so that that code can be edited and iterated on in a fairly convenient fashion.
-By default, it is assumed that the GeoPySpark code is present in `../geopyspark/geopyspark`, but than can be changed by passing in an alternate location through the `GEOPYSPARK_DIR` environment variable.
+By default, it is assumed that the GeoPySpark code is present in `../geopyspark/geopyspark`, but that assumption can be changed by passing in an alternate location through the `GEOPYSPARK_DIR` environment variable.
 Here
 ```
 TAG=latest GEOPYSPARK_DIR=/tmp/geopyspark/geopyspark run-editable
@@ -85,6 +85,7 @@ and document how the various pieces interact as part of the build process.
    - [`config`](config) contains the [GeoNotebook configuration file](config/geonotebook.ini)
      and a [list of python dependencies](config/requirements.txt) that GeoNotebook requires.
    - [`emr-docker`](emr-docker) contains files useful for running the image on Amazon EMR (please see the [README](emr-docker/README.md) in that directory for more information).
+   - [`terraform-docker`](terraform-docker) contains file useful for running the image on Amazon EMR using Terraform.  Its remit is similar to that of the directory mentioned in the previous bullet-point, but it uses Terraform instead of shell scripts.
    - [`kernels`](kernels) contains Jupyter kernel configuration files.
      The one most likely to be of interest is [the one](geonotebook/kernel.json) that enables GeoNotebook and GeoPySpark, the other two kernels are mostly vestigial/ceremonial.
    - [`notebooks`](notebook) contains various sample notebooks.
@@ -113,14 +114,14 @@ When the `all` makefile target is invoked, the last two stages of the three-stag
 
 ### Stage 0: Build Bootstrap Images ###
 
-The first of the three stages is done using the contents of the [`bootstrap`](bootstrap) directory.
+The first of the three stages is done using the contents of the [`rpms/build`](rpms/build) directory.
 Its results have already been pushed to the `quay.io/geodocker` docker repository, so unless the reader wishes to modify the bootstrap images, this stage can be considered complete.
-Please see the [`README.md`](bootstrap/README.md) file in the [`boostrap`](bootstrap) directory for more details.
+To rebuild the boostrap images, the reader should navigate into the `rpms/build` directory and run the `./build.sh` script.
 
 ### Stage 1: EMR-Compatible Artifacts  ###
 
 The purpose of this stage is to build python artifacts that need to be linked against those binary dependencies which have been built
-in a context that [resembles EMR](bootstrap/Dockerfile.aws-build-base#L1) (because we want the image to be usable on EMR).
+in a context that resembles EMR (because we want the image to be usable on EMR).
 
 First, a tarball containing python code linked against the binary dependencies mentioned above [is created](Makefile#L62-L70).
 Then, another python tarball containing GeoPySpark [is created](Makefile#L72-L80).
@@ -136,10 +137,10 @@ In the third of the three stages, the artifacts which were created earlier are b
 As an example of how to make a meaningful modification to the image,
 in this section we will describe the process of adding new binary dependencies to the image.
 
-Currently, all binary dependencies are located in the file [`gdal-and-friends.tar.gz`](bootstrap/Makefile#L123-L134) which comes in via the [`quay.io/geodocker/jupyter-geopyspark:base`](bootstrap/Dockerfile.base) image on which the final image is based.
+Currently, all binary dependencies are located in the file [`gdal-and-friends.tar.gz`](bootstrap/Makefile#L123-L134) which comes in via the [`quay.io/geodocker/jupyter-geopyspark:base-2`](rpms/build/Dockerfile.base) image on which the final image is based.
 If we want to add an additional binary dependency inside of that file,
-then we only need to [download or otherwise acquire the source code](bootstrap/Makefile#L33-L78)
-and update the [build script](bootstrap/scripts/build-gdal.sh) to build and package the additional code.
+then we only need to [download or otherwise acquire the source code](rpms/build/Makefile#L3-L17)
+and update the [build script](rpms/build/scripts/build-gdal.sh) to build and package the additional code.
 If we wish to add a binary dependency outside of the `gdal-and-friends.tar.gz` file, then the process is slightly more involved,
 but potentially faster because it is not necessary to rebuild bootstrap images.
 
@@ -148,57 +149,75 @@ will be to mirror the process for `gdal-and-friends.tar.gz` to the extent that w
 The difference is that this time we will add the binary to the final image rather than to a bootstrap image.
    - First, augment to the [`Makefile`](Makefile) to download or otherwise ensure the existence of the `libHelloWorld` source code.
    - Next, we want to build and package `libHelloWorld` in the context of the AWS build image, so that it will be usable on EMR.
-     This would probably be done by first creating a script analogous to [the one for GDAL](bootstrap/scripts/build-gdal.sh) that builds, links, and archives the dependency.
+     This would probably be done by first creating a script analogous to [the one for GDAL](rpms/build/scripts/build-gdal.sh) that builds, links, and archives the dependency.
    - That script should run in the context of the AWS build container so that the created binaries are compiled and linked in an environment that resembles EMR.
    - The resulting archived binary blob should then be added to the final image so that it can be distributed to the Spark executors.
      That should probably be done by adding a the `COPY` command to the Dockerfile to copy the new blob to the `/blobs` directory of the image.
-   - Finally, the image environment and the kernel should be modified to make use of the new dependency.
+   - Finally, the image environment and the kernel should both be modified to make use of the new dependency.
      The former will probably involve the addition of an `ENV` command to the Dockerfile to augment the `LD_LIBRARY_PATH` environment variable to be able to find any new shared libraries;
      The latter is described below.
 
 The changes to the kernel described in the last bullet-point would probably look something like this
 ```diff
-@@ -9,12 +9,12 @@
-         "{connection_file}"
-     ],
-     "env": {
--        "LD_LIBRARY_PATH": "/home/hadoop/local/gdal/lib",
-+        "LD_LIBRARY_PATH": "/home/hadoop/local/gdal/lib:/home/hadoop/local/helloworld/lib",
-         "PYSPARK_PYTHON": "/usr/bin/python3.4",
-         "SPARK_HOME": "/usr/local/spark-2.1.0-bin-hadoop2.7",
+@@ -14,6 +14,6 @@
          "PYTHONPATH": "/usr/local/spark-2.1.0-bin-hadoop2.7/python/lib/pyspark.zip:/usr/local/spark-2.1.0-bin-hadoop2.7/python/lib/py4j-0.10.4-src.zip",
          "GEOPYSPARK_JARS_PATH": "/opt/jars",
          "YARN_CONF_DIR": "/etc/hadoop/conf",
--        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.yarn.appMasterEnv.LD_LIBRARY_PATH=/home/hadoop/local/gdal/lib --conf spark.executorEnv.LD_LIBRARY_PATH=gdal-and-friends.tar.gz/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
-+        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/helloworld-and-friends.tar.gz,/blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.yarn.appMasterEnv.LD_LIBRARY_PATH=/home/hadoop/local/helloworld/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.LD_LIBRARY_PATH=helloworld-and-friends/lib:gdal-and-friends.tar.gz/lib:/home/hadoop/local/helloworld/lib:/home/hadoop/local/gdal/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
+-        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.executorEnv.LD_LIBRARY_PATH=gdal-and-friends.tar.gz/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
++        "PYSPARK_SUBMIT_ARGS": "--archives /blobs/helloworld-and-friends.tar.gz,/blobs/gdal-and-friends.tar.gz,/blobs/friends-of-geopyspark.tar.gz,/blobs/geopyspark-sans-friends.tar.gz --conf spark.executorEnv.LD_LIBRARY_PATH=helloworld-and-friends.tar.gz/lib:gdal-and-friends.tar.gz/lib --conf spark.executorEnv.PYTHONPATH=friends-of-geopyspark.tar.gz/:geopyspark-sans-friends.tar.gz/ --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
      }
  }
 ```
 
+(The changes represented by the diff above have not been tested.)
+
 The process for adding new distributed python dependencies is analogous to the one above,
-except that changes to `LD_LIBRARY_PATH` (both in the Dockerfile and in the kernel) might not be required,
+except that changes to `LD_LIBRARY_PATH` variable on the executors might not be required,
 and additions most-probably will need to be made to the `--conf spark.executorEnv.PYTHONPATH` configuration passed in via `PYSPARK_SUBMIT_ARGS` in the kernel.
 
+# RPM-based Deployment #
+
+## Build RPMs ##
+
+To build the RPMs, navigate into the [`rpms/build`](rpms/build/) directory and type `./build.sh`.
+
+## Terraform And AWS ##
+
+To use the RPM-based deployment, navigate into the [`terraform-nodocker`](terraform-nodocker/) directory.
+The configuration in that directory require [Terraform](https://www.terraform.io/) version 0.10.6 or greater.
+If you want to use Google OAuth, GitHub OAuth, or some supported generic type of OAuth, then type
+```bash
+terraform init
+terraform apply
+```
+and respond appropriatly to the prompts.
+
+Doing that will upload (or sync) the RPMs to the S3 location that you specify, and will also upload the [`terraform-nodocker/bootstrap.sh`](terraform-nodocker/bootstrap.sh) bootstrap script.
+
+If you do not wish to use OAuth, then [some modifications to the bootstrap script](terraform-nodocker/bootstrap.sh#L84-L93) will be required.
+
 # OAuth #
+
+## With The Docker Image ##
 
 In to use OAuth for login, two things are necessary:
 It is necessary to [set three environment](https://github.com/jupyterhub/oauthenticator/blame/f5e39b1ece62b8d075832054ed3213cc04f85030/README.md#L74-L78) variables inside of the container before the JupyterHub process is launched, and
 it is necessary to use a `jupyterhub_config.py` file that enables the desired OAuth setup.
 
-## Environment Variables ##
+### Environment Variables ###
 
 The three environment variables that must be set are `OAUTH_CALLBACK_URL`, `OAUTH_CLIENT_ID`, and `OAUTH_CLIENT_SECRET`.
 The first of those three variables should be set to `http://localhost:8000/hub/oauth_callback` for local testing and something like `http://$(hostname -f):8000/hub/oauth_callback` for deployment.
 The second and third are dependent on the OAuth provider.
 
-## `jupyterhub_config.py` ##
+### `jupyterhub_config.py` ###
 
-There [three such files](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/tree/99fceaa141d477d2eea8e2603916133aed0e0692/config) already included in the image:
-One for [Google](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/blob/99fceaa141d477d2eea8e2603916133aed0e0692/config/jupyterhub_config_google.py) and related services,
-one for [GitHub](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/blob/99fceaa141d477d2eea8e2603916133aed0e0692/config/jupyterhub_config_github.py),
-and a [generic](https://github.com/jamesmcclain/geodocker-geotrellis-jupyter/blob/99fceaa141d477d2eea8e2603916133aed0e0692/config/jupyterhub_config_generic.py) one.
+There three such files already included in the image:
+One for [Google](config/jupyterhub_config_google.py) and related services,
+one for [GitHub](config/jupyterhub_config_github.py),
+and a [generic](config/jupyterhub_config_generic.py) one.
 There is some variability in precise details of how OAuth providers work (e.g. some require variables to be passed in the URL of a POST request, whereas others require variables to passed in the body of a POST request).
-For that reason, the generic configuration should be considered a starting point rather than something that is likely to work in its unmodified state.
+For that reason, the generic configuration should be considered a starting point rather than something that is guranteed to work in its unmodified state.
 
 There are only two user accounts in the image: `root` and `hadoop`.
 All three of the configurations discussed above map all valid OAuth users to the `hadoop` account.
@@ -206,7 +225,7 @@ That is done because -- without additional configuration -- Spark jobs on EMR mu
 (The users inside of the container are separate and distinct from those on the host instance,
 but the username is evidently part of a Spark job submission, so it must match that of the user that EMR is expecting submissions from.)
 
-## Using ##
+### Using ###
 
 To use OAuth, launch a container with the three variables supplied and with the appropriate `jupyterhub_config.py` used.
 
@@ -221,3 +240,7 @@ docker run -it --rm --name geopyspark \
       -f /etc/jupterhub/jupyterhub_config_github.py \
       --no-ssl --Spawner.notebook_dir=/home/hadoop/notebooks
 ```
+
+## With The RPM-based Deployment ##
+
+This was discussed [earlier](#terraform-and-aws).
