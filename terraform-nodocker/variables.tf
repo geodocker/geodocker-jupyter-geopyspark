@@ -14,12 +14,6 @@ variable "s3_log_uri" {
     description = "Where EMR logs will be sent"
 }
 
-variable "ecs_ami" {
-    type        = "string"
-    description = "AMI to use for the ECS Instance"
-    default     = "ami-9eb4b1e5"
-}
-
 variable "jupyterhub_port" {
     type        = "string"
     description = "The port on which to connect to JupyterHub"
@@ -42,12 +36,6 @@ variable "emr_instance_profile" {
   type        = "string"
   description = "EMR instance profile"
   default     = "EMR_EC2_DefaultRole"
-}
-
-variable "ecs_instance_profile" {
-  type        = "string"
-  description = "ECS instance profile"
-  default     = "ecsInstanceRole"
 }
 
 variable "bs_bucket" {
