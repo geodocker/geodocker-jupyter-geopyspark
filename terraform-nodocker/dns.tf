@@ -22,3 +22,7 @@ resource "aws_route53_record" "geotrellis" {
   ttl     = "300"
   records = ["${data.aws_instance.selected.public_ip}"]
 }
+
+output "nameservers" {
+  value = "${aws_route53_record.geotrellis.name_servers}"
+}
