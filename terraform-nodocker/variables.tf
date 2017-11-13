@@ -85,3 +85,9 @@ variable "bid_price" {
   description = "Bid Price"
   default     = "0.07"
 }
+
+variable "subdomain" {
+  type        = "string"
+  description = "Subdomain"
+  default     = "geotrellis.example.com"
+}
