@@ -2,7 +2,7 @@
 
 TAG ?= rpm
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-AWSBUILD := $(FAMILY):aws-build-gdal-2
+AWSBUILD := $(FAMILY):aws-build-gdal-3
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= a5ec919c53e1ae083b2d7284e9053e7173b6bfae
 GEOPYSPARK_NETCDF_SHA ?= 69897d9f03df2efbf6f7d8317aa6ad004274b1eb
