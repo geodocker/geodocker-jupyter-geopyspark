@@ -29,10 +29,14 @@ cd $HOME/local/src
 rm -rf /usr/local/*
 
 # untar source
-for archive in zlib-1.2.11.tar.gz libpng-1.6.30.tar.xz geos-3.6.1.tar.bz2 proj-4.9.3.tar.gz lcms2-2.8.tar.gz openjpeg-v2.1.2.tar.gz gdal-2.1.3.tar.gz
+for archive in curl-7.57.0.tar.bz2 zlib-1.2.11.tar.gz libpng-1.6.30.tar.xz geos-3.6.1.tar.bz2 proj-4.9.3.tar.gz lcms2-2.8.tar.gz openjpeg-v2.1.2.tar.gz gdal-2.1.3.tar.gz
 do
     tar axvfk /src/$archive
 done
+
+# build curl
+cd $HOME/local/src/curl-7.57.0
+./configure --prefix=/usr/local && make -j && make install
 
 # build zlib
 cd $HOME/local/src/zlib-1.2.11

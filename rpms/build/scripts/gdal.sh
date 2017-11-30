@@ -3,7 +3,7 @@
 USERID=$1
 GROUPID=$2
 
-yum install -y geos-devel lcms2-devel libpng-devel openjpeg-devel zlib-devel
+yum install -y geos-devel lcms2-devel libcurl-devel libpng-devel openjpeg-devel zlib-devel
 yum localinstall -y /tmp/rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm
 ldconfig
 

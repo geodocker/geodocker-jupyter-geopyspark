@@ -44,6 +44,7 @@ if is_master; then
     ],
     "env": {
         "PYSPARK_PYTHON": "/usr/bin/python3.4",
+        "PYSPARK_DRIVER_PYTHON": "/usr/bin/python3.4",
         "SPARK_HOME": "/usr/lib/spark",
         "PYTHONPATH": "/usr/lib/spark/python/lib/pyspark.zip:/usr/lib/spark/python/lib/py4j-0.10.4-src.zip",
         "GEOPYSPARK_JARS_PATH": "/opt/jars",
@@ -132,7 +133,7 @@ EOF
 
 else
     # Download packages
-    for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
+    for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-worker-0.2.2-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
     do
 	aws s3 cp $RPM_BUCKET/$i /tmp/$i
     done

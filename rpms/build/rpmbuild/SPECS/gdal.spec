@@ -12,6 +12,15 @@ Release:   %{release}
 Source:    gdal-%{version}.tar.gz
 Prefix:    /usr/local
 Group:     Geography
+Requires:  libpng-devel
+Requires:  libcurl-devel
+Requires:  libgeos-devel
+BuildRequires: geos-devel
+BuildRequires: lcms2-devel
+BuildRequires: libcurl-devel
+BuildRequires: libpng-devel
+BuildRequires: openjpeg-devel
+BuildRequires: zlib-devel
 
 %description
 GDAL
