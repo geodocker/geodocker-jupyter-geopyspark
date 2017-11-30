@@ -13,6 +13,8 @@ Source:    geonotebook.tar
 Prefix:    /usr
 Group:     Geography
 AutoReq:   no
+Requires:  python34
+Requires:  python34-libs
 
 %global _enable_debug_package 0
 %global debug_package %{nil}
