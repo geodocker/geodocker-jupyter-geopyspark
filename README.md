@@ -23,13 +23,13 @@ will pull the latest version of the image.
 The container can then be started by typing
 ```
 docker run -it --rm --name geopyspark \
-   -p 8000:8000 \
+   -p 8000:8000 -p 4040:4040 \
    quay.io/geodocker/jupyter-geopyspark
 ```
 or perhaps
 ```
 docker run -it --rm --name geopyspark \
-   -p 8000:8000 \
+   -p 8000:8000 -p 4040:4040 \
    -v $HOME/.aws:/home/hadoop/.aws:ro \
    quay.io/geodocker/jupyter-geopyspark
 ```
