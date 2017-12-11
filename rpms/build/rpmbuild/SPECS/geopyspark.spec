@@ -1,6 +1,6 @@
 %define _topdir   /tmp/rpmbuild
 %define name      geopyspark
-%define release   13
+%define release   14
 %define version   0.3.0
 
 BuildRoot: %{buildroot}
