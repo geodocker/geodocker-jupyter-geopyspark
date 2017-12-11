@@ -1,7 +1,7 @@
 %define _topdir   /tmp/rpmbuild
 %define name      geopyspark
-%define release   13
-%define version   0.2.2
+%define release   14
+%define version   0.3.0
 
 BuildRoot: %{buildroot}
 Summary:   GeoPySpark
@@ -19,7 +19,7 @@ AutoReq:   no
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 %description
-GeoPySpark 0.2.2
+GeoPySpark 0.3.0
 
 %prep
 %setup -q -n geopyspark

@@ -9,7 +9,7 @@ archives/geopyspark-$(GEOPYSPARK_SHA).zip:
 	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK_SHA).zip" -o $@
 
 archives/geopyspark-netcdf-$(NETCDF_SHA).zip:
-	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(NETCDF_SHA).zip" -o $@
+	Curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(NETCDF_SHA).zip" -o $@
 
 rpmbuild/SOURCES/geopyspark.tar:
 	tar cvf $@ geopyspark/
@@ -31,7 +31,7 @@ archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR): scripts/geopyspark-jar.sh arc
            openjdk:8-jdk /scripts/geopyspark-jar.sh $(shell id -u) $(shell id -g) \
 	   $(GEOPYSPARK_SHA) $(GEOPYSPARK_JAR) $(NETCDF_SHA) $(NETCDF_JAR)
 
-rpmbuild/RPMS/x86_64/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm rpmbuild/RPMS/x86_64/geopyspark-worker-$(GEOPYSPARK_VERSION)-13.x86_64.rpm: rpmbuild/SPECS/geopyspark.spec scripts/geopyspark.sh rpmbuild/SOURCES/geopyspark.tar \
+rpmbuild/RPMS/x86_64/geopyspark-$(GEOPYSPARK_VERSION)-14.x86_64.rpm rpmbuild/RPMS/x86_64/geopyspark-worker-$(GEOPYSPARK_VERSION)-14.x86_64.rpm: rpmbuild/SPECS/geopyspark.spec scripts/geopyspark.sh rpmbuild/SOURCES/geopyspark.tar \
 archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
 	cp -f archives/geopyspark-netcdf-$(NETCDF_SHA).zip archives/geopyspark-netcdf.zip
 	cp -f archives/geopyspark-$(GEOPYSPARK_SHA).zip archives/geopyspark.zip
