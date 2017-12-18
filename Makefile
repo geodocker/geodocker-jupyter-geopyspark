@@ -1,6 +1,6 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= rpm
+TAG ?= bintray
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 AWSBUILD := $(FAMILY):aws-build-gdal-3
 IMAGE := $(FAMILY):$(TAG)
