@@ -4,33 +4,17 @@ TAG ?= rpm
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 AWSBUILD := $(FAMILY):aws-build-gdal-3
 IMAGE := $(FAMILY):$(TAG)
-GEOPYSPARK_SHA ?= a5ec919c53e1ae083b2d7284e9053e7173b6bfae
-GEOPYSPARK_NETCDF_SHA ?= 69897d9f03df2efbf6f7d8317aa6ad004274b1eb
+GEOPYSPARK_SHA ?= 7b93a0264674513d6f8923c43c32c82f056e5f10
+GEOPYSPARK_NETCDF_SHA ?= f48dd2119d3440c7b800c8c60f3cd4d0724645ab
 GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
-GEOPYSPARK_VERSION ?= 0.2.2
-GEOPYSPARK_JAR := geotrellis-backend-assembly-$(GEOPYSPARK_VERSION).jar
+GEOPYSPARK_VERSION ?= 0.3.0
 PYTHON_BLOB1 := friends-of-geopyspark.tar.gz
 PYTHON_BLOB2 := geopyspark-sans-friends.tar.gz
 
 all: image
 
-archives/geopyspark-$(GEOPYSPARK_SHA).zip:
-	curl -L "https://github.com/locationtech-labs/geopyspark/archive/$(GEOPYSPARK_SHA).zip" -o $@
-
-archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
-	curl -L "https://github.com/geotrellis/geonotebook/archive/$(GEONOTEBOOK_SHA).zip" -o $@
-
-archives/geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA).zip:
-	curl -L "https://github.com/geotrellis/geopyspark-netcdf/archive/$(GEOPYSPARK_NETCDF_SHA).zip" -o $@
-
-########################################################################
-
 blobs/%: archives/%
 	cp -f $< $@
-
-%: archives/%.zip
-	rm -rf $@
-	unzip -qu $<
 
 ########################################################################
 
@@ -44,9 +28,7 @@ archives/$(PYTHON_BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scr
           -v $(shell pwd)/scripts:/scripts:ro \
           $(AWSBUILD) /scripts/build-python-blob1.sh $(shell id -u) $(shell id -g) $(PYTHON_BLOB1)
 
-archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/python3.4/site-packages/.xxx \
-   archives/geopyspark-$(GEOPYSPARK_SHA).zip \
-   archives/geopyspark-netcdf-$(GEOPYSPARK_NETCDF_SHA).zip
+archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/python3.4/site-packages/.xxx
 	rm -rf scratch/dot-local/lib/python3.4/site-packages/geopyspark*
 	rm -rf scratch/pip-cache/wheels/*
 	docker run -it --rm \
@@ -58,9 +40,6 @@ archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/py
 ########################################################################
 
 image: Dockerfile \
-   blobs/geonotebook-$(GEONOTEBOOK_SHA).zip \
-   blobs/$(GEOPYSPARK_JAR) \
-   blobs/$(GEOPYSPARK-WHEEL) \
    blobs/$(PYTHON_BLOB1) \
    blobs/$(PYTHON_BLOB2)
 ifeq ($(TRAVIS),1)

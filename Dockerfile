@@ -13,19 +13,22 @@ COPY blobs/$PYTHONBLOB1 /blobs/
 COPY scripts/install-blob1.sh /scripts/
 RUN pip3 install --user pytest && /scripts/install-blob1.sh $PYTHONBLOB1
 
-# Install remaining GeoNotebook dependencies
+# Install Remaining Geonotebook Dependencies
 COPY config/requirements.txt /tmp/requirements.txt
 RUN pip3 install --user -r /tmp/requirements.txt && \
     pip3 install --user "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip"
 
 # Install GeoNotebook
-COPY blobs/geonotebook-$GEONOTEBOOKSHA.zip /tmp
 RUN mkdir /home/hadoop/notebooks && \
-    (pushd /tmp ; unzip -q geonotebook-$GEONOTEBOOKSHA.zip ; popd) && \
-    (pushd /tmp/geonotebook-$GEONOTEBOOKSHA ; pip3 install --user . ; popd) && \
+    cd /tmp && \
+    curl -L -O "https://github.com/geotrellis/geonotebook/archive/$GEONOTEBOOKSHA.zip" && \
+    unzip -q $GEONOTEBOOKSHA.zip && \
+    cd /tmp/geonotebook-$GEONOTEBOOKSHA && \
+    pip3 install --user . && \
     jupyter nbextension enable --py widgetsnbextension && \
     jupyter serverextension enable --py geonotebook && \
-    jupyter nbextension enable --py geonotebook
+    jupyter nbextension enable --py geonotebook && \
+    cd /tmp && rm -rf /tmp/geonotebook-$GEONOTEBOOKSHA $GEONOTEBOOKSHA.zip
 COPY config/geonotebook.ini /home/hadoop/.local/etc/geonotebook.ini
 COPY kernels/geonotebook/kernel.json /home/hadoop/.local/share/jupyter/kernels/geonotebook3/kernel.json
 COPY kernels/local/kernel.json /usr/local/share/jupyter/kernels/pyspark/

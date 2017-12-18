@@ -3,28 +3,23 @@
 USER=$1
 GROUP=$2
 BLOB=$3
-GEOPYSPARK=$4
-GEOPYSPARK_NETCDF=$5
+GEOPYSPARK_SHA=$4
+GEOPYSPARK_NETCDF_SHA=$5
 
-# aquire
+# Aquire
 chown -R root:root $HOME/.local
 
 set -x
 
-# install geopsypark
-cd $HOME
-unzip -q /archives/geopyspark-${GEOPYSPARK}.zip
-unzip -q /archives/geopyspark-netcdf-${GEOPYSPARK_NETCDF}.zip
-cd geopyspark-${GEOPYSPARK}/
-pip3 install --user .
-cd ../geopyspark-netcdf-${GEOPYSPARK_NETCDF}/
-pip3 install --user .
+# Install GeoPySpark
+pip3 install --user "https://github.com/locationtech-labs/geopyspark/archive/${GEOPYSPARK_SHA}.zip"
+pip3 install --user "https://github.com/geotrellis/geopyspark-netcdf/archive/${GEOPYSPARK_NETCDF_SHA}.zip"
 
 set +x
 
-# archive libraries
+# Archive Libraries
 cd $HOME/.local/lib/python3.4/site-packages
 tar acf /archives/$BLOB $(find | grep geopyspark)
 
-# release
+# Release
 chown -R $USER:$GROUP /archives $HOME/.local
