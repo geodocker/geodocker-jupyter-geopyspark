@@ -47,9 +47,6 @@ endif
           --build-arg PYTHONBLOB2=$(PYTHON_BLOB2) \
           -t $(IMAGE) -f Dockerfile .
 
-env:
-	env
-
 clean:
 	rm -rf scratch/local/gdal/
 
