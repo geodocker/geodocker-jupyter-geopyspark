@@ -48,9 +48,7 @@ ADD https://s3.amazonaws.com/geopyspark-dependency-jars/netcdfAll-5.0.0-SNAPSHOT
 # YARN
 COPY config/core-site.xml /etc/hadoop/conf/
 COPY config/yarn-site.xml /etc/hadoop/conf/
-COPY config/jupyterhub_config_generic.py /etc/jupterhub/
-COPY config/jupyterhub_config_github.py /etc/jupterhub/
-COPY config/jupyterhub_config_google.py /etc/jupterhub/
+COPY config/jupyterhub_config_*.py /etc/jupterhub/
 COPY scripts/jupyterhub.sh /scripts/
 USER root
 RUN chown hadoop:hadoop -R /etc/hadoop/conf && chmod ugo+r /opt/jars/*

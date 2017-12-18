@@ -16,8 +16,6 @@ all: image
 blobs/%: archives/%
 	cp -f $< $@
 
-########################################################################
-
 archives/$(PYTHON_BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scripts/build-python-blob1.sh
 	rm -rf scratch/dot-local/lib/python3.4/site-packages/*
 	rm -rf scratch/pip-cache/wheels/*
@@ -37,15 +35,10 @@ archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/py
           -v $(shell pwd)/scripts:/scripts:ro \
           $(AWSBUILD) /scripts/build-python-blob2.sh $(shell id -u) $(shell id -g) $(PYTHON_BLOB2) $(GEOPYSPARK_SHA) $(GEOPYSPARK_NETCDF_SHA)
 
-########################################################################
-
-image: Dockerfile \
-   blobs/$(PYTHON_BLOB1) \
-   blobs/$(PYTHON_BLOB2)
+image: Dockerfile blobs/$(PYTHON_BLOB1) blobs/$(PYTHON_BLOB2)
 ifeq ($(TRAVIS),1)
 	docker rmi $(AWSBUILD)
-	rm -rf $(shell ls archives/* | grep -iv 'netcdf')
-	rm -rf geopyspark-*/ scratch/local/
+	rm -rf archives/ scratch/local/
 endif
 	docker build \
           --build-arg VERSION=$(GEOPYSPARK_VERSION) \
@@ -54,17 +47,14 @@ endif
           --build-arg PYTHONBLOB2=$(PYTHON_BLOB2) \
           -t $(IMAGE) -f Dockerfile .
 
-########################################################################
 env:
 	env
 
 clean:
-	rm -f archives/$(GEOPYSPARK_JAR)
 	rm -rf scratch/local/gdal/
 
 cleaner: clean
 	rm -f blobs/*
-	rm -rf geopyspark-*/
 	rm -rf scratch/dot-local/*
 
 cleanest: cleaner
@@ -78,10 +68,6 @@ publish:
 	docker tag $(IMAGE) "$(FAMILY):latest"
 	docker push $(IMAGE)
 	docker push "$(FAMILY):latest"
-
-########################################################################
-
-GEOPYSPARK_DIR ?= $(realpath ../geopyspark/geopyspark)
 
 run:
 	mkdir -p $(HOME)/.aws
