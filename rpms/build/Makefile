@@ -1,4 +1,4 @@
-.PHONY: all gcc4 gcc6 jars rpms
+.PHONY: all gcc4 gcc6 rpms
 
 FAMILY := quay.io/geodocker/emr-build
 VERSION := 3
@@ -26,8 +26,6 @@ aws-build-gdal: blobs/gdal-and-friends.tar.gz
 
 base: blobs/gdal-and-friends.tar.gz blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms
 	docker build -t $(BASEIMAGE) -f Dockerfile.base .
-
-jars: archives/$(CDM_JAR) archives/$(GEOPYSPARK_JAR) archives/$(NETCDF_JAR)
 
 rpms: rpmbuild/RPMS/x86_64/gcc6-lib-6.4.0-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/s3fs-fuse-1.82-33.x86_64.rpm \
