@@ -4,12 +4,12 @@ USER=$1
 GROUP=$2
 BLOB=$3
 
-# aquire
+# Aquire
 chown -R root:root $HOME/.cache/pip $HOME/.local
 
 set -x
 
-# install geopsypark's friends
+# Install Geopsypark's Friends
 cat <<EOF > /tmp/geopyspark_deps.txt
 appdirs==1.4.3
 numpy==1.12.1
@@ -21,7 +21,7 @@ six==1.10.0
 EOF
 pip3 install --user -r /tmp/geopyspark_deps.txt &> /dev/null
 
-# install geonotebook's friends
+# Install Geonotebook's Friends
 pip3 install --user GDAL==2.1.3
 pip3 install --user requests==2.11.1 &> /dev/null
 pip3 install --user promise==0.4.2 &> /dev/null
@@ -29,7 +29,7 @@ pip3 install --user fiona==1.7.1 &> /dev/null
 pip3 install --user matplotlib==2.0.0 &> /dev/null
 CFLAGS='-DPI=M_PI -DHALFPI=M_PI_2 -DFORTPI=M_PI_4 -DTWOPI=(2*M_PI) -I/usr/local/include' pip3 install --user pyproj==1.9.5.1 &> /dev/null
 
-# install geonotebook's other friends
+# Install Geonotebook's Other Friends
 cat <<EOF > /tmp/geonotebook_deps.txt
 affine==2.0.0.post1
 alembic==0.8.9
@@ -88,10 +88,10 @@ pip3 install --user -r /tmp/geonotebook_deps.txt &> /dev/null
 
 set +x
 
-# archive libraries
+# Archive Libraries
 cd $HOME/.local/lib/python3.4/site-packages
 touch .xxx
 tar acf /archives/$BLOB $(find | grep -v geopyspark)
 
-# release
+# Release
 chown -R $USER:$GROUP $HOME/.cache/pip $HOME/.local
