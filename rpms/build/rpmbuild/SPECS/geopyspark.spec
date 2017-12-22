@@ -29,7 +29,8 @@ echo
 
 %install
 find /usr/local/lib /usr/local/lib64 | sort > before.txt
-pip3 install -r requirements.txt
+pip3 install -r requirements1.txt
+pip3 install -r requirements2.txt
 find /usr/local/lib /usr/local/lib64 | sort > after.txt
 tar cvf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')
 cd %{buildroot}

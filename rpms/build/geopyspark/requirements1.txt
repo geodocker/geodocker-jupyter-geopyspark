@@ -1,5 +1,4 @@
 appdirs==1.4.3
-/archives/geopyspark-netcdf.zip
 /archives/geopyspark.zip
 numpy==1.12.1
 packaging==16.8
