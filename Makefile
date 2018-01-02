@@ -1,13 +1,13 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= bintray
+TAG ?= postvp
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 AWSBUILD := $(FAMILY):aws-build-gdal-3
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= 7b93a0264674513d6f8923c43c32c82f056e5f10
 GEOPYSPARK_NETCDF_SHA ?= f48dd2119d3440c7b800c8c60f3cd4d0724645ab
 GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
-GEOPYSPARK_VERSION ?= 0.3.0
+GEOPYSPARK_VERSION ?= 0.3.0-postvp
 PYTHON_BLOB1 := friends-of-geopyspark.tar.gz
 PYTHON_BLOB2 := geopyspark-sans-friends.tar.gz
 
