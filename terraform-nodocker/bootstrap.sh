@@ -18,7 +18,7 @@ is_master() {
 
 if is_master; then
     # Download packages
-    for i in boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-0.3.0-13.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm s3fs-fuse-1.82-33.x86_64.rpm
+    for i in boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-0.3.0-13.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm
     do
 	aws s3 cp $RPM_BUCKET/$i /tmp/$i
     done
@@ -63,11 +63,6 @@ EOF
     sudo ldconfig
     rm -f /tmp/local.conf
 
-    # Mount Bucket
-    sudo mkdir /s3
-    sudo /usr/local/bin/s3fs $NB_BUCKET /s3 -o allow_other,iam_role=auto,umask=0000
-    sudo ln -s /s3 /etc/skel/s3
-
     # Set up user account to manage JupyterHub
     sudo groupadd shadow
     sudo chgrp shadow /etc/shadow
@@ -101,11 +96,6 @@ export user=\$1
 
 sudo useradd -m -G jupyterhub,hadoop \$user
 sudo -u hdfs hdfs dfs -mkdir /user/\$user
-
-bucket=$(echo $NB_BUCKET | cut '-d:' -f1)
-prefix=$(echo $NB_BUCKET | cut '-d:' -f2 | sed 's,^/,,')
-aws s3api put-object --bucket \$bucket --key \$prefix/\$user/
-# sudo -E ln -s /s3/\$(echo $user) /home/\$(echo $user)/s3
 
 EOF
     chmod +x /tmp/new_user

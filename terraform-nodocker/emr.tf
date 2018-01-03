@@ -1,7 +1,7 @@
 resource "aws_emr_cluster" "emr-spark-cluster" {
   name          = "GeoNotebook + GeoPySpark Cluster"
   applications  = ["Hadoop", "Spark", "Ganglia"]
-  log_uri       = "${var.s3_uri}"
+  log_uri       = "${var.s3_log_uri}"
   release_label = "emr-5.7.0"
   service_role  = "${var.emr_service_role}"
 
@@ -30,11 +30,11 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   }
 
   bootstrap_action {
-    path = "s3://${var.rpm_bucket}/${var.rpm_prefix}/bootstrap.sh"
+    path = "s3://${var.bs_bucket}/${var.bs_prefix}/bootstrap.sh"
     name = "geopyspark"
     args = [
-      "s3://${var.rpm_bucket}/${var.rpm_prefix}",
-      "${var.nb_bucket}",
+      "${var.s3_rpm_uri}",
+      "NOTEBOOK PATH",
       "${var.jupyterhub_oauth_module}",
       "${var.jupyterhub_oauth_class}",
       "${var.oauth_client_id}",
