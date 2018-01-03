@@ -25,3 +25,5 @@ RUN yum clean all -y && yum update -y && \
       which \
       zlib-devel
 RUN ln -s /usr/include/python3.4m /usr/include/python3.4
+
+RUN yum makecache fast
