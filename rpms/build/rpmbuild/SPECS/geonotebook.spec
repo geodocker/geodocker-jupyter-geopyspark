@@ -3,6 +3,8 @@
 %define release   13
 %define version   0.0.0
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   GeoNotebook
 License:   Apache 2.0

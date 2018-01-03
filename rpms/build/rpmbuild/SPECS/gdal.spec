@@ -3,6 +3,8 @@
 %define release   33
 %define version   2.1.3
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   GDAL
 License:   X/MIT

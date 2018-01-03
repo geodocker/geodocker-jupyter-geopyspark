@@ -3,6 +3,8 @@
 %define release   33
 %define version   1.82
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   s3fs-fuse
 License:   GPL

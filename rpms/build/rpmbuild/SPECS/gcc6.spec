@@ -3,6 +3,8 @@
 %define release   33
 %define version   6.4.0
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   GCC
 License:   GPL

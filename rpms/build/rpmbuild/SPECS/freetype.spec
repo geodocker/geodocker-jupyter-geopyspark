@@ -3,6 +3,8 @@
 %define release   33
 %define version   2.8
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   FreeType
 License:   GPL

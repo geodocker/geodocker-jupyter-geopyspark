@@ -3,6 +3,8 @@
 %define release   33
 %define version   e5f107d
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   Python bindings for Mapnik
 License:   LGPL

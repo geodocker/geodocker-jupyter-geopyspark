@@ -3,6 +3,8 @@
 %define release   13
 %define version   0.3.0
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   GeoPySpark
 License:   Apache 2.0

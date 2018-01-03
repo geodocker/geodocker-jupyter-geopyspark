@@ -3,6 +3,8 @@
 %define release   33
 %define version   4.9.3
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   Proj4
 License:   MIT

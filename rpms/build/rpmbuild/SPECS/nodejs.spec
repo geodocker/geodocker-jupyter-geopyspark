@@ -3,6 +3,8 @@
 %define release   13
 %define version   8.5.0
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   NodeJS
 License:   node.js

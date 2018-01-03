@@ -3,6 +3,8 @@
 %define release   33
 %define version   1_62_0
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   Boost
 License:   Boost License

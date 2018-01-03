@@ -3,6 +3,8 @@
 %define release   33
 %define version   093fcee
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   Mapnik
 License:   LGPL
