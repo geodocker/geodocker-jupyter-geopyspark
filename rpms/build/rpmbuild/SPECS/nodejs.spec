@@ -23,7 +23,7 @@ Node.js 8.5.0
 
 %build
 ./configure --prefix=/usr/local
-make -j 33
+make -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
 make DESTDIR=%{buildroot} install

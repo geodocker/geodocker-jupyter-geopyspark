@@ -32,7 +32,7 @@ GDAL
 
 %build
 LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' ./configure --prefix=/usr/local
-make -k -j 33 || make
+make -k -j$(grep -c ^processor /proc/cpuinfo) || make
 
 %install
 make DESTDIR=%{buildroot} install

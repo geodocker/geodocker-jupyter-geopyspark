@@ -25,7 +25,7 @@ Mapnik 093fcee
 echo
 
 %install
-PKG_CONFIG_PATH=/usr/local/lib/pkgconfig python scons/scons.py PYTHON=/usr/bin/python3.4 DESTDIR=%{buildroot} PREFIX=/usr/local -j 33 install
+PKG_CONFIG_PATH=/usr/local/lib/pkgconfig python scons/scons.py PYTHON=/usr/bin/python3.4 DESTDIR=%{buildroot} PREFIX=/usr/local -j$(grep -c ^processor /proc/cpuinfo) install
 
 %files
 %defattr(-,root,root)

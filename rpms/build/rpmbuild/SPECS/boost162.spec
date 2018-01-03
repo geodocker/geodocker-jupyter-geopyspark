@@ -24,10 +24,10 @@ Boost 1.62
 
 %build
 ./bootstrap.sh --with-python=python3.4 --with-python-version=3.4
-./b2 --prefix=%{buildroot}/usr/local -j 33
+./b2 --prefix=%{buildroot}/usr/local -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
-./b2 --prefix=%{buildroot}/usr/local -j 33 install
+./b2 --prefix=%{buildroot}/usr/local -j$(grep -c ^processor /proc/cpuinfo) install
 
 %package lib
 Group: Development/Libraries
