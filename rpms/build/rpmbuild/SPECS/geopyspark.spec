@@ -39,9 +39,9 @@ cd %{buildroot}
 tar axvf /tmp/packages.tar
 mkdir -p %{buildroot}/opt/jars
 cd %{buildroot}/opt/jars
-curl -L -O https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geotrellis-backend_2.11/%{version}-postvp/geotrellis-backend_2.11-%{version}-postvp.jar
-curl -L -O https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geopyspark-gddp_2.11/%{version}-postvp/geopyspark-gddp_2.11-%{version}-postvp.jar
-curl -L -O https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-%{version}-postvp-deps.jar
+curl -L -O https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geotrellis-backend_2.11/%{version}/geotrellis-backend_2.11-%{version}.jar
+curl -L -O https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geopyspark-gddp_2.11/%{version}/geopyspark-gddp_2.11-%{version}.jar
+curl -L -O https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-%{version}-deps.jar
 curl -L -O https://s3.amazonaws.com/geopyspark-dependency-jars/netcdfAll-5.0.0-SNAPSHOT.jar
 
 %package worker
