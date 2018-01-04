@@ -31,7 +31,7 @@ JupyterHub 0.7.2
 echo
 
 %install
-find /usr/local/lib /usr/local/lib64 | grep 'site-packages/[^/]\+$' | sort > before.txt
+find /usr/local/lib /usr/local/lib64 | grep -v geopyspark | grep 'site-packages/[^/]\+$' | sort > before.txt
 find /usr/local/share /usr/local/bin | sort >> before.txt
 pip3 install -r requirements-1.txt
 unzip /archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip
@@ -40,7 +40,7 @@ patch -p1 < ../patch.diff
 pip3 install .
 cd ..
 pip3 install -r requirements-2.txt
-find /usr/local/lib /usr/local/lib64 | grep 'site-packages/[^/]\+$' | sort > after.txt
+find /usr/local/lib /usr/local/lib64 | grep -v geopyspark | grep 'site-packages/[^/]\+$' | sort > after.txt
 find /usr/local/share /usr/local/bin | sort >> after.txt
 echo /usr/local/lib/node_modules/configurable-http-proxy >> after.txt
 tar cf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')

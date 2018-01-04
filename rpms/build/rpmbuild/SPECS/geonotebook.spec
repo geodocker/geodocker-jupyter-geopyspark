@@ -32,14 +32,13 @@ GeoNotebook 0.0.0
 echo
 
 %install
-find /usr/local /usr/share | sort > before.txt
+find /usr/local /usr/share | grep -v geopyspark | sort > before.txt
 pip3 install -r requirements.txt
 jupyter nbextension enable --py widgetsnbextension --system
 jupyter serverextension enable --py geonotebook --system
 jupyter nbextension enable --py geonotebook --system
-find /usr/local /usr/share | sort > after.txt
+find /usr/local /usr/share | grep -v geopyspark | sort > after.txt
 tar cvf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')
-
 cd %{buildroot}
 tar axvf /tmp/packages.tar
 
