@@ -4,6 +4,8 @@ archives/geonotebook-$(GEONOTEBOOK_SHA).zip:
 rpmbuild/SOURCES/geonotebook.tar:
 	tar cvf $@ geonotebook/
 
+geonotebook-deps: archives/geonotebook-$(GEONOTEBOOK_SHA).zip rpmbuild/SOURCES/geonotebook.tar
+
 rpmbuild/RPMS/x86_64/geonotebook-0.0.0-13.x86_64.rpm: rpmbuild/SPECS/geonotebook.spec scripts/geonotebook.sh \
 rpmbuild/SOURCES/geonotebook.tar \
 $(shell scripts/not.sh rpmbuild/RPMS/x86_64/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm) \

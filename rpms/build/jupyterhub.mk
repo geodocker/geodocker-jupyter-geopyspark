@@ -7,6 +7,8 @@ archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip:
 rpmbuild/SOURCES/jupyterhub.tar:
 	tar cvf $@ jupyterhub/
 
+jupyterhub-deps: archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip rpmbuild/SOURCES/jupyterhub.tar
+
 rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm: rpmbuild/SPECS/nodejs.spec scripts/nodejs.sh rpmbuild/SOURCES/node-v8.5.0.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/rpmbuild:/tmp/rpmbuild:rw \
