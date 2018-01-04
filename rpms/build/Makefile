@@ -39,7 +39,7 @@ rpmbuild/SOURCES/lcms2-2.8.tar.gz rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz rpmbui
 rpmbuild/SOURCES/freetype-2.8.tar.gz rpmbuild/SOURCES/gdal-2.1.3.tar.gz rpmbuild/SOURCES/node-v8.5.0.tar.gz \
 rpmbuild/SOURCES/boost_1_62_0.tar.bz2 rpmbuild/SOURCES/mapbox-variant-v1.1.3.tar.gz rpmbuild/SOURCES/mapbox-geometry-v0.9.2.tar.gz \
 rpmbuild/SOURCES/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip rpmbuild/SOURCES/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip \
-rpmbuild/SOURCES/v1.82.tar.gz jupyterhub-deps geonotebook-deps geopyspark-deps
+geopyspark-deps jupyterhub-deps geonotebook-deps
 
 blobs/spark-2.1.0-bin-hadoop2.7.tgz:
 	curl -L "http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz" -o $@
