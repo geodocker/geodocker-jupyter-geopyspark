@@ -3,6 +3,8 @@
 %define release   33
 %define version   2.8
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   FreeType
 License:   GPL
@@ -21,7 +23,7 @@ FreeType 2.8
 
 %build
 ./configure --prefix=/usr/local --with-harfbuzz=no
-make -j 33
+nice -n 19 make -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
 make DESTDIR=%{buildroot} install

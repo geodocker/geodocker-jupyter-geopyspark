@@ -3,6 +3,8 @@
 %define release   33
 %define version   4.9.3
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   Proj4
 License:   MIT
@@ -21,7 +23,7 @@ Proj 4.9.3
 
 %build
 ./configure --prefix=/usr/local
-make -j 33
+nice -n 19 make -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
 make DESTDIR=%{buildroot} install

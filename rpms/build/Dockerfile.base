@@ -23,7 +23,6 @@ COPY rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm /rpms/
 COPY rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm /rpms/
 COPY rpmbuild/RPMS/x86_64/proj493-lib-4.9.3-33.x86_64.rpm /rpms/
 COPY rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm /rpms/
-COPY rpmbuild/RPMS/x86_64/s3fs-fuse-1.82-33.x86_64.rpm /rpms/
 RUN yum localinstall -y /rpms/*.rpm && \
     echo /usr/local/lib >> /etc/ld.so.conf.d/local.conf && echo /usr/local/lib64 >> /etc/ld.so.conf.d/local.conf && \
     ldconfig

@@ -15,3 +15,5 @@ RUN curl -L "ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz" -o /tmp/libtool
     tar axvf /tmp/libtool-2.4.6.tar.xz && rm -r /tmp/libtool-2.4.6.tar.xz && \
     cd libtool-2.4.6 && ./configure --prefix=/usr/local && make -j33 && make install && \
     cd .. && rm -rf libtool-2.4.6
+
+RUN yum makecache fast

@@ -3,6 +3,8 @@
 %define release   33
 %define version   2.1.3
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   GDAL
 License:   X/MIT
@@ -30,10 +32,10 @@ GDAL
 
 %build
 LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' ./configure --prefix=/usr/local
-make -k -j 33 || make
+nice -n 19 make -k -j$(grep -c ^processor /proc/cpuinfo) || make
 
 %install
-make DESTDIR=%{buildroot} install
+nice -n 19 make DESTDIR=%{buildroot} install
 
 %package lib
 Group: Geography

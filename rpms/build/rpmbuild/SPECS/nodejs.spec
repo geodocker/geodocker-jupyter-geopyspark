@@ -3,6 +3,8 @@
 %define release   13
 %define version   8.5.0
 
+%define debug_package %{nil}
+
 BuildRoot: %{buildroot}
 Summary:   NodeJS
 License:   node.js
@@ -21,7 +23,7 @@ Node.js 8.5.0
 
 %build
 ./configure --prefix=/usr/local
-make -j 33
+nice -n 19 make -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
 make DESTDIR=%{buildroot} install

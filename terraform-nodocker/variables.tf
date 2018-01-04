@@ -9,7 +9,7 @@ variable "key_name" {
     description = "The name of the EC2 secret key (primarily for SSH access)"
 }
 
-variable "s3_uri" {
+variable "s3_log_uri" {
     type        = "string"
     description = "Where EMR logs will be sent"
     default     = "s3n://geotrellis-test/terraform-logs/"
@@ -51,19 +51,19 @@ variable "ecs_instance_profile" {
   default     = "ecsInstanceRole"
 }
 
-variable "rpm_bucket" {
+variable "bs_bucket" {
   type        = "string"
-  description = "S3 Bucket containing RPMs (e.g. bucket if the whole path is s3://bucket/containing/rpms)"
+  description = "S3 Bucket containing the bootstrap script (e.g. bucket if the whole path is s3://bucket/containing/bootstrap)"
 }
 
-variable "rpm_prefix" {
+variable "bs_prefix" {
   type        = "string"
-  description = "The prefix of the RPMS within the s3 bucket (e.g. containing/rpms if the whole path is s3://bucket/containing/rpms)"
+  description = "The prefix of the bootstrap script within the s3 bucket (e.g. containing/bootstrap if the whole path is s3://bucket/containing/bootstrap/bootstrap.sh)"
 }
 
-variable "nb_bucket" {
+variable "s3_rpm_uri" {
   type        = "string"
-  description = "S3 Bucket containing notebooks (e.g. bucket:/containing/notebooks)"
+  description = "S3 path containing RPMs (e.g. s3://bucket/containing/rpms/)"
 }
 
 variable "jupyterhub_oauth_module" {
