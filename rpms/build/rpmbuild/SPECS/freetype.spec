@@ -23,7 +23,7 @@ FreeType 2.8
 
 %build
 ./configure --prefix=/usr/local --with-harfbuzz=no
-make -j$(grep -c ^processor /proc/cpuinfo)
+nice -n 19 make -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
 make DESTDIR=%{buildroot} install

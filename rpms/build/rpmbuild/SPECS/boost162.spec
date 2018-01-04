@@ -23,11 +23,11 @@ Boost 1.62
 %setup -q -n boost_1_62_0
 
 %build
-./bootstrap.sh --with-python=python3.4 --with-python-version=3.4
-./b2 --prefix=%{buildroot}/usr/local -j$(grep -c ^processor /proc/cpuinfo)
+nice -n 19 ./bootstrap.sh --with-python=python3.4 --with-python-version=3.4
+nice -n 19 ./b2 --prefix=%{buildroot}/usr/local -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
-./b2 --prefix=%{buildroot}/usr/local -j$(grep -c ^processor /proc/cpuinfo) install
+nice -n 19 ./b2 --prefix=%{buildroot}/usr/local -j$(grep -c ^processor /proc/cpuinfo) install
 
 %package lib
 Group: Development/Libraries

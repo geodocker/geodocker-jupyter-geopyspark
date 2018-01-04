@@ -32,10 +32,10 @@ GDAL
 
 %build
 LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' ./configure --prefix=/usr/local
-make -k -j$(grep -c ^processor /proc/cpuinfo) || make
+nice -n 19 make -k -j$(grep -c ^processor /proc/cpuinfo) || make
 
 %install
-make DESTDIR=%{buildroot} install
+nice -n 19 make DESTDIR=%{buildroot} install
 
 %package lib
 Group: Geography

@@ -25,10 +25,10 @@ Gnu Compiler Collection 6.4.0
 tar axvf /tmp/rpmbuild/SOURCES/isl-0.16.1.tar.bz2
 mv isl-0.16.1/ isl/
 ./configure --prefix=/usr/local --disable-nls --disable-multilib --disable-bootstrap --enable-linker-build-id --enable-languages='c,c++'
-make -j$(grep -c ^processor /proc/cpuinfo)
+nice -n 19 make -j$(grep -c ^processor /proc/cpuinfo)
 
 %install
-make DESTDIR=%{buildroot} install
+nice -n 19 make DESTDIR=%{buildroot} install
 
 %package lib
 Group: Development/Tools
