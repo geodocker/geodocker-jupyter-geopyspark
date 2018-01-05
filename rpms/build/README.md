@@ -38,3 +38,12 @@ This will also produce all of the images described above (including the base ima
 ## Fetching ##
 
 From within this directory, type `./fetch s3://bucket/prefix/abc123/` where `s3://bucket/prefix/` is the path to a "directory" on S3 where RPMs have been previously-published, and `abc123` is the git SHA from which those RPMs were produced.
+
+## Refreshing GeoPySpark ##
+
+With a complete set of RPMs already present, the GeoPySpark RPMs can be refreshed (for example to a newer version) by deleting the old GeoPySpark RPMs, then executing the `rpms` Makefile target.
+
+```bash
+rm -f rpmbuild/RPMS/x86_64/geopyspark-*.rpm
+make rpms
+```
