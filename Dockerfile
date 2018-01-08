@@ -47,9 +47,10 @@ COPY scripts/jupyterhub.sh /scripts/
 
 # Install Jars
 ADD https://s3.amazonaws.com/geopyspark-dependency-jars/netcdfAll-5.0.0-SNAPSHOT.jar /opt/jars/
-ADD https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-$VERSION-deps.jar /opt/jars/
-ADD https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geotrellis-backend_2.11/$VERSION/geotrellis-backend_2.11-$VERSION.jar /opt/jars/
+# ADD https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-$VERSION-deps.jar /opt/jars/
+# ADD https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geotrellis-backend_2.11/$VERSION/geotrellis-backend_2.11-$VERSION.jar /opt/jars/
 ADD https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geopyspark-gddp_2.11/$VERSION/geopyspark-gddp_2.11-$VERSION.jar /opt/jars/
+ADD https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar /opt/jars
 
 USER root
 RUN chown hadoop:hadoop -R /etc/hadoop/conf && chmod ugo+r /opt/jars/*

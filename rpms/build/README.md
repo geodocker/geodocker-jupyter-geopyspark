@@ -1,6 +1,6 @@
 # Introduction #
 
-This directory contains the configuration and build files needed to (re)build the bootstrap images.
+This directory contains the configuration and build files needed to (re)build the base image and the RPMs.
 
 # Inventory #
 
@@ -8,32 +8,42 @@ This directory contains the configuration and build files needed to (re)build th
 
 The following images can be built from the materials in this directory:
 
-   - [`aws-build-base`](Dockerfile.aws-build-base) is an image with many build tools included that resembles EMR.
-     This image is used to build the [`gdal-and-friends.tar.gz`](Makefile#L123-L134) tarball.
-   - [`aws-build-gdal-0`](Dockerfile.aws-build-gdal) is much the same as the above, but it contains the `gdal-and-friends.tar.gz` tarball mentioned above.
-     This image is used as the AWS build environment described in the [top-level README.md](../README.md).
-   - [`centos-build-base`](Dockerfile.centos-build-base) is much the same as the [`quay.io/geodocker/jupyter-geopyspark`](https://quay.io/repository/geodocker/jupyter-geopyspark) image,
-     except that it contains a number of build tools and GIS-related libraries.
-     This image is used to build and package [GCC 6.4.0](https://gcc.gnu.org/gcc-6/) which is needed to build the other binaries that are built here.
-   - [`centos-build-gcc6`](Dockerfile.centos-build-gcc6) is much the same as the above, but it has GCC 6.4.0 installed.
-     It is used to build most of the binaries in the `base` image.
-   - [`base-0`](Dockerfile.base) is much the same as `quay.io/geodocker/jupyter-geopyspark` but has a number of additional binary dependencies,
-     including [Mapnik](https://github.com/mapnik/mapnik), [python-mapnik](https://github.com/mapnik/python-mapnik), and `gdal-and-friends.tar.gz`.
-     The final image (produced in the top-level build) is derived from this image.
+   - [`quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-3`](Dockerfile.aws-build-gdal) is an image used to build the `gdal-and-friend.tar.gz` binary blob.  This image is meant to mimic the environment of an EC2 (EMR) instance as closely as possible so as to create a compatible artifact.
+   - [`quay.io/geodocker/jupyter-geopyspark:base-3`](Dockerfile.base) is the ancestor images of the image produced in the root of this repository.  It contains mostly slow-rate-of-change binary dependencies.
+   - [`quay.io/geodocker/emr-build:gcc4-3`](Dockerfile.gcc4) is used to build RPMs with gcc 4.8.
+   - [`quay.io/geodocker/emr-build:gcc6-3`](Dockerfile.gcc6) is used to build RPMs with gcc 6.4.
 
 ## Files and Directories ##
 
    - [`archives`](archives) is an initially-empty directory that is populated with source code, tarballs, and RPMs downloaded or produced during the build process.
    - [`blobs`](blobs) is an initially-empty directory that is populated with archives and RPMS from the `archives` directory.
-   - [`rpmbuild`](rpmbuild) is a directory containing configuration files used to produce custom RPMs which are installed in `centos-build-gcc6` and `base-0`.
+   - [`rpmbuild`](rpmbuild) is a directory containing configuration files used to produce the RPMs.
    - [`scripts`](scripts) is a directory containing scripts used to build the RPMs mentioned above, as well as the `gdal-and-friends.tar.gz` tarball.
-   - The various Dockerfiles specify the various images discussed above.
    - [`Makefile`](Makefile) coordinates the build process.
+   - [`etc`](etc) contains additional configuration files that are included in the base image.
+   - The various Dockerfiles specify the various images discussed above.
+   - `*.mk`: these are included in the Makefile.
+   - `README.md`: this file.
 
-# To Build #
+# RPMs #
 
-Type `make all` or simply `make` to build everything.
+## Building ##
 
-Images can be built individually by typing `make aws-build-base`, `make aws-build-gdal`, `make centos-build-base`, `make centos-build-gcc6`, or `make base` as appropriate.
+From within this directory, type `./build.sh` to build all of the RPMs (this could take a very long time).
+Once they are built, type `./publish.sh s3://bucket/prefix/` where `s3://bucket/prefix/` is a "directory" on S3 for which you have write permissions.
+The RPMs will be published to `s3://bucket/prefix/abc123/` where `abc123` is the present git SHA.
 
-RPMs can be built individually by typing e.g. [`make archives/gcc6-6.4.0-33.x86_64.rpm`](Makefile#L85-L89).
+This will also produce all of the images described above (including the base image).
+
+## Fetching ##
+
+From within this directory, type `./fetch s3://bucket/prefix/abc123/` where `s3://bucket/prefix/` is the path to a "directory" on S3 where RPMs have been previously-published, and `abc123` is the git SHA from which those RPMs were produced.
+
+## Refreshing GeoPySpark ##
+
+With a complete set of RPMs already present, the GeoPySpark RPMs can be refreshed (for example to a newer version) by deleting the old GeoPySpark RPMs, then executing the `rpms` Makefile target.
+
+```bash
+rm -f rpmbuild/RPMS/x86_64/geopyspark-*.rpm
+make rpms
+```
