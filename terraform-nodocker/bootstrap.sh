@@ -1,7 +1,8 @@
 #!/bin/bash
 
-RPM_BUCKET=$(echo $1 | sed 's,/$,,')
-NB_BUCKET=$(echo $2 | sed 's,/$,,')
+RPM_URI=$(echo $1 | sed 's,/$,,')
+NB_BUCKET=$(echo $2 | sed 's,s3://\([^/]*\).*,\1,')
+NB_PREFIX=$(echo $2 | sed 's,s3://[^/]*/,,' | sed 's,/$,,')
 OAUTH_MODULE=$3
 OAUTH_CLASS=$4
 OAUTH_CLIENT_ID=$5
@@ -20,7 +21,7 @@ if is_master; then
     # Download packages
     for i in boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-0.3.0-13.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm
     do
-	aws s3 cp $RPM_BUCKET/$i /tmp/$i
+	aws s3 cp $RPM_URI/$i /tmp/$i
     done
 
     # Install packages
@@ -74,6 +75,9 @@ EOF
     # Ensure that all members of `jupyterhub` group may log in to JupyterHub
     echo 'hublauncher ALL=(%jupyterhub) NOPASSWD: /usr/local/bin/sudospawner' | sudo tee -a /etc/sudoers
     echo 'hublauncher ALL=(ALL) NOPASSWD: /usr/sbin/useradd' | sudo tee -a /etc/sudoers
+    echo 'hublauncher ALL=(ALL) NOPASSWD: /bin/chown' | sudo tee -a /etc/sudoers
+    echo 'hublauncher ALL=(ALL) NOPASSWD: /bin/mkdir' | sudo tee -a /etc/sudoers
+    echo 'hublauncher ALL=(ALL) NOPASSWD: /bin/mv' | sudo tee -a /etc/sudoers
     echo 'hublauncher ALL=(hdfs) NOPASSWD: /usr/bin/hdfs' | sudo tee -a /etc/sudoers
 
     # Environment setup
@@ -97,6 +101,20 @@ export user=\$1
 sudo useradd -m -G jupyterhub,hadoop \$user
 sudo -u hdfs hdfs dfs -mkdir /user/\$user
 
+sudo mkdir -p /home/\$user/.jupyter/
+
+cat << LOL > /tmp/jupyter_notebook_config.py.\$user
+from s3contents import S3ContentsManager
+
+c.NotebookApp.contents_manager_class = S3ContentsManager
+c.S3ContentsManager.bucket = "$NB_BUCKET"
+c.S3ContentsManager.prefix = "$NB_PREFIX"
+
+LOL
+
+sudo mv /tmp/jupyter_notebook_config.py.\$user /home/\$user/.jupyter/jupyter_notebook_config.py
+sudo chown \$user:\$user -R /home/\$user/.jupyter/
+
 EOF
     chmod +x /tmp/new_user
     sudo chown root:root /tmp/new_user
@@ -106,6 +124,7 @@ EOF
 from oauthenticator.$OAUTH_MODULE import $OAUTH_CLASS
 
 c = get_config()
+
 c.JupyterHub.authenticator_class = $OAUTH_CLASS
 c.${OAUTH_CLASS}.create_system_users = True
 
@@ -125,7 +144,7 @@ else
     # Download packages
     for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geonotebook-0.0.0-13.x86_64.rpm geopyspark-worker-0.3.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
     do
-	aws s3 cp $RPM_BUCKET/$i /tmp/$i
+	aws s3 cp $RPM_URI/$i /tmp/$i
     done
 
     # Install packages

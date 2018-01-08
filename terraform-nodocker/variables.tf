@@ -66,6 +66,11 @@ variable "s3_rpm_uri" {
   description = "S3 path containing RPMs (e.g. s3://bucket/containing/rpms/)"
 }
 
+variable "s3_notebook_uri" {
+  type        = "string"
+  description = "S3 path for notebooks (e.g. s3://bucket/containing/notebooks/)"
+}
+
 variable "jupyterhub_oauth_module" {
   type        = "string"
   description = "Name of the jupyterhub/oauthenticator module to import the jupyterhub_oauth_class from"
