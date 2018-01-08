@@ -34,7 +34,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
     name = "geopyspark"
     args = [
       "${var.s3_rpm_uri}",
-      "NOTEBOOK PATH",
+      "${var.s3_notebook_uri}",
       "${var.jupyterhub_oauth_module}",
       "${var.jupyterhub_oauth_class}",
       "${var.oauth_client_id}",
