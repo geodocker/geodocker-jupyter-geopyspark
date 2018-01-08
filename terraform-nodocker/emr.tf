@@ -42,6 +42,8 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
     ]
   }
 
+  configurations = "cluster-configurations.json"
+
   depends_on = ["aws_s3_bucket_object.bootstrap"]
 }
 
