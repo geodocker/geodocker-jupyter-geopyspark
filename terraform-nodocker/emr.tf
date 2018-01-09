@@ -6,6 +6,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   service_role  = "${var.emr_service_role}"
 
   ec2_attributes {
+    # subnet_id        = "subnet-xxxxxxxx"
     instance_profile = "${var.emr_instance_profile}"
     key_name         = "${var.key_name}"
 

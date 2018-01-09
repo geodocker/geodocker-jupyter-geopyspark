@@ -12,7 +12,6 @@ variable "key_name" {
 variable "s3_log_uri" {
     type        = "string"
     description = "Where EMR logs will be sent"
-    default     = "s3n://geotrellis-test/terraform-logs/"
 }
 
 variable "ecs_ami" {
