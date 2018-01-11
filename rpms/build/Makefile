@@ -33,12 +33,18 @@ rpmbuild/RPMS/x86_64/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm rpmbuild/RPM
 rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm rpmbuild/RPMS/x86_64/jupyterhub-0.7.2-13.x86_64.rpm rpmbuild/RPMS/x86_64/geonotebook-0.0.0-13.x86_64.rpm
 
-src: rpmbuild/SOURCES/isl-0.16.1.tar.bz2 rpmbuild/SOURCES/gcc-6.4.0.tar.xz rpmbuild/SOURCES/curl-7.57.0.tar.bz2 \
-rpmbuild/SOURCES/zlib-1.2.11.tar.gz rpmbuild/SOURCES/libpng-1.6.30.tar.xz rpmbuild/SOURCES/geos-3.6.1.tar.bz2 \
-rpmbuild/SOURCES/lcms2-2.8.tar.gz rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz rpmbuild/SOURCES/proj-4.9.3.tar.gz \
-rpmbuild/SOURCES/freetype-2.8.tar.gz rpmbuild/SOURCES/gdal-2.1.3.tar.gz rpmbuild/SOURCES/node-v8.5.0.tar.gz \
-rpmbuild/SOURCES/boost_1_62_0.tar.bz2 rpmbuild/SOURCES/mapbox-variant-v1.1.3.tar.gz rpmbuild/SOURCES/mapbox-geometry-v0.9.2.tar.gz \
-rpmbuild/SOURCES/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip rpmbuild/SOURCES/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip \
+src: rpmbuild/SOURCES/isl-0.16.1.tar.bz2 rpmbuild/SOURCES/gcc-6.4.0.tar.xz \
+rpmbuild/SOURCES/curl-7.57.0.tar.bz2 rpmbuild/SOURCES/zlib-1.2.11.tar.gz \
+rpmbuild/SOURCES/libpng-1.6.30.tar.xz rpmbuild/SOURCES/geos-3.6.1.tar.bz2 \
+rpmbuild/SOURCES/lcms2-2.8.tar.gz rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz \
+rpmbuild/SOURCES/proj-4.9.3.tar.gz rpmbuild/SOURCES/freetype-2.8.tar.gz \
+rpmbuild/SOURCES/hdf5-1.8.20.tar.bz2 rpmbuild/SOURCES/netcdf-4.5.0.tar.gz \
+rpmbuild/SOURCES/gdal-2.1.3.tar.gz rpmbuild/SOURCES/node-v8.5.0.tar.gz \
+rpmbuild/SOURCES/boost_1_62_0.tar.bz2 \
+rpmbuild/SOURCES/mapbox-variant-v1.1.3.tar.gz \
+rpmbuild/SOURCES/mapbox-geometry-v0.9.2.tar.gz \
+rpmbuild/SOURCES/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip \
+rpmbuild/SOURCES/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip \
 geopyspark-deps jupyterhub-deps geonotebook-deps
 
 blobs/spark-2.1.0-bin-hadoop2.7.tgz:

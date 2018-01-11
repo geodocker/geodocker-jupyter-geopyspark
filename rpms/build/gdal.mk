@@ -4,6 +4,12 @@ rpmbuild/SOURCES/proj-4.9.3.tar.gz:
 rpmbuild/SOURCES/freetype-2.8.tar.gz:
 	curl -L "https://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz" -o $@
 
+rpmbuild/SOURCES/hdf5-1.8.20.tar.bz2:
+	curl -L "https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.20.tar.bz2" -o $@
+
+rpmbuild/SOURCES/netcdf-4.5.0.tar.gz:
+	curl -L "ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.5.0.tar.gz" -o $@
+
 rpmbuild/SOURCES/gdal-2.1.3.tar.gz:
 	curl -L "http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz" -o $@
 
