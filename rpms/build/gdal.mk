@@ -37,7 +37,7 @@ rpmbuild/RPMS/x86_64/freetype2-2.8-33.x86_64.rpm rpmbuild/RPMS/x86_64/freetype2-
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/freetype.sh $(shell id -u) $(shell id -g)
 
-rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/gdal213-lib-2.1.3-33.x86_64.rpm: rpmbuild/SPECS/gdal.spec rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/freetype2-2.8-33.x86_64.rpm rpmbuild/SOURCES/gdal-2.1.3.tar.gz
+rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/gdal213-lib-2.1.3-33.x86_64.rpm: rpmbuild/SPECS/gdal.spec rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/freetype2-2.8-33.x86_64.rpm rpmbuild/RPMS/x86_64/hdf5-1.8.20-33.x86_64.rpm rpmbuild/RPMS/x86_64/netcdf-4.5.0-33.x86_64.rpm rpmbuild/SOURCES/gdal-2.1.3.tar.gz
 	docker run -it --rm \
           -v $(shell pwd)/rpmbuild:/tmp/rpmbuild:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
