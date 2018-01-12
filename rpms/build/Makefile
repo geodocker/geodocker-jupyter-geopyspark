@@ -1,4 +1,4 @@
-.PHONY: all gcc4 gcc6 aws-build-gdal rpms
+.PHONY: all gcc4 gcc6 aws-build-gdal rpms src
 
 FAMILY := quay.io/geodocker/emr-build
 VERSION := 4
