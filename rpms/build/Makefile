@@ -1,7 +1,7 @@
 .PHONY: all gcc4 gcc6 aws-build-gdal rpms
 
 FAMILY := quay.io/geodocker/emr-build
-VERSION := 3
+VERSION := 4
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
 BASEIMAGE := quay.io/geodocker/jupyter-geopyspark:base-$(VERSION)
@@ -28,10 +28,19 @@ base: blobs/gdal-and-friends.tar.gz blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms
 	docker build -t $(BASEIMAGE) -f Dockerfile.base .
 
 rpms: rpmbuild/RPMS/x86_64/gcc6-lib-6.4.0-33.x86_64.rpm \
-rpmbuild/RPMS/x86_64/freetype2-lib-2.8-33.x86_64.rpm rpmbuild/RPMS/x86_64/proj493-lib-4.9.3-33.x86_64.rpm rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm \
-rpmbuild/RPMS/x86_64/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm rpmbuild/RPMS/x86_64/geopyspark-worker-$(GEOPYSPARK_VERSION)-13.x86_64.rpm \
-rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm \
-rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm rpmbuild/RPMS/x86_64/jupyterhub-0.7.2-13.x86_64.rpm rpmbuild/RPMS/x86_64/geonotebook-0.0.0-13.x86_64.rpm
+rpmbuild/RPMS/x86_64/freetype2-lib-2.8-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/proj493-lib-4.9.3-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/hdf5-1.8.20-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/netcdf-4.5.0-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/geopyspark-$(GEOPYSPARK_VERSION)-13.x86_64.rpm \
+rpmbuild/RPMS/x86_64/geopyspark-worker-$(GEOPYSPARK_VERSION)-13.x86_64.rpm \
+rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm \
+rpmbuild/RPMS/x86_64/jupyterhub-0.7.2-13.x86_64.rpm \
+rpmbuild/RPMS/x86_64/geonotebook-0.0.0-13.x86_64.rpm
 
 src: rpmbuild/SOURCES/isl-0.16.1.tar.bz2 rpmbuild/SOURCES/gcc-6.4.0.tar.xz \
 rpmbuild/SOURCES/curl-7.57.0.tar.bz2 rpmbuild/SOURCES/zlib-1.2.11.tar.gz \

@@ -24,17 +24,16 @@ rpmbuild/SOURCES/lcms2-2.8.tar.gz:
 rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz:
 	curl -L "https://github.com/uclouvain/openjpeg/archive/v2.1.2.tar.gz" -o $@
 
-blobs/gdal-and-friends.tar.gz: scripts/build-gdal.sh \
-   rpmbuild/SOURCES/gdal-2.1.3.tar.gz \
-   rpmbuild/SOURCES/geos-3.6.1.tar.bz2 \
-   rpmbuild/SOURCES/lcms2-2.8.tar.gz \
-   rpmbuild/SOURCES/libpng-1.6.30.tar.xz \
-   rpmbuild/SOURCES/proj-4.9.3.tar.gz \
-   rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz \
-   rpmbuild/SOURCES/zlib-1.2.11.tar.gz \
-   rpmbuild/SOURCES/curl-7.57.0.tar.bz2
+blobs/gdal-and-friends.tar.gz: scripts/build-gdal-and-friends.sh \
+rpmbuild/SOURCES/geos-3.6.1.tar.bz2 \
+rpmbuild/SOURCES/lcms2-2.8.tar.gz \
+rpmbuild/SOURCES/libpng-1.6.30.tar.xz \
+rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz \
+rpmbuild/SOURCES/zlib-1.2.11.tar.gz \
+rpmbuild/SOURCES/curl-7.57.0.tar.bz2 \
+src
 	docker run -it --rm \
           -v $(shell pwd)/rpmbuild/SOURCES:/src:rw \
 	  -v $(shell pwd)/blobs:/blobs:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(GCC4IMAGE) /scripts/build-gdal.sh $(shell id -u) $(shell id -g)
+          $(GCC4IMAGE) /scripts/build-gdal-and-friends.sh $(shell id -u) $(shell id -g)
