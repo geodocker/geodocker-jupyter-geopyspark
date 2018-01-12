@@ -3,7 +3,13 @@
 USERID=$1
 GROUPID=$2
 
-yum localinstall -y /tmp/rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm /tmp/rpmbuild/RPMS/x86_64/freetype2-2.8-33.x86_64.rpm /tmp/rpmbuild/RPMS/x86_64/boost162-1_62_0-33.x86_64.rpm /tmp/rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm
+yum localinstall -y \
+    /tmp/rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/freetype2-2.8-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/boost162-1_62_0-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/hdf5-1.8.20-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/netcdf-4.5.0-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm
 ldconfig
 
 cd /tmp
