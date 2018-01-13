@@ -26,11 +26,9 @@ aws-build-gdal: blobs/gdal-and-friends.tar.gz
 	docker build -t $(GDALIMAGE) -f Dockerfile.aws-build-gdal .
 
 base: blobs/gdal-and-friends.tar.gz blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms
-	# docker network create --driver bridge rpm || echo
 	docker run -dit --rm --name rpm-server --hostname rpm-server -p "18080:80" -v $(shell pwd)/rpmbuild/RPMS/x86_64:/usr/local/apache2/htdocs httpd:2.4
 	docker build --add-host="localhost:$(shell ifconfig $(INTERFACE) | grep 'inet addr:' | sed 's,.*inet addr:\([^ ]*\).*,\1,')" -t $(BASEIMAGE) -f Dockerfile.base .
 	docker stop rpm-server
-	# docker network rm rpm
 
 rpms: rpmbuild/RPMS/x86_64/gcc6-lib-6.4.0-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/freetype2-lib-2.8-33.x86_64.rpm \
