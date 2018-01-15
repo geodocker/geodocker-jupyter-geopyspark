@@ -5,7 +5,6 @@ FAMILY := quay.io/geodocker/jupyter-geopyspark
 AWSBUILD := $(FAMILY):aws-build-gdal-4
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= ce5e03f7210966d893129311d1dd5b3945075bf7
-GEOPYSPARK_NETCDF_SHA ?= 388ac89f170916c716723b7f40fd0a4118eb238a
 GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
 GEOPYSPARK_VERSION ?= 0.3.0
 PYTHON_BLOB1 := friends-of-geopyspark.tar.gz
@@ -29,7 +28,7 @@ archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(AWSBUILD) /scripts/build-python-blob2.sh $(shell id -u) $(shell id -g) $(PYTHON_BLOB2) $(GEOPYSPARK_SHA) $(GEOPYSPARK_NETCDF_SHA)
+          $(AWSBUILD) /scripts/build-python-blob2.sh $(shell id -u) $(shell id -g) $(PYTHON_BLOB2) $(GEOPYSPARK_SHA)
 
 image: Dockerfile blobs/$(PYTHON_BLOB1) blobs/$(PYTHON_BLOB2)
 ifeq ($(TRAVIS),1)
