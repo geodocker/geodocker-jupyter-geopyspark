@@ -31,8 +31,7 @@ echo
 
 %install
 find /usr/local/lib /usr/local/lib64 | sort > before.txt
-pip3 install -r requirements1.txt
-pip3 install -r requirements2.txt
+pip3 install -r requirements.txt
 find /usr/local/lib /usr/local/lib64 | sort > after.txt
 tar cvf /tmp/packages.tar $(diff before.txt after.txt | grep '^>' | cut -f2 '-d ')
 cd %{buildroot}
@@ -41,8 +40,6 @@ mkdir -p %{buildroot}/opt/jars
 cd %{buildroot}/opt/jars
 # curl -L -O https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geotrellis-backend_2.11/%{version}/geotrellis-backend_2.11-%{version}.jar
 # curl -L -O https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-%{version}-deps.jar
-curl -L -O https://dl.bintray.com/azavea/maven/org/locationtech/geotrellis/geopyspark-gddp_2.11/%{version}/geopyspark-gddp_2.11-%{version}.jar
-curl -L -O https://s3.amazonaws.com/geopyspark-dependency-jars/netcdfAll-5.0.0-SNAPSHOT.jar
 curl -L -O https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar
 
 %package worker
