@@ -8,6 +8,8 @@ and instructions for [building the image](#building-the-image) and [modifying it
 
 # Using The Image #
 
+You will be prompted for a username and a password when direct your web browser to the container: the username and password are both `hadoop`.
+
 One can use the image with or without making a clone of this repository.
 
 ## Without A Clone ##

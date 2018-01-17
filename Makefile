@@ -1,8 +1,8 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= rpm
+TAG ?= new
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-AWSBUILD := $(FAMILY):aws-build-gdal-3
+AWSBUILD := $(FAMILY):aws-build-gdal-4
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= ce5e03f7210966d893129311d1dd5b3945075bf7
 GEOPYSPARK_NETCDF_SHA ?= 388ac89f170916c716723b7f40fd0a4118eb238a
@@ -16,22 +16,18 @@ all: image
 blobs/%: archives/%
 	cp -f $< $@
 
-archives/$(PYTHON_BLOB1) scratch/dot-local/lib/python3.4/site-packages/.xxx: scripts/build-python-blob1.sh
-	rm -rf scratch/dot-local/lib/python3.4/site-packages/*
+archives/$(PYTHON_BLOB1): scripts/build-python-blob1.sh
 	rm -rf scratch/pip-cache/wheels/*
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
           -v $(shell pwd)/scratch/pip-cache:/root/.cache/pip:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(AWSBUILD) /scripts/build-python-blob1.sh $(shell id -u) $(shell id -g) $(PYTHON_BLOB1)
 
-archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh scratch/dot-local/lib/python3.4/site-packages/.xxx
-	rm -rf scratch/dot-local/lib/python3.4/site-packages/geopyspark*
+archives/$(PYTHON_BLOB2): scripts/build-python-blob2.sh
 	rm -rf scratch/pip-cache/wheels/*
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:rw \
-          -v $(shell pwd)/scratch/dot-local:/root/.local:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(AWSBUILD) /scripts/build-python-blob2.sh $(shell id -u) $(shell id -g) $(PYTHON_BLOB2) $(GEOPYSPARK_SHA) $(GEOPYSPARK_NETCDF_SHA)
 

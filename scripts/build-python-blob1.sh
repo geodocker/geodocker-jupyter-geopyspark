@@ -5,7 +5,7 @@ GROUP=$2
 BLOB=$3
 
 # Aquire
-chown -R root:root $HOME/.cache/pip $HOME/.local
+chown -R root:root $HOME/.cache/pip
 
 set -x
 
