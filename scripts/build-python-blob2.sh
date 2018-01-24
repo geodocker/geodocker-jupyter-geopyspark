@@ -4,7 +4,6 @@ USER=$1
 GROUP=$2
 BLOB=$3
 GEOPYSPARK_SHA=$4
-GEOPYSPARK_NETCDF_SHA=$5
 
 # Aquire
 chown -R root:root $HOME/.local
@@ -13,7 +12,6 @@ set -x
 
 # Install GeoPySpark
 pip3 install --user "https://github.com/locationtech-labs/geopyspark/archive/${GEOPYSPARK_SHA}.zip"
-pip3 install --user "https://github.com/geotrellis/geopyspark-netcdf/archive/${GEOPYSPARK_NETCDF_SHA}.zip"
 
 set +x
 
