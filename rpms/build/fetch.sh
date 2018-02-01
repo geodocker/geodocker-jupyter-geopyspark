@@ -14,5 +14,4 @@ then
     touch rpmbuild/RPMS/x86_64/jupyterhub-*.rpm
     touch rpmbuild/RPMS/x86_64/mapnik-*.rpm
     touch rpmbuild/RPMS/x86_64/python-mapnik-*.rpm
-    touch rpmbuild/RPMS/x86_64/geonotebook-*.rpm
 fi
