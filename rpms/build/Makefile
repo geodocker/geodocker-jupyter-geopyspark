@@ -1,7 +1,7 @@
 .PHONY: all gcc4 gcc6 aws-build-gdal rpms src
 
 FAMILY := quay.io/geodocker/emr-build
-VERSION := 4
+VERSION := 5
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
 BASEIMAGE := quay.io/geodocker/jupyter-geopyspark:base-$(VERSION)
