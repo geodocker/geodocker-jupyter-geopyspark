@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip
 Prefix:    /usr/local/lib/python3.4/site-package
-Group:     Geography
+Group:     Azavea
 
 %global _enable_debug_package 0
 %global debug_package %{nil}

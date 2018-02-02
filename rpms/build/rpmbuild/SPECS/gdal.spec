@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    gdal-%{version}.tar.gz
 Prefix:    /usr/local
-Group:     Geography
+Group:     Azavea
 Requires:  libpng
 Requires:  libcurl
 Requires:  libgeos

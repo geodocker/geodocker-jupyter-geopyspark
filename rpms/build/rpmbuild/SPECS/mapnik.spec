@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 Prefix:    /usr/local
-Group:     Geography
+Group:     Azavea
 
 %description
 Mapnik 093fcee

@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    boost_%{version}.tar.bz2
 Prefix:    /usr/local
-Group:     Development/Libraries
+Group:     Azavea
 
 Requires:  libstdc++64
 

@@ -6,13 +6,14 @@
 %define debug_package %{nil}
 
 BuildRoot: %{buildroot}
-License:   Apache 2.0
 Summary:   GeoPySpark dependencies
+License:   ?
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
 Source:    geopyspark.tar
 Prefix:    /
+Group:     Azavea
 AutoReq:   no
 
 %global _enable_debug_package 0

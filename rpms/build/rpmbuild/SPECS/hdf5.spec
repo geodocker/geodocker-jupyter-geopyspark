@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    hdf5-%{version}.tar.bz2
 Prefix:    /usr/local
-Group:     Geography
+Group:     Azavea
 Requires:  libcurl
 BuildRequires: libcurl-devel
 

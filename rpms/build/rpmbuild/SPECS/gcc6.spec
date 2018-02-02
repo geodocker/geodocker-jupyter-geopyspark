@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    gcc-%{version}.tar.xz
 Prefix:    /usr/local
-Group:     Development/Tools
+Group:     Azavea
 
 %description
 Gnu Compiler Collection 6.4.0
