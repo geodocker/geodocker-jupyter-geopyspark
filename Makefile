@@ -38,6 +38,7 @@ endif
 	docker build \
           --build-arg VERSION=$(GEOPYSPARK_VERSION) \
           --build-arg GEONOTEBOOKSHA=$(GEONOTEBOOK_SHA) \
+          --build-arg GEOPYSPARKSHA=$(GEOPYSPARK_SHA) \
           --build-arg PYTHONBLOB1=$(PYTHON_BLOB1) \
           --build-arg PYTHONBLOB2=$(PYTHON_BLOB2) \
           -t $(IMAGE) -f Dockerfile .

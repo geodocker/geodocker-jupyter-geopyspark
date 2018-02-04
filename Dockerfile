@@ -2,6 +2,7 @@ FROM quay.io/geodocker/jupyter-geopyspark:base-5
 
 ARG VERSION
 ARG GEONOTEBOOKSHA
+ARG GEOPYSPARKSHA
 ARG PYTHONBLOB1
 ARG PYTHONBLOB2
 
@@ -19,10 +20,13 @@ RUN mkdir /home/hadoop/notebooks && \
 
 COPY config/geonotebook.ini /home/hadoop/.local/etc/geonotebook.ini
 COPY kernels/geonotebook/kernel.json /home/hadoop/.local/share/jupyter/kernels/geonotebook3/kernel.json
+
 # Install GeoPySpark
+RUN pip3 install --user protobuf==3.1.0 "https://github.com/locationtech-labs/geopyspark/archive/$GEOPYSPARKSHA.zip"
+
+# Copy Blobs
+COPY blobs/$PYTHONBLOB1 /blobs/
 COPY blobs/$PYTHONBLOB2 /blobs/
-COPY scripts/install-blob2.sh /scripts/
-RUN /scripts/install-blob2.sh $PYTHONBLOB2
 
 # YARN
 COPY config/core-site.xml /etc/hadoop/conf/
