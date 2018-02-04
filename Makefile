@@ -2,7 +2,7 @@
 
 TAG ?= reorg
 FAMILY := quay.io/geodocker/jupyter-geopyspark
-AWSBUILD := $(FAMILY):aws-build-gdal-4
+AWSBUILD := $(FAMILY):aws-build-gdal-5
 IMAGE := $(FAMILY):$(TAG)
 GEOPYSPARK_SHA ?= ce5e03f7210966d893129311d1dd5b3945075bf7
 GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
