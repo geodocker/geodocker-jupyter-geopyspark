@@ -28,9 +28,6 @@ if is_master; then
     sudo yum localinstall -y /tmp/*.rpm
     rm -f /tmp/*.rpm
 
-    # install the sudospawner package for multiuser jupyterhub access
-    sudo pip-3.4 install sudospawner
-
     # Linkage
     echo '/usr/local/lib' > /tmp/local.conf
     echo '/usr/local/lib64' >> /tmp/local.conf
@@ -146,7 +143,6 @@ EOF
     rm -f /tmp/kernel.json
 
     # Execute
-    export PATH=/usr/local/bin:$PATH # XXX
     cd /tmp
     sudo -u hublauncher -E env "PATH=/usr/local/bin:$PATH" jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner --SudoSpawner.sudospawner_path=/usr/local/bin/sudospawner --Spawner.notebook_dir=/home/{username} -f /tmp/jupyterhub_config.py &
 
