@@ -65,12 +65,6 @@ EOF
     sudo mv /tmp/oauth_profile.sh /etc/profile.d
     . /etc/profile.d/oauth_profile.sh
 
-    cat <<EOF > /tmp/jars.sh
-export GEOPYSPARK_JARS_PATH=/opt/jars
-EOF
-    sudo mv /tmp/jars.sh /etc/profile.d
-    . /etc/profile.d/jars.sh
-
     # Setup required scripts/configurations for launching JupyterHub
     cat <<EOF > /tmp/new_user
 #!/bin/bash
