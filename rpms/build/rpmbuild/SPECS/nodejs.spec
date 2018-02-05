@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    node-v%{version}.tar.gz
 Prefix:    /usr/local
-Group:     Development
+Group:     Azavea
 
 %description
 Node.js 8.5.0

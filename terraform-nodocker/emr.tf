@@ -39,7 +39,9 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
       "${var.jupyterhub_oauth_module}",
       "${var.jupyterhub_oauth_class}",
       "${var.oauth_client_id}",
-      "${var.oauth_client_secret}"
+      "${var.oauth_client_secret}",
+      "${var.geopyspark_jars}",
+      "${var.geopyspark_uri}"
     ]
   }
 

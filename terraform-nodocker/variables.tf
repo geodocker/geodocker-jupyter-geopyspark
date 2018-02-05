@@ -92,6 +92,18 @@ variable "oauth_client_secret" {
   description = "Client secret token for OAuth server"
 }
 
+variable "geopyspark_jars" {
+  type        = "string"
+  description = "Comma-separated list of URIs pointing to GeoPySpark jars"
+  default     = "https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar"
+}
+
+variable "geopyspark_uri" {
+  type        = "string"
+  description = "URI from which the GeoPySpark Python code is to be obtained"
+  default     = "https://github.com/locationtech-labs/geopyspark/archive/ce5e03f7210966d893129311d1dd5b3945075bf7.zip"
+}
+
 variable "bid_price" {
   type        = "string"
   description = "Bid Price"

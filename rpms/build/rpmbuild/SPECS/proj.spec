@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    proj-%{version}.tar.gz
 Prefix:    /usr/local
-Group:     Geography
+Group:     Azavea
 
 %description
 Proj 4.9.3

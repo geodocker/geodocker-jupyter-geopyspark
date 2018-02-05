@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    freetype-%{version}.tar.gz
 Prefix:    /usr/local
-Group:     Typography
+Group:     Azavea
 
 %description
 FreeType 2.8

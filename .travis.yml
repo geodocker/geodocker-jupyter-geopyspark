@@ -43,7 +43,7 @@ before_install:
 
 install:
    - pip3 install --user wheel
-   - docker pull quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-4
+   - docker pull quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-5
 
 script:
    - TRAVIS=1 TAG=$TAG make image

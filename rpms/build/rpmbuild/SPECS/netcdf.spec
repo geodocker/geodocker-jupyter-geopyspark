@@ -13,7 +13,7 @@ Version:   %{version}
 Release:   %{release}
 Source:    netcdf-%{version}.tar.gz
 Prefix:    /usr/local
-Group:     Geography
+Group:     Azavea
 Requires:  libcurl
 Requires:  hdf5
 BuildRequires: libcurl-devel
