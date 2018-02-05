@@ -7,6 +7,8 @@ OAUTH_MODULE=$3
 OAUTH_CLASS=$4
 OAUTH_CLIENT_ID=$5
 OAUTH_CLIENT_SECRET=$6
+GEOPYSPARKJARS=$7
+GEOPYSPARKURI=$8
 
 # Parses a configuration file put in place by EMR to determine the role of this node
 is_master() {
@@ -63,6 +65,12 @@ EOF
     sudo mv /tmp/oauth_profile.sh /etc/profile.d
     . /etc/profile.d/oauth_profile.sh
 
+    cat <<EOF > /tmp/jars.sh
+export GEOPYSPARK_JARS_PATH=/opt/jars
+EOF
+    sudo mv /tmp/jars.sh /etc/profile.d
+    . /etc/profile.d/jars.sh
+
     # Setup required scripts/configurations for launching JupyterHub
     cat <<EOF > /tmp/new_user
 #!/bin/bash
@@ -109,12 +117,15 @@ EOF
     # Install KTile, GeoNotebook, GeoPySpark
     sudo -E env "PATH=/usr/local/bin:$PATH" pip-3.4 install "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip" \
 	 "https://github.com/geotrellis/geonotebook/archive/2c0073c60afc610f7d9616edbb3843e5ba8b68af.zip" \
-	 "https://github.com/locationtech-labs/geopyspark/archive/ce5e03f7210966d893129311d1dd5b3945075bf7.zip"
+	 "$GEOPYSPARKURI"
     sudo -E env "PATH=/usr/local/bin:$PATH" jupyter nbextension enable --py widgetsnbextension --system
     sudo -E env "PATH=/usr/local/bin:$PATH" jupyter serverextension enable --py geonotebook --system
     sudo -E env "PATH=/usr/local/bin:$PATH" jupyter nbextension enable --py geonotebook --system
     sudo mkdir -p /opt/jars/
-    sudo curl -L https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar -o /opt/jars/geotrellis-backend-assembly-0.3.1.jar
+    for url in $(echo $GEOPYSPARKJARS | tr , "\n")
+    do
+	(cd /opt/jars ; sudo curl -L -O -C - $url )
+    done
 
     # Install GeoPySpark + GeoNotebook kernel
     cat <<EOF > /tmp/kernel.json
