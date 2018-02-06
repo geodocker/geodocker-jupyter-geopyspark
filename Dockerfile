@@ -1,4 +1,4 @@
-FROM quay.io/geodocker/jupyter-geopyspark:base-5
+FROM quay.io/geodocker/jupyter-geopyspark:base-6
 
 ARG VERSION
 ARG GEONOTEBOOKSHA
