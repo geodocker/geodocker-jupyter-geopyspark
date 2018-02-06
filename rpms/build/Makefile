@@ -1,4 +1,4 @@
-.PHONY: all gcc4 gcc6 aws-build-gdal rpms src
+.PHONY: all gcc4 gcc6 aws-build-gdal rpms src wheels
 
 FAMILY := quay.io/geodocker/emr-build
 VERSION := 5
@@ -34,9 +34,8 @@ rpmbuild/RPMS/x86_64/netcdf-4.5.0-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm \
-rpmbuild/RPMS/x86_64/python-mapnik-e5f107d-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm \
-rpmbuild/RPMS/x86_64/geopyspark-deps-0.0.0-13.x86_64.rpm \
+rpmbuild/RPMS/x86_64/configurable-http-proxy-0.0.0-13.x86_64.rpm \
 rpmbuild/RPMS/x86_64/jupyterhub-0.7.2-13.x86_64.rpm
 
 src: rpmbuild/SOURCES/isl-0.16.1.tar.bz2 rpmbuild/SOURCES/gcc-6.4.0.tar.xz \
@@ -49,25 +48,25 @@ rpmbuild/SOURCES/gdal-2.1.3.tar.gz rpmbuild/SOURCES/node-v8.5.0.tar.gz \
 rpmbuild/SOURCES/boost_1_62_0.tar.bz2 \
 rpmbuild/SOURCES/mapbox-variant-v1.1.3.tar.gz \
 rpmbuild/SOURCES/mapbox-geometry-v0.9.2.tar.gz \
-rpmbuild/SOURCES/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip \
-rpmbuild/SOURCES/python-mapnik-e5f107d8d459590829d50c976c7a4222d8f4737c.zip \
-jupyterhub-deps
+rpmbuild/SOURCES/mapnik-093fcee6d1ba1fd360718ceade83894aeffc2548.zip
 
 blobs/spark-2.1.0-bin-hadoop2.7.tgz:
 	curl -L "http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz" -o $@
 
+rpmbuild/SOURCES/%.tar: %/
+	tar cvf $@ $<
+
+include configurable-http-proxy.mk
 include gcc.mk
+include gdal-and-friends.mk
 include gdal.mk
 include mapnik.mk
-include geopyspark.mk
-include jupyterhub.mk
-include gdal-and-friends.mk
+include wheels.mk
 
 clean:
-	rm -f rpmbuild/SOURCES/*.tar rpmbuild/RPMS/x86_64/*-debuginfo-*.rpm
+	rm -f rpmbuild/SOURCES/*.tar
 
 cleaner: clean
-	rm -f archives/*.jar
 
 cleanest: cleaner
 	rm -f rpmbuild/RPMS/x86_64/*
