@@ -35,8 +35,7 @@ rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/boost162-lib-1_62_0-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/mapnik-093fcee-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm \
-rpmbuild/RPMS/x86_64/configurable-http-proxy-0.0.0-13.x86_64.rpm \
-rpmbuild/RPMS/x86_64/jupyterhub-0.7.2-13.x86_64.rpm
+rpmbuild/RPMS/x86_64/configurable-http-proxy-0.0.0-13.x86_64.rpm
 
 src: rpmbuild/SOURCES/isl-0.16.1.tar.bz2 rpmbuild/SOURCES/gcc-6.4.0.tar.xz \
 rpmbuild/SOURCES/curl-7.57.0.tar.bz2 rpmbuild/SOURCES/zlib-1.2.11.tar.gz \

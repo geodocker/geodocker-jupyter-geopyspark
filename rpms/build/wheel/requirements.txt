@@ -1,7 +1,6 @@
 affine==2.0.0.post1
 alembic==0.8.9
 appdirs==1.4.3
-/archives/ipykernel.zip
 backports-abc==0.5
 bleach==1.5.0
 boto3==1.4.5

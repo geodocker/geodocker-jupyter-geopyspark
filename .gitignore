@@ -9,6 +9,7 @@ notebooks/.ipynb_checkpoints/
 rpms/build/blobs/*
 rpms/build/rpmbuild/RPMS/x86_64/*
 rpms/build/rpmbuild/SOURCES/*
+rpms/build/wheel/*.whl
 scratch/*
 target/*
 terraform-docker/.terraform/*
