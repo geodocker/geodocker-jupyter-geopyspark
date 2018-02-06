@@ -35,6 +35,7 @@ rm -f decorator-4.2.1-py2.py3-none-any.whl \
    Pygments-2.2.0-py2.py3-none-any.whl \
    python_dateutil-2.6.1-py2.py3-none-any.whl \
    pyzmq-16.0.4-cp34-cp34m-manylinux1_x86_64.whl \
+   setuptools-18.5-py2.py3-none-any.whl \
    six-1.11.0-py2.py3-none-any.whl \
    tornado-4.5.3-cp34-cp34m-linux_x86_64.whl \
    traitlets-4.3.2-py2.py3-none-any.whl
