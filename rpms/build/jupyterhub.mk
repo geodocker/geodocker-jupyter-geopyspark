@@ -4,6 +4,13 @@ rpmbuild/SOURCES/node-v8.5.0.tar.gz:
 archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip:
 	curl -L "https://github.com/ipython/ipykernel/archive/629ac54cae9767310616d47d769665453619ac64.zip" -o $@
 
+archives/ipykernel.zip: archives/ipykernel-629ac54cae9767310616d47d769665453619ac64.zip jupyterhub/patch.diff
+	rm -rf ipykernel-629ac54cae9767310616d47d769665453619ac64/
+	unzip $<
+	cd ipykernel-629ac54cae9767310616d47d769665453619ac64; patch -p1 < ../jupyterhub/patch.diff
+	zip $@ $(shell find ipykernel-629ac54cae9767310616d47d769665453619ac64)
+	rm -r ipykernel-629ac54cae9767310616d47d769665453619ac64/
+
 rpmbuild/SOURCES/jupyterhub.tar: jupyterhub/
 	tar cvf $@ jupyterhub/
 
