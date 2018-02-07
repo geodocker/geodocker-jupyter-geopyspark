@@ -3,8 +3,6 @@ FROM quay.io/geodocker/jupyter-geopyspark:base-6
 ARG VERSION
 ARG GEONOTEBOOKSHA
 ARG GEOPYSPARKSHA
-ARG PYTHONBLOB1
-ARG PYTHONBLOB2
 
 ENV PYSPARK_PYTHON=python3.4
 ENV PYSPARK_DRIVER_PYTHON=python3.4
@@ -24,22 +22,12 @@ COPY kernels/geonotebook/kernel.json /home/hadoop/.local/share/jupyter/kernels/g
 # Install GeoPySpark
 RUN pip3 install --user protobuf==3.1.0 "https://github.com/locationtech-labs/geopyspark/archive/$GEOPYSPARKSHA.zip"
 
-# Copy Blobs
-COPY blobs/$PYTHONBLOB1 /blobs/
-COPY blobs/$PYTHONBLOB2 /blobs/
-
-# YARN
-COPY config/core-site.xml /etc/hadoop/conf/
-COPY config/yarn-site.xml /etc/hadoop/conf/
-COPY config/jupyterhub_config_*.py /etc/jupterhub/
-COPY scripts/jupyterhub.sh /scripts/
-
 # Install Jars
 ADD https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar /opt/jars/
 
 USER root
-RUN chown hadoop:hadoop -R /etc/hadoop/conf && chmod ugo+r /opt/jars/*
+RUN chmod ugo+r /opt/jars/*
 USER hadoop
 
 WORKDIR /tmp
-CMD ["/scripts/jupyterhub.sh"]
+CMD ["jupyterhub", "--no-ssl", "--Spawner.notebook_dir=/home/hadoop/notebooks"]

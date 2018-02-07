@@ -8,5 +8,5 @@ fi
 make gcc4
 make gcc6
 make rpms
-make aws-build-gdal
+make wheels
 make base

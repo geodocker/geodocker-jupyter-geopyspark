@@ -5,7 +5,6 @@ VERSION := 6
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
 BASEIMAGE := quay.io/geodocker/jupyter-geopyspark:base-$(VERSION)
-GDALIMAGE := quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-$(VERSION)
 INTERFACE ?= eth0
 
 
@@ -18,10 +17,7 @@ gcc4:
 gcc6: rpmbuild/RPMS/x86_64/gcc6-6.4.0-33.x86_64.rpm
 	docker build -t $(GCC6IMAGE) -f Dockerfile.$@ .
 
-aws-build-gdal: blobs/gdal-and-friends.tar.gz
-	docker build -t $(GDALIMAGE) -f Dockerfile.aws-build-gdal .
-
-base: blobs/gdal-and-friends.tar.gz blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms
+base: blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms wheel/ipykernel-4.7.0.dev0-py3-none-any.whl
 	docker run -dit --rm --name rpm-server --hostname rpm-server -p "18080:80" -v $(shell pwd)/rpmbuild/RPMS/x86_64:/usr/local/apache2/htdocs httpd:2.4
 	docker run -dit --rm --name whl-server --hostname whl-server -p "28080:80" -v $(shell pwd)/wheel:/usr/local/apache2/htdocs httpd:2.4
 	docker build --no-cache --add-host="localhost:$(shell ifconfig $(INTERFACE) | grep 'inet addr:' | sed 's,.*inet addr:\([^ ]*\).*,\1,')" -t $(BASEIMAGE) -f Dockerfile.base .
@@ -59,7 +55,6 @@ rpmbuild/SOURCES/%.tar: %/
 
 include configurable-http-proxy.mk
 include gcc.mk
-include gdal-and-friends.mk
 include gdal.mk
 include mapnik.mk
 include wheels.mk

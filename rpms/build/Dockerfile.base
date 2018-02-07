@@ -12,9 +12,6 @@ ENV SPARK_HOME /usr/local/spark-2.1.0-bin-hadoop2.7
 ADD blobs/spark-2.1.0-bin-hadoop2.7.tgz /usr/local
 RUN ln -s /usr/local/spark-2.1.0-bin-hadoop2.7 /usr/local/spark
 
-# GDAL and friends
-COPY blobs/gdal-and-friends.tar.gz /blobs/
-
 # kit, caboodle
 RUN yum install -y \
     http://localhost:18080/boost162-lib-1_62_0-33.x86_64.rpm \
