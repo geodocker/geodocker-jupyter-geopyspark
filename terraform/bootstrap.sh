@@ -20,15 +20,19 @@ is_master() {
 }
 
 if is_master; then
-    # Download packages
-    for i in boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-2.1.3-33.x86_64.rpm geopyspark-deps-0.0.0-13.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm jupyterhub-0.7.2-13.x86_64.rpm mapnik-093fcee-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm python-mapnik-e5f107d-33.x86_64.rpm
-    do
-	aws s3 cp $RPM_URI/$i /tmp/$i
-    done
 
-    # Install packages
-    sudo yum localinstall -y /tmp/*.rpm
-    rm -f /tmp/*.rpm
+    # Download packages
+    mkdir -p /tmp/blobs/
+    aws s3 sync $RPM_URI /tmp/blobs/
+
+    # Install binary packages
+    (cd /tmp/blobs; sudo yum localinstall -y boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm mapnik-093fcee-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm configurable-http-proxy-0.0.0-13.x86_64.rpm)
+
+    # Install Python packages
+    sudo pip-3.4 install --upgrade pip
+    sudo ln -s /usr/local/bin/pip3 /usr/bin/
+    sudo ln -s /usr/local/bin/pip3.4 /usr/bin/
+    (cd /tmp/blobs ; sudo pip3.4 install *.whl)
 
     # Linkage
     echo '/usr/local/lib' > /tmp/local.conf
@@ -109,7 +113,11 @@ c.LocalAuthenticator.add_user_cmd = ['new_user']
 EOF
 
     # Install KTile, GeoNotebook, GeoPySpark
-    sudo -E env "PATH=/usr/local/bin:$PATH" pip-3.4 install "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip" \
+    if [[ $GEOPYSPARKURI == s3* ]]; then
+	aws s3 cp $GEOPYSPARKURI /tmp/geopyspark.zip
+	GEOPYSPARKURI=/tmp/geopyspark.zip
+    fi
+    sudo -E env "PATH=/usr/local/bin:$PATH" pip3.4 install "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip" \
 	 "https://github.com/geotrellis/geonotebook/archive/2c0073c60afc610f7d9616edbb3843e5ba8b68af.zip" \
 	 "$GEOPYSPARKURI"
     sudo -E env "PATH=/usr/local/bin:$PATH" jupyter nbextension enable --py widgetsnbextension --system
@@ -118,7 +126,11 @@ EOF
     sudo mkdir -p /opt/jars/
     for url in $(echo $GEOPYSPARKJARS | tr , "\n")
     do
-	(cd /opt/jars ; sudo curl -L -O -C - $url )
+	if [[ $url == s3* ]]; then
+	    (cd /opt/jars ; aws s3 cp $url . )
+	else
+	    (cd /opt/jars ; sudo curl -L -O -C - $url )
+	fi
     done
 
     # Install GeoPySpark + GeoNotebook kernel
@@ -153,14 +165,17 @@ EOF
 
 else
     # Download packages
-    for i in freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm geopyspark-deps-0.0.0-13.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm
-    do
-	aws s3 cp $RPM_URI/$i /tmp/$i
-    done
+    mkdir -p /tmp/blobs/
+    aws s3 sync $RPM_URI /tmp/blobs/
 
     # Install packages
-    sudo yum localinstall -y /tmp/*.rpm
-    rm -f /tmp/*.rpm
+    (cd /tmp/blobs; sudo yum localinstall -y freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm)
+
+    # Install Python packages
+    sudo pip-3.4 install --upgrade pip
+    sudo ln -s /usr/local/bin/pip3 /usr/bin/
+    sudo ln -s /usr/local/bin/pip3.4 /usr/bin/
+    (cd /tmp/blobs ; sudo pip3.4 install *.whl)
 
     # Linkage
     echo '/usr/local/lib' > /tmp/local.conf
