@@ -113,6 +113,10 @@ c.LocalAuthenticator.add_user_cmd = ['new_user']
 EOF
 
     # Install KTile, GeoNotebook, GeoPySpark
+    if [[ $GEOPYSPARKURI == s3* ]]; then
+	aws s3 cp $GEOPYSPARKURI /tmp/geopyspark.zip
+	GEOPYSPARKURI=/tmp/geopyspark.zip
+    fi
     sudo -E env "PATH=/usr/local/bin:$PATH" pip3.4 install "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip" \
 	 "https://github.com/geotrellis/geonotebook/archive/2c0073c60afc610f7d9616edbb3843e5ba8b68af.zip" \
 	 "$GEOPYSPARKURI"
@@ -122,7 +126,11 @@ EOF
     sudo mkdir -p /opt/jars/
     for url in $(echo $GEOPYSPARKJARS | tr , "\n")
     do
-	(cd /opt/jars ; sudo curl -L -O -C - $url )
+	if [[ $url == s3* ]]; then
+	    (cd /opt/jars ; aws s3 cp $url . )
+	else
+	    (cd /opt/jars ; sudo curl -L -O -C - $url )
+	fi
     done
 
     # Install GeoPySpark + GeoNotebook kernel
