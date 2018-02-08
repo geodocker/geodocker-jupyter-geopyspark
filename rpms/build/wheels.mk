@@ -1,4 +1,4 @@
-wheels wheel/ipykernel-4.7.0.dev0-py3-none-any.whl: archives/ipykernel.zip \
+wheels wheel/http-requirements.txt: archives/ipykernel.zip \
 rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/freetype2-2.8-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/boost162-1_62_0-33.x86_64.rpm \
@@ -15,3 +15,4 @@ wheel/requirements.txt
           -v $(shell pwd)/wheel:/wheel:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
           $(GCC6IMAGE) /scripts/wheel.sh $(shell id -u) $(shell id -g)
+	(cd wheel ; ls *.whl | sed 's,^,http://localhost:28080/,' > http-requirements.txt)

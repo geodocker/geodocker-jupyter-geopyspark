@@ -17,6 +17,7 @@ http://localhost:28080/entrypoints-0.2.2-py2.py3-none-any.whl
 http://localhost:28080/Fiona-1.7.1-cp34-cp34m-manylinux1_x86_64.whl
 http://localhost:28080/Flask-0.12.1-py2.py3-none-any.whl
 http://localhost:28080/Flask_Cors-3.0.2-py2.py3-none-any.whl
+http://localhost:28080/futures-3.1.1-py3-none-any.whl
 http://localhost:28080/gcsfs-0.0.4-py2.py3-none-any.whl
 http://localhost:28080/GDAL-2.1.3-cp34-cp34m-linux_x86_64.whl
 http://localhost:28080/gevent-1.2.1-cp34-cp34m-manylinux1_x86_64.whl
@@ -44,6 +45,7 @@ http://localhost:28080/MarkupSafe-0.23-cp34-cp34m-linux_x86_64.whl
 http://localhost:28080/matplotlib-2.0.0-cp34-cp34m-manylinux1_x86_64.whl
 http://localhost:28080/mistune-0.7.3-py2.py3-none-any.whl
 http://localhost:28080/mock-2.0.0-py2.py3-none-any.whl
+http://localhost:28080/ModestMaps-1.4.7-py3-none-any.whl
 http://localhost:28080/munch-2.1.1-py3-none-any.whl
 http://localhost:28080/nbconvert-5.0.0-py2.py3-none-any.whl
 http://localhost:28080/nbformat-4.2.0-py2.py3-none-any.whl
@@ -71,7 +73,7 @@ http://localhost:28080/pyasn1_modules-0.2.1-py2.py3-none-any.whl
 http://localhost:28080/Pygments-2.1.3-py2.py3-none-any.whl
 http://localhost:28080/pyparsing-2.2.0-py2.py3-none-any.whl
 http://localhost:28080/pyproj-1.9.5.1-cp34-cp34m-linux_x86_64.whl
-http://localhost:28080/python_dateutil-2.6.0-py2.py3-none-any.whl
+http://localhost:28080/python_dateutil-2.6.1-py2.py3-none-any.whl
 http://localhost:28080/python_editor-1.0.3-py3-none-any.whl
 http://localhost:28080/pytz-2017.2-py2.py3-none-any.whl
 http://localhost:28080/PyWavelets-0.5.2-cp34-cp34m-manylinux1_x86_64.whl
@@ -90,6 +92,7 @@ http://localhost:28080/setuptools-38.5.1-py2.py3-none-any.whl
 http://localhost:28080/Shapely-1.6b4-cp34-cp34m-manylinux1_x86_64.whl
 http://localhost:28080/simplegeneric-0.8.1-cp34-none-any.whl
 http://localhost:28080/simplegeneric-0.8.1-py3-none-any.whl
+http://localhost:28080/simplejson-3.13.2-cp34-cp34m-linux_x86_64.whl
 http://localhost:28080/six-1.10.0-py2.py3-none-any.whl
 http://localhost:28080/snuggs-1.4.1-py3-none-any.whl
 http://localhost:28080/SQLAlchemy-1.1.4-cp34-cp34m-linux_x86_64.whl
@@ -100,5 +103,5 @@ http://localhost:28080/tornado-4.4.2-cp34-cp34m-linux_x86_64.whl
 http://localhost:28080/traitlets-4.3.1-py2.py3-none-any.whl
 http://localhost:28080/virtualenv-13.1.2-py2.py3-none-any.whl
 http://localhost:28080/wcwidth-0.1.7-py2.py3-none-any.whl
-http://localhost:28080/Werkzeug-0.14.1-py2.py3-none-any.whl
+http://localhost:28080/Werkzeug-0.11.13-py2.py3-none-any.whl
 http://localhost:28080/widgetsnbextension-2.0.0-py2.py3-none-any.whl
