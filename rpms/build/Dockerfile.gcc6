@@ -1,4 +1,4 @@
-FROM quay.io/geodocker/emr-build:gcc4-5
+FROM quay.io/geodocker/emr-build:gcc4-6
 MAINTAINER James McClain <james.mcclain@gmail.com>
 
 COPY rpmbuild/RPMS/x86_64/gcc6-6.4.0-33.x86_64.rpm /blobs/
