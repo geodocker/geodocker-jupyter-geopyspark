@@ -6,7 +6,7 @@ GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 GCC6IMAGE := $(FAMILY):gcc6-$(VERSION)
 BASEIMAGE := quay.io/geodocker/jupyter-geopyspark:base-$(VERSION)
 INTERFACE ?= eth0
-
+IP_ADDR := $(shell ifconfig $(INTERFACE) | grep -i mask | awk '{print $$2}' | cut -f2 -d:)
 
 all:
 	echo "see build.sh"
@@ -20,7 +20,7 @@ gcc6: rpmbuild/RPMS/x86_64/gcc6-6.4.0-33.x86_64.rpm
 base: blobs/spark-2.1.0-bin-hadoop2.7.tgz rpms wheel/http-requirements.txt
 	docker run -dit --rm --name rpm-server --hostname rpm-server -p "18080:80" -v $(shell pwd)/rpmbuild/RPMS/x86_64:/usr/local/apache2/htdocs httpd:2.4
 	docker run -dit --rm --name whl-server --hostname whl-server -p "28080:80" -v $(shell pwd)/wheel:/usr/local/apache2/htdocs httpd:2.4
-	docker build --no-cache --add-host="localhost:$(shell ifconfig $(INTERFACE) | grep 'inet addr:' | sed 's,.*inet addr:\([^ ]*\).*,\1,')" -t $(BASEIMAGE) -f Dockerfile.base .
+	docker build --no-cache --add-host="localhost:$(IP_ADDR)" -t $(BASEIMAGE) -f Dockerfile.base .
 	docker stop whl-server
 	docker stop rpm-server
 
