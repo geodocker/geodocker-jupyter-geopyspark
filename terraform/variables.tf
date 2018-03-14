@@ -95,7 +95,7 @@ variable "oauth_client_secret" {
 variable "geopyspark_jars" {
   type        = "string"
   description = "Comma-separated list of URIs pointing to GeoPySpark jars"
-  default     = "https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar"
+  default     = "s3://geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar"
 }
 
 variable "geopyspark_uri" {
