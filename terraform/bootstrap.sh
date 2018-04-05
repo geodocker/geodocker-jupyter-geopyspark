@@ -96,7 +96,7 @@ EOF
     chmod +x /tmp/new_user
     sudo chown root:root /tmp/new_user
     sudo mv /tmp/new_user /usr/local/bin
-    
+
     cat <<EOF > /tmp/jupyterhub_config.py
 from oauthenticator.$OAUTH_MODULE import $OAUTH_CLASS
 
@@ -127,7 +127,7 @@ EOF
     for url in $(echo $GEOPYSPARKJARS | tr , "\n")
     do
 	if [[ $url == s3* ]]; then
-	    (cd /opt/jars ; aws s3 cp $url . )
+	    (cd /opt/jars ; sudo aws s3 cp $url . )
 	else
 	    (cd /opt/jars ; sudo curl -L -O -C - $url )
 	fi
@@ -176,6 +176,13 @@ else
     sudo ln -s /usr/local/bin/pip3 /usr/bin/
     sudo ln -s /usr/local/bin/pip3.4 /usr/bin/
     (cd /tmp/blobs ; sudo pip3.4 install *.whl)
+
+    # Install GeoPySpark
+    if [[ $GEOPYSPARKURI == s3* ]]; then
+	aws s3 cp $GEOPYSPARKURI /tmp/geopyspark.zip
+	GEOPYSPARKURI=/tmp/geopyspark.zip
+    fi
+    sudo -E env "PATH=/usr/local/bin:$PATH" pip3.4 install "$GEOPYSPARKURI"
 
     # Linkage
     echo '/usr/local/lib' > /tmp/local.conf
