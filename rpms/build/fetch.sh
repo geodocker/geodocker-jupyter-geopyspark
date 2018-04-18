@@ -11,6 +11,4 @@ then
     touch rpmbuild/RPMS/x86_64/netcdf-*.rpm
     touch rpmbuild/RPMS/x86_64/gdal213-*.rpm
     touch rpmbuild/RPMS/x86_64/jupyterhub-*.rpm
-    touch rpmbuild/RPMS/x86_64/mapnik-*.rpm
-    touch rpmbuild/RPMS/x86_64/python-mapnik-*.rpm
 fi

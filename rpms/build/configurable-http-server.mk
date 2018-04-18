@@ -15,11 +15,11 @@ rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm: rpmbuild/SPECS/nodejs.spec scri
 	docker run -it --rm \
           -v $(shell pwd)/rpmbuild:/tmp/rpmbuild:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(GCC6IMAGE) /scripts/nodejs.sh $(shell id -u) $(shell id -g)
+          $(GCC4IMAGE) /scripts/nodejs.sh $(shell id -u) $(shell id -g)
 
 rpmbuild/RPMS/x86_64/configurable-http-proxy-0.0.0-13.x86_64.rpm: rpmbuild/SPECS/configurable-http-proxy.spec rpmbuild/RPMS/x86_64/nodejs-8.5.0-13.x86_64.rpm
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:ro \
           -v $(shell pwd)/rpmbuild:/tmp/rpmbuild:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(GCC6IMAGE) /scripts/configurable-http-proxy.sh $(shell id -u) $(shell id -g)
+          $(GCC4IMAGE) /scripts/configurable-http-proxy.sh $(shell id -u) $(shell id -g)

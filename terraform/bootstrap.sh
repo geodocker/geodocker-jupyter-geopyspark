@@ -26,7 +26,7 @@ if is_master; then
     aws s3 sync $RPM_URI /tmp/blobs/
 
     # Install binary packages
-    (cd /tmp/blobs; sudo yum localinstall -y boost162-lib-1_62_0-33.x86_64.rpm freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm mapnik-093fcee-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm configurable-http-proxy-0.0.0-13.x86_64.rpm)
+    (cd /tmp/blobs; sudo yum localinstall -y gdal213-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm configurable-http-proxy-0.0.0-13.x86_64.rpm)
 
     # Install Python packages
     sudo pip-3.4 install --upgrade pip
@@ -112,17 +112,13 @@ c.LocalAuthenticator.add_user_cmd = ['new_user']
 
 EOF
 
-    # Install KTile, GeoNotebook, GeoPySpark
+    # Install GeoPySpark
     if [[ $GEOPYSPARKURI == s3* ]]; then
 	aws s3 cp $GEOPYSPARKURI /tmp/geopyspark.zip
 	GEOPYSPARKURI=/tmp/geopyspark.zip
     fi
-    sudo -E env "PATH=/usr/local/bin:$PATH" pip3.4 install "https://github.com/OpenGeoscience/ktile/archive/0370c334467dc2928a04e201d0c9c0a07f28b181.zip" \
-	 "https://github.com/geotrellis/geonotebook/archive/2c0073c60afc610f7d9616edbb3843e5ba8b68af.zip" \
-	 "$GEOPYSPARKURI"
+    sudo -E env "PATH=/usr/local/bin:$PATH" pip3.4 install "$GEOPYSPARKURI"
     sudo -E env "PATH=/usr/local/bin:$PATH" jupyter nbextension enable --py widgetsnbextension --system
-    sudo -E env "PATH=/usr/local/bin:$PATH" jupyter serverextension enable --py geonotebook --system
-    sudo -E env "PATH=/usr/local/bin:$PATH" jupyter nbextension enable --py geonotebook --system
     sudo mkdir -p /opt/jars/
     for url in $(echo $GEOPYSPARKJARS | tr , "\n")
     do
@@ -137,11 +133,11 @@ EOF
     cat <<EOF > /tmp/kernel.json
 {
     "language": "python",
-    "display_name": "GeoNotebook + GeoPySpark",
+    "display_name": "GeoPySpark",
     "argv": [
         "/usr/bin/python3.4",
         "-m",
-        "geonotebook",
+        "ipykernel",
         "-f",
         "{connection_file}"
     ],
@@ -156,7 +152,7 @@ EOF
     }
 }
 EOF
-    sudo cp /tmp/kernel.json /usr/share/jupyter/kernels/geonotebook3/kernel.json
+    sudo cp /tmp/kernel.json /usr/share/jupyter/kernels/geopyspark/kernel.json
     rm -f /tmp/kernel.json
 
     # Execute
@@ -169,7 +165,7 @@ else
     aws s3 sync $RPM_URI /tmp/blobs/
 
     # Install packages
-    (cd /tmp/blobs; sudo yum localinstall -y freetype2-lib-2.8-33.x86_64.rpm gcc6-lib-6.4.0-33.x86_64.rpm gdal213-lib-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm)
+    (cd /tmp/blobs; sudo yum localinstall -y gdal213-lib-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm)
 
     # Install Python packages
     sudo pip-3.4 install --upgrade pip
