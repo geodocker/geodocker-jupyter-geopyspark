@@ -129,7 +129,7 @@ EOF
 	fi
     done
 
-    # Install GeoPySpark + GeoNotebook kernel
+    # Install GeoPySpark kernel
     cat <<EOF > /tmp/kernel.json
 {
     "language": "python",
@@ -152,7 +152,8 @@ EOF
     }
 }
 EOF
-    sudo cp /tmp/kernel.json /usr/share/jupyter/kernels/geopyspark/kernel.json
+    sudo mkdir -p /usr/local/share/jupyter/kernels/geopyspark
+    sudo cp /tmp/kernel.json /usr/local/share/jupyter/kernels/geopyspark/kernel.json
     rm -f /tmp/kernel.json
 
     # Execute
