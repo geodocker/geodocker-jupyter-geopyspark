@@ -43,6 +43,7 @@ rm -f decorator-4.0.10-py2.py3-none-any.whl \
    s3fs-0.1.3-py2.py3-none-any.whl \
    setuptools-18.5-py2.py3-none-any.whl \
    setuptools-38.5.2-py2.py3-none-any.whl \
+   setuptools-39.0.1-py2.py3-none-any.whl \
    simplegeneric-0.8.1-py3-none-any.whl \
    six-1.11.0-py2.py3-none-any.whl \
    tornado-5.0-cp34-cp34m-linux_x86_64.whl \

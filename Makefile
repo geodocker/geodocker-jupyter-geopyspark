@@ -1,16 +1,16 @@
-PHONY: image clean cleaner cleanest mrproper
+.PHONY: image clean cleaner cleanest mrproper
 
 TAG ?= reorg
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 IMAGE := $(FAMILY):$(TAG)
-GEOPYSPARK_SHA ?= ce5e03f7210966d893129311d1dd5b3945075bf7
-GEOPYSPARK_VERSION ?= 0.3.0
+GEOPYSPARK_SHA ?= b421d61e7a06cd443cec63a69eda3f45d423b0f4
+GEOPYSPARK_VERSION ?= 0.4.0
 
 all: image
 
 image: Dockerfile
 	docker build \
-          --build-arg VERSION=$(GEOPYSPARK_VERSION) \
+          --build-arg GEOPYSPARK_VERSION=$(GEOPYSPARK_VERSION) \
           --build-arg GEOPYSPARKSHA=$(GEOPYSPARK_SHA) \
           -t $(IMAGE) -f Dockerfile .
 

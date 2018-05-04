@@ -1,6 +1,6 @@
 FROM quay.io/geodocker/jupyter-geopyspark:base-7
 
-ARG VERSION
+ARG GEOPYSPARK_VERSION
 ARG GEOPYSPARKSHA
 
 ENV PYSPARK_PYTHON=python3.4
@@ -13,10 +13,10 @@ RUN mkdir /home/hadoop/notebooks && \
 COPY kernels/local/kernel.json /home/hadoop/.local/share/jupyter/kernels/pyspark/kernel.json
 
 # Install GeoPySpark
-RUN pip3 install --user protobuf==3.1.0 "https://github.com/locationtech-labs/geopyspark/archive/$GEOPYSPARKSHA.zip"
+RUN pip3 install --user protobuf==3.3.0 traitlets==4.3.2 "https://github.com/locationtech-labs/geopyspark/archive/$GEOPYSPARKSHA.zip"
 
 # Install Jars
-ADD https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-0.3.1.jar /opt/jars/
+ADD https://s3.amazonaws.com/geopyspark-dependency-jars/geotrellis-backend-assembly-${GEOPYSPARK_VERSION}.jar /opt/jars/
 
 USER root
 RUN chmod ugo+r /opt/jars/*
