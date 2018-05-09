@@ -63,6 +63,7 @@ PyWavelets==0.5.2
 pyzmq==16.0.2
 rasterio==0.36.0
 requests==2.12.4
+rise==5.2.0
 s3contents==0.2.1
 scikit-image==0.13.0
 scipy==0.19.0
