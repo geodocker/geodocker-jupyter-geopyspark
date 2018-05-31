@@ -12,14 +12,10 @@ yum remove -y \
     bzip2-devel \
     cairo-devel \
     gmp-devel \
-    harfbuzz-devel \
-    libicu-devel \
     libjpeg-turbo-devel \
     libmpc-devel \
     libpng-devel \
     libtiff-devel \
-    libwebp-devel \
-    libxml2-devel \
     mpfr-devel \
     zlib-devel
 

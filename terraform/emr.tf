@@ -1,5 +1,5 @@
 resource "aws_emr_cluster" "emr-spark-cluster" {
-  name          = "GeoNotebook + GeoPySpark Cluster"
+  name          = "GeoPySpark Cluster"
   applications  = ["Hadoop", "Spark", "Ganglia"]
   log_uri       = "${var.s3_log_uri}"
   release_label = "emr-5.7.0"

@@ -7,7 +7,7 @@
     "{connection_file}"
   ],
   "env": {
-      "LD_LIBRARY_PATH": "/home/hadoop/local/gdal/lib",
+      "LD_LIBRARY_PATH": "/usr/local/lib",
       "PYSPARK_PYTHON": "/usr/bin/python3.4",
       "SPARK_HOME": "/usr/local/spark-2.1.0-bin-hadoop2.7",
       "GEOPYSPARK_JARS_PATH": "/opt/jars",

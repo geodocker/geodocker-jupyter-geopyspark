@@ -7,4 +7,4 @@ scripts/geopyspark.sh rpmbuild/SOURCES/geopyspark.tar
           -v $(shell pwd)/archives:/archives:ro \
 	  -v $(shell pwd)/rpmbuild:/tmp/rpmbuild:rw \
           -v $(shell pwd)/scripts:/scripts:ro \
-          $(GCC6IMAGE) /scripts/geopyspark.sh $(shell id -u) $(shell id -g)
+          $(GCC4IMAGE) /scripts/geopyspark.sh $(shell id -u) $(shell id -g)

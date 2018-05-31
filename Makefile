@@ -3,16 +3,14 @@
 TAG ?= reorg
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 IMAGE := $(FAMILY):$(TAG)
-GEOPYSPARK_SHA ?= ce5e03f7210966d893129311d1dd5b3945075bf7
-GEONOTEBOOK_SHA ?= 2c0073c60afc610f7d9616edbb3843e5ba8b68af
-GEOPYSPARK_VERSION ?= 0.3.0
+GEOPYSPARK_SHA ?= d03d95fcd0e24cfca7df81fa56dcd84e30035a0f
+GEOPYSPARK_VERSION ?= 0.4.1
 
 all: image
 
 image: Dockerfile
 	docker build \
-          --build-arg VERSION=$(GEOPYSPARK_VERSION) \
-          --build-arg GEONOTEBOOKSHA=$(GEONOTEBOOK_SHA) \
+          --build-arg GEOPYSPARK_VERSION=$(GEOPYSPARK_VERSION) \
           --build-arg GEOPYSPARKSHA=$(GEOPYSPARK_SHA) \
           -t $(IMAGE) -f Dockerfile .
 

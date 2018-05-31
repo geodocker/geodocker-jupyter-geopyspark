@@ -8,18 +8,10 @@ RUN yum clean all -y && yum update -y && \
     yum install -y \
       bzip2-devel \
       cairo-devel \
-      gcc gcc-c++ \
-      gmp-devel \
-      harfbuzz-devel \
-      libicu-devel \
       libjpeg-turbo-devel \
-      libmpc-devel \
       libpng-devel \
       libtiff-devel \
-      libwebp-devel \
-      libxml2-devel \
       make \
-      mpfr-devel \
       pkgconfig \
       rpm-build \
       which \
