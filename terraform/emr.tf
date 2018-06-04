@@ -2,7 +2,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   name          = "GeoPySpark Cluster"
   applications  = ["Hadoop", "Spark", "Ganglia"]
   log_uri       = "${var.s3_log_uri}"
-  release_label = "emr-5.7.0"
+  release_label = "emr-5.13.0"
   service_role  = "${var.emr_service_role}"
 
   ec2_attributes {

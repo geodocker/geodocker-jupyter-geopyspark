@@ -145,7 +145,7 @@ EOF
         "PYSPARK_PYTHON": "/usr/bin/python3.4",
         "PYSPARK_DRIVER_PYTHON": "/usr/bin/python3.4",
         "SPARK_HOME": "/usr/lib/spark",
-        "PYTHONPATH": "/usr/lib/spark/python/lib/pyspark.zip:/usr/lib/spark/python/lib/py4j-0.10.4-src.zip",
+        "PYTHONPATH": "/usr/lib/spark/python/lib/pyspark.zip:/usr/lib/spark/python/lib/py4j-0.10.6-src.zip",
         "GEOPYSPARK_JARS_PATH": "/opt/jars",
         "YARN_CONF_DIR": "/etc/hadoop/conf",
         "PYSPARK_SUBMIT_ARGS": "--conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
