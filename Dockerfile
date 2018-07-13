@@ -12,6 +12,12 @@ RUN mkdir /home/hadoop/notebooks && \
     jupyter nbextension enable --py widgetsnbextension
 COPY kernels/local/kernel.json /home/hadoop/.local/share/jupyter/kernels/pyspark/kernel.json
 
+# Set up GeoPandas
+USER root
+RUN yum install --assumeyes gcc python34-devel.x86_64 gcc-c++
+RUN pip3 install geopandas
+USER hadoop
+
 # Install GeoPySpark
 RUN pip3 install --user protobuf==3.3.0 traitlets==4.3.2 "https://github.com/locationtech-labs/geopyspark/archive/$GEOPYSPARKSHA.zip"
 
