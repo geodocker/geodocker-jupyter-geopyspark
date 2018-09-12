@@ -3,8 +3,8 @@
 TAG ?= reorg
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 IMAGE := $(FAMILY):$(TAG)
-GEOPYSPARK_SHA ?= d03d95fcd0e24cfca7df81fa56dcd84e30035a0f
-GEOPYSPARK_VERSION ?= 0.4.1
+GEOPYSPARK_SHA ?= 12dfb5a026b7b6ddc9d59a4794cab62b07e0fe31
+GEOPYSPARK_VERSION ?= 0.4.2
 
 all: image
 

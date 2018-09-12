@@ -54,3 +54,4 @@ cleanest: cleaner
 
 mrproper: cleanest
 	rm -f rpmbuild/SOURCES/SOURCES/*
+	rm -f wheel/*.whl
