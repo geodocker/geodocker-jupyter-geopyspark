@@ -1,7 +1,7 @@
 %define _topdir   /tmp/rpmbuild
-%define name      gdal213
+%define name      gdal231
 %define release   33
-%define version   2.1.3
+%define version   2.3.1
 
 %define debug_package %{nil}
 
@@ -32,14 +32,17 @@ BuildRequires: netcdf
 GDAL
 
 %prep
-%setup -q -n gdal-2.1.3
+%setup -q -n gdal-2.3.1
 
 %build
-LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' CC='gcc48' ./configure --prefix=/usr/local
+LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' CC='gcc48' ./configure --prefix=/usr/local --with-java --with-curl
 nice -n 19 make -k -j$(grep -c ^processor /proc/cpuinfo) || make
+make -C swig/java
 
 %install
 nice -n 19 make DESTDIR=%{buildroot} install
+cp -L swig/java/.libs/libgdalalljni* %{buildroot}/usr/local/lib/
+cp swig/java/gdal.jar %{buildroot}/usr/local/share/
 
 %package lib
 Group: Geography
@@ -49,8 +52,10 @@ The libraries
 
 %files lib
 %defattr(-,root,root)
-/usr/local/lib/*
+/usr/local/lib
+/usr/local/share/gdal.jar
 
 %files
 %defattr(-,root,root)
 /usr/local/*
+/usr/local/share/gdal.jar

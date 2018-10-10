@@ -1,9 +1,9 @@
 .PHONY: image clean cleaner cleanest mrproper
 
-TAG ?= reorg
+TAG ?= 8
 FAMILY := quay.io/geodocker/jupyter-geopyspark
 IMAGE := $(FAMILY):$(TAG)
-GEOPYSPARK_SHA ?= 12dfb5a026b7b6ddc9d59a4794cab62b07e0fe31
+GEOPYSPARK_SHA ?= a75dda65434b472045f3fd97baca1e9bdc1ac353
 GEOPYSPARK_VERSION ?= 0.4.2
 
 all: image

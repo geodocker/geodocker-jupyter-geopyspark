@@ -9,6 +9,6 @@ then
     touch rpmbuild/RPMS/x86_64/*.rpm
     touch rpmbuild/RPMS/x86_64/hdf5-*.rpm
     touch rpmbuild/RPMS/x86_64/netcdf-*.rpm
-    touch rpmbuild/RPMS/x86_64/gdal213-*.rpm
+    touch rpmbuild/RPMS/x86_64/gdal231-*.rpm
     touch rpmbuild/RPMS/x86_64/jupyterhub-*.rpm
 fi
