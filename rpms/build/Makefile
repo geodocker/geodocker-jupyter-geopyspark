@@ -1,11 +1,13 @@
-.PHONY: all gcc4 aws-build-gdal rpms src wheels
+.PHONY: all gcc4 aws-build-gdal rpms src wheels publish-rpms
 
 FAMILY := quay.io/geodocker/emr-build
 VERSION := 7
 GCC4IMAGE := $(FAMILY):gcc4-$(VERSION)
 BASEIMAGE := quay.io/geodocker/jupyter-geopyspark:base-$(VERSION)
+RPMIMAGE := quay.io/geodocker/rpm-build:1
 INTERFACE ?= eth0
 IP_ADDR := $(shell ifconfig $(INTERFACE) | grep -i mask | awk '{print $$2}' | cut -f2 -d:)
+BUILD_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 all:
 	echo "see build.sh"
@@ -54,3 +56,8 @@ cleanest: cleaner
 
 mrproper: cleanest
 	rm -f rpmbuild/SOURCES/SOURCES/*
+
+# Publish built RPMS to
+publish-rpms: rpms
+	docker build . -t quay.io/geodocker/rpm-build:1
+	docker run -it --rm -v $(HOME)/.aws:/root/.aws -v $(BUILD_DIR)/rpmbuild:/rpmbuild quay.io/geodocker/rpm-build:1
