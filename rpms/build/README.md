@@ -11,7 +11,6 @@ The following images can be built from the materials in this directory:
    - [`quay.io/geodocker/jupyter-geopyspark:aws-build-gdal-3`](Dockerfile.aws-build-gdal) is an image used to build the `gdal-and-friend.tar.gz` binary blob.  This image is meant to mimic the environment of an EC2 (EMR) instance as closely as possible so as to create a compatible artifact.
    - [`quay.io/geodocker/jupyter-geopyspark:base-3`](Dockerfile.base) is the ancestor images of the image produced in the root of this repository.  It contains mostly slow-rate-of-change binary dependencies.
    - [`quay.io/geodocker/emr-build:gcc4-3`](Dockerfile.gcc4) is used to build RPMs with gcc 4.8.
-   - [`quay.io/geodocker/emr-build:gcc6-3`](Dockerfile.gcc6) is used to build RPMs with gcc 6.4.
 
 ## Files and Directories ##
 
