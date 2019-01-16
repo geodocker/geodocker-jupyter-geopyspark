@@ -23,7 +23,7 @@ BuildRequires: geos-devel
 BuildRequires: lcms2-devel
 BuildRequires: libcurl-devel
 BuildRequires: libpng-devel
-BuildRequires: openjpeg-devel
+BuildRequires: openjpeg230
 BuildRequires: zlib-devel
 BuildRequires: hdf5
 BuildRequires: netcdf
@@ -35,7 +35,7 @@ GDAL
 %setup -q -n gdal-2.3.1
 
 %build
-LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' CC='gcc48' ./configure --prefix=/usr/local --with-java --with-curl
+PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LDFLAGS='-L/usr/local/lib -L/usr/local/lib64' CC='gcc48' ./configure --prefix=/usr/local --with-java --with-curl --with-openjpeg
 nice -n 19 make -k -j$(grep -c ^processor /proc/cpuinfo) || make
 make -C swig/java
 

@@ -29,7 +29,7 @@ rpmbuild/RPMS/x86_64/configurable-http-proxy-0.0.0-13.x86_64.rpm
 
 src: rpmbuild/SOURCES/curl-7.57.0.tar.bz2 rpmbuild/SOURCES/zlib-1.2.11.tar.gz \
 rpmbuild/SOURCES/libpng-1.6.30.tar.xz rpmbuild/SOURCES/geos-3.6.1.tar.bz2 \
-rpmbuild/SOURCES/lcms2-2.8.tar.gz rpmbuild/SOURCES/openjpeg-v2.1.2.tar.gz \
+rpmbuild/SOURCES/lcms2-2.8.tar.gz rpmbuild/SOURCES/openjpeg-2.3.0.tar.gz \
 rpmbuild/SOURCES/hdf5-1.8.20.tar.bz2 rpmbuild/SOURCES/netcdf-4.5.0.tar.gz \
 rpmbuild/SOURCES/gdal-2.3.1.tar.gz rpmbuild/SOURCES/node-v8.5.0.tar.gz \
 rpmbuild/SOURCES/proj-4.9.3.tar.gz
