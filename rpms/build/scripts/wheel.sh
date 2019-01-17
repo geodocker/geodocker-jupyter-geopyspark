@@ -7,7 +7,8 @@ yum localinstall -y \
     /tmp/rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm \
     /tmp/rpmbuild/RPMS/x86_64/hdf5-1.8.20-33.x86_64.rpm \
     /tmp/rpmbuild/RPMS/x86_64/netcdf-4.5.0-33.x86_64.rpm \
-    /tmp/rpmbuild/RPMS/x86_64/gdal231-2.3.1-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/openjpeg230-2.3.0-33.x86_64.rpm \
+    /tmp/rpmbuild/RPMS/x86_64/gdal231-2.3.1-33.x86_64.rpm
 ldconfig
 
 mkdir -p /usr/share/jupyter/kernels
