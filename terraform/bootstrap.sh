@@ -26,7 +26,7 @@ if is_master; then
     aws s3 sync $RPM_URI /tmp/blobs/
 
     # Install binary packages
-    (cd /tmp/blobs; sudo yum localinstall -y gdal213-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm configurable-http-proxy-0.0.0-13.x86_64.rpm)
+    (cd /tmp/blobs; sudo yum localinstall -y openjpeg230-2.3.0-33.x86_64.rpm gdal213-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm nodejs-8.5.0-13.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm configurable-http-proxy-0.0.0-13.x86_64.rpm)
 
     # Install Python packages
     sudo pip-3.4 install --upgrade pip
