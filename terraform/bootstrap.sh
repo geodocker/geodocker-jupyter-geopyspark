@@ -148,7 +148,8 @@ EOF
         "PYTHONPATH": "/usr/lib/spark/python/lib/pyspark.zip:/usr/lib/spark/python/lib/py4j-0.10.6-src.zip",
         "GEOPYSPARK_JARS_PATH": "/opt/jars",
         "YARN_CONF_DIR": "/etc/hadoop/conf",
-        "PYSPARK_SUBMIT_ARGS": "--conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
+        "LD_LIBRARY_PATH": "/usr/local/lib:/usr/lib",
+        "PYSPARK_SUBMIT_ARGS": "--conf spark.executorEnv.LD_LIBRARY_PATH=/usr/local/lib:/usr/lib --conf hadoop.yarn.timeline-service.enabled=false pyspark-shell"
     }
 }
 EOF
@@ -166,7 +167,7 @@ else
     aws s3 sync $RPM_URI /tmp/blobs/
 
     # Install packages
-    (cd /tmp/blobs; sudo yum localinstall -y gdal213-lib-2.1.3-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm)
+    (cd /tmp/blobs; sudo yum localinstall -y openjpeg230-2.3.0-33.x86_64.rpm gdal231-2.3.1-33.x86_64.rpm hdf5-1.8.20-33.x86_64.rpm netcdf-4.5.0-33.x86_64.rpm proj493-lib-4.9.3-33.x86_64.rpm)
 
     # Install Python packages
     sudo pip-3.4 install --upgrade pip
