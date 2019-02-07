@@ -2,8 +2,9 @@ wheels wheel/http-requirements.txt: archives/ipykernel.zip \
 rpmbuild/RPMS/x86_64/proj493-4.9.3-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/hdf5-1.8.20-33.x86_64.rpm \
 rpmbuild/RPMS/x86_64/netcdf-4.5.0-33.x86_64.rpm \
-rpmbuild/RPMS/x86_64/gdal213-2.1.3-33.x86_64.rpm \
+rpmbuild/RPMS/x86_64/gdal231-2.3.1-33.x86_64.rpm \
 wheel/requirements.txt
+	(cd wheel ; rm -f *.whl)
 	docker run -it --rm \
           -v $(shell pwd)/archives:/archives:ro \
           -v $(shell pwd)/rpmbuild:/tmp/rpmbuild:ro \

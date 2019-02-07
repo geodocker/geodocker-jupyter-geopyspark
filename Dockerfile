@@ -1,4 +1,4 @@
-FROM quay.io/geodocker/jupyter-geopyspark:base-7
+FROM quay.io/geodocker/jupyter-geopyspark:base-8
 
 ARG GEOPYSPARK_VERSION
 ARG GEOPYSPARKSHA
