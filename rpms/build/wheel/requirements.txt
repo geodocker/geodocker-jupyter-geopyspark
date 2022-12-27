@@ -67,7 +67,7 @@ rise==5.2.0
 s3contents==0.1.10
 scikit-image==0.13.0
 scipy==0.19.0
-setuptools==18.5
+setuptools==65.5.1
 Shapely==1.6b4
 simplegeneric==0.8.1
 simplejson==3.13.2
